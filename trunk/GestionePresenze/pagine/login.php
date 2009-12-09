@@ -74,7 +74,7 @@ function stampaMessaggio(){?>
     <table class="oggettoContenente">
         <tr>
             <td>
-                <nobr class="messaggioAreaLogin">Gestione Presenze 1.0, Buongiorno <?php echo $_SESSION['username']; ?> </nobr>
+                <nobr class="messaggioAreaLogin"> Buongiorno <?php echo $_SESSION['username']; ?> </nobr>
             </td>
             <td>
                  (<a class="linkAiuti" href="<?php session_destroy(); ?>">Logout</a>)
