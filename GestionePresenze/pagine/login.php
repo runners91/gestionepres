@@ -28,9 +28,9 @@ function login($stampa = true){
 }
 
 function stampaForm($messaggio = ""){ ?>
-<div class="loginForm">
+<div>
     <form name="loginForm" method="POST" action="<?php echo $_SERVER[PHP_SELF] ?>">
-    <table class="oggettoContenente">
+    <table class="loginForm">
         <tr>
             <td class="cellaTesto">
                 Username:
@@ -57,10 +57,10 @@ function stampaForm($messaggio = ""){ ?>
         </tr>
         <tr>
             <td>
-                <a class="linkAiuti" href="www.google.com">Registrati</a>
+                <a class="linkAiuti" href="">Registrati</a>
             </td>
             <td colspan="2">
-                <a class="linkAiuti" href="www.google.com">Hai dimenticato la password ?</a>
+                <a class="linkAiuti" href="">Hai dimenticato la password ?</a>
             </td>
         </tr>
     </table>
@@ -69,17 +69,7 @@ function stampaForm($messaggio = ""){ ?>
 <?php
 }
 
-function stampaMessaggio(){?>
-<div class="messaggioUtente">
-    <table class="oggettoContenente">
-        <tr>
-            <td>
-                <nobr class="messaggioAreaLogin"> Buongiorno <?php echo $_SESSION['username']; ?> </nobr>
-            </td>
-            <td>
-                 (<a class="linkAiuti" href="<?php session_destroy(); ?>">Logout</a>)
-            </td>
-        </tr>
-    </table>
-</div>
+function stampaMessaggio(){ ?>
+    <nobr>Buongiorno <a class="linkUser" href=""><?php echo $_SESSION['username']; ?></a>
+    (<a class="linkAiuti" href="<?php session_destroy(); ?>">Logout</a>)</nobr>
 <?php } ?>
