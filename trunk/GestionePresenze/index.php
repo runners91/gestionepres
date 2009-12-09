@@ -13,36 +13,51 @@
     </head>
     <body OnLoad="document.loginForm.username.focus();">
         <div id="header">
-            <table class="header">
-                <tr>
-                    <td class="header" align="center">
-                        <div class="mainTitle">Gestione Presenze</div>
-                    </td>
-                    <td class="header" align="right">
-                        <div><?php if(isset($_SESSION['username'])) stampaMessaggio(); ?></div>
-                    </td>
-                </tr>
-            </table>
-            
+           <div class="mainTitle"><img class="titleImg" src="img/titolo.png" alt="titolo" /></div>
+           <?php if(isset($_SESSION['username'])){ ?>
+           <table class="menu">
+               <tr>
+                   <td class="menuItem">
+                        <nobr><a class="menuLink" href="#">Item 1</a></nobr>
+                   </td>
+                   <td class="menuItem">
+                   <nobr><a class="menuLink" href="#">Item 2</a></nobr>
+                   </td>
+                   <td class="menuItem">
+                       <nobr><a class="menuLink" href="#">Item 3</a></nobr>
+                   </td>
+                   <td class="menuItem">
+                       <nobr><a class="menuLink" href="#">Item 4</a></nobr>
+                   </td>
+                   <td class="menuItem">
+                       <nobr><a class="menuLink" href="#">Item 5</a></nobr>
+                   </td>
+                   <td class="menuSpace">
+                       
+                   </td>
+                   <td class="messaggioUtente">
+                       <?php stampaMessaggio(); ?>
+                   </td>
+               </tr>
+           </table>
+           <?php } ?>
         </div>
         <div id="corpo">
-            <table class="contenuto"> <?php
-                if(!isset($_SESSION['username'])){ ?>
-                    <tr>
-                        <td colspan="2" align="center">
-                             <?php
-                                login();
-                             ?>
-                        </td>
-                    </tr> <?php
-                } ?>
+            <table class="contenuto">
                 <tr>
-                    <td> <?php
+                    <td colspan="2" align="center">
+                        <?php
+                            login();
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center"> <?php
                         if(isset($_SESSION['username'])){
                             Assenze::stampaReportAssenze();
                         }?>
                     </td>
-                    <td> <?php
+                    <td align="center"> <?php
                         if(isset($_SESSION['username'])){
                             Assenze::inserisciReportInserimento();
                         }?>

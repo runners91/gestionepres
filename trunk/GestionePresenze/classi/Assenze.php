@@ -78,7 +78,7 @@ class Assenze {
      * Stampa un report contenente tutte le assenze
      */
     static function stampaReportAssenze(){ ?>
-        <div class="standartFormContainer">
+        <div>
         <?php
         $rs = Database::getInstance()->eseguiQuery("select id_assenza as ID,data as Data,quantita as Quantita from assenze");
         Utilita::stampaTabella($rs);
@@ -87,11 +87,11 @@ class Assenze {
     }
 
     static function inserisciReportInserimento(){ ?>
-        <div class="standartFormContainer">
+        <div>
             <form name="loginForm" method="POST" action="<?php echo $_SERVER[PHP_SELF] ?>">
-                <table class="oggettoContenente">
+                <table class="standartFormContainer">
                     <tr>
-                        <td align="right">
+                        <td class="cellaTesto" align="right">
                             Data:
                         </td>
                         <td>
@@ -99,7 +99,7 @@ class Assenze {
                         </td>
                     </tr>
                     <tr>
-                        <td align="right">
+                        <td class="cellaTesto" align="right">
                             Quantit&agrave:
                         </td>
                         <td>
@@ -107,7 +107,7 @@ class Assenze {
                         </td>
                     </tr>
                     <tr>
-                        <td align="right">
+                        <td class="cellaTesto" align="right">
                             Dipendente:
                         </td>
                         <td>
@@ -115,7 +115,7 @@ class Assenze {
                         </td>
                     </tr>
                     <tr>
-                        <td align="right">
+                        <td class="cellaTesto" align="right">
                             Motivo:
                         </td>
                         <td>
