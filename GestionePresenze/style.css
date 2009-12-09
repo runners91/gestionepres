@@ -1,0 +1,90 @@
+body{
+    font-family: arial;
+    background-color: #F2F0F0; /* grigio chiarissimo */
+}
+#header{
+    border-bottom: 1px solid black;
+}
+.header{
+    width: 100%;
+}
+#corpo{
+    padding: 20px;
+}
+#footer{
+    border-top: 1px solid black;
+    text-align: center;
+}
+.mainTitle{
+    color: red;
+    text-align: center;
+    font-size: 20pt;
+    margin: 15px;
+    text-decoration: underline;
+    font-weight: bold;
+    font-style: oblique;    
+}
+
+.contenuto{
+    width: 100%;
+}
+.oggettoContenente{
+    background-color: #5F8CFF; /* Celeste scuro */
+    margin: 10px;
+    padding: 5px;
+    border: 1px solid black;
+    -moz-border-radius: 5px;
+}
+.loginForm{
+
+}
+.messaggioUtente{
+
+}
+
+.cellaTesto{
+    font-weight: bold;
+    font-size: 9pt;
+    color: #494949; /* Grigio scuro */
+}
+.standartTextfield{
+    border: 1px solid #494949; /* Grigio scuro */
+    -moz-border-radius: 3px;
+}
+.standartButton{
+    background-color: #96D6E9; /* celeste */
+    -moz-border-radius: 3px;
+    border: 1px solid black;
+}
+
+
+.reportTabella{
+    background-color: #C1C1C3; /* Grigio chiaro */
+    -moz-border-radius: 5px;
+    margin: 5px;
+}
+.reportRigaTitoli{
+    background-color: #3258FF; /* Celeste scuro */
+}
+.reportRigaDati{
+    background-color: #D9DADE; /* Grigio quasi bianco */
+}
+.reportCella{
+    padding: 3px 8px 3px 8px;
+}
+
+
+
+.messaggioErrore{
+    color: red;
+    font-weight: bold;
+    font-style: italic;
+}
+.linkAiuti{
+    font-size: 10pt;
+}
+
+
+.standartFormContainer{
+    margin-left: 70px;
+}
