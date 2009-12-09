@@ -18,7 +18,7 @@
            <table class="menu">
                <tr>
                    <td class="menuItem">
-                        <nobr><a class="menuLink" href="#">Item 1</a></nobr>
+                        <nobr><a class="menuLink" href="?page=item1">Item 1</a></nobr>
                    </td>
                    <td class="menuItem">
                    <nobr><a class="menuLink" href="#">Item 2</a></nobr>
