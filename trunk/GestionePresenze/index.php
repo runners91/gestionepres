@@ -18,19 +18,20 @@
            <table class="menu">
                <tr>
                    <td class="menuItem">
-                        <nobr><a class="menuLink" href="?page=item1">Item 1</a></nobr>
+                        <a class="menuLink" href="?page=item1">Item 1</a>
+
                    </td>
                    <td class="menuItem">
-                       <nobr><a class="menuLink" href="#">Item 2</a></nobr>
+                       <a class="menuLink" href="#">Item 2</a>
                    </td>
                    <td class="menuItem">
-                       <nobr><a class="menuLink" href="#">Item 3</a></nobr>
+                       <a class="menuLink" href="#">Item 3</a>
                    </td>
                    <td class="menuItem">
-                       <nobr><a class="menuLink" href="#">Item 4</a></nobr>
+                       <a class="menuLink" href="#">Item 4</a>
                    </td>
                    <td class="menuItem">
-                       <nobr><a class="menuLink" href="#">Item 5</a></nobr>
+                       <a class="menuLink" href="#">Item 5</a>
                    </td>
                    <td class="menuSpace">
                        

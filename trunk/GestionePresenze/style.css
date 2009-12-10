@@ -52,6 +52,7 @@ body{
     border: 1px solid black;
     padding: 4px 8px 4px 8px;
     background-color: #5F8CFF; /* Celeste scuro */
+    width: 45px;
 }
 .menuLink{
     font-size: 12pt;
@@ -61,8 +62,13 @@ body{
 .menuLink:hover{
     text-decoration: underline;
 }
-.menuSpace{
-    width: 100%;
+.messaggioUtente{
+    background-color: #5F8CFF; /* Celeste scuro */
+    padding: 4px 8px 4px 8px;
+    border: 1px solid black;
+    -moz-border-radius: 5px;
+    text-align:center;
+    width: 200px;
 }
 /*******************************************************************************/
 
@@ -106,12 +112,7 @@ body{
 .contenuto{
     width: 100%;
 }
-.messaggioUtente{
-    background-color: #5F8CFF; /* Celeste scuro */
-    padding: 4px 8px 4px 8px;
-    border: 1px solid black;
-    -moz-border-radius: 5px;
-}
+
 /*******************************************************************************/
 
 
@@ -132,6 +133,10 @@ body{
 .reportRigaDati{
     background-color: #D9DADE; /* Grigio quasi bianco */
 }
+tr.reportRigaDati:hover{
+    background-color: #C6DEFF; /* Celeste chiaro */
+}
+
 .reportCella{
     padding: 3px 8px 3px 8px;
     border: 1px solid black;
