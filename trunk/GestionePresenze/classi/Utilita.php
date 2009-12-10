@@ -27,7 +27,7 @@ class Utilita {
         echo '</tr>';
 
         while(!$rs->EOF){
-            echo '<tr class="reportRigaDati" onmouseover="style.backgroundColor=\'#C6DEFF\'" onmouseout="style.backgroundColor=\'#D9DADE\'">';
+            echo '<tr class="reportRigaDati">';
                 foreach ($rs->fields as $key => $value){
                     echo '<td class="reportCella"> '.$value.' </td>';
                 }
