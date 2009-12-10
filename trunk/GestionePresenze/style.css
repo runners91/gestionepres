@@ -1,38 +1,38 @@
 /*********************** IMPOSTAZIONE DELLA PAGINA *****************************/
-body{
+body {
     font-family: arial;
     background-color: #F2F0F0; /* grigio chiarissimo */
 }
-#header{
+#header {
 
 }
-#corpo{
+#corpo {
     padding: 30px;
 }
-#footer{
+#footer {
     border-top: 1px solid black;
     text-align: center;
 }
-.cellaTesto{
+.cellaTesto {
     font-weight: bold;
     font-size: 9pt;
     color: #494949; /* Grigio scuro */
 }
-.standartTextfield{
+.standartTextfield {
     border: 1px solid #494949; /* Grigio scuro */
     -moz-border-radius: 3px;
 }
-.standartButton{
+.standartButton {
 
 }
-.mainTitle{
+.mainTitle {
     text-align: left;
     font-weight: bold;
     font-size: 28pt;
     text-decoration: underline;
     font-family: heleverica;
 }
-.titleImg{
+.titleImg {
     margin: 2px;
     padding: 5px;
     background-color: white;
@@ -43,26 +43,26 @@ body{
 
 
 /******************************** COMPONENTI DEL MENU **************************/
-.menu{
+.menu {
     width: 100%;
     margin-top: 10px;
     border: 1px solid black;
 }
-.menuItem{
+.menuItem {
     border: 1px solid black;
     padding: 4px 8px 4px 8px;
     background-color: #5F8CFF; /* Celeste scuro */
     width: 45px;
 }
-.menuLink{
+.menuLink {
     font-size: 12pt;
     color: red;
     text-decoration: none;
 }
-.menuLink:hover{
+.menuLink:hover {
     text-decoration: underline;
 }
-.messaggioUtente{
+.messaggioUtente {
     background-color: #5F8CFF; /* Celeste scuro */
     padding: 4px 8px 4px 8px;
     border: 1px solid black;
@@ -72,32 +72,71 @@ body{
 }
 /*******************************************************************************/
 
+/************************************** GESTIONE TAB **************************/
+ul#tabList {
+    font: bold 11px verdana, arial, sans-serif;
+    list-style-type: none;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #6c6;
+    margin: 0;
+}
+
+ul#tabList li {
+    float: left;
+    height: 21px;
+    background-color: #cfc;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+ul#tabList li#selectedTab {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+li#selectedTab a { 
+    color: #000;
+}
+
+#tabList a {
+    float: left;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    padding: 4px;
+}
+
+#tabList a:hover { 
+    background: #fff;
+}
+
+/*******************************************************************************/
 
 
 
 /************************************** FORM DI LOGIN **************************/
-.messaggioErrore{
+.messaggioErrore {
     color: red;
     font-weight: bold;
     font-style: italic;
 }
-.linkAiuti{
+.linkAiuti {
     text-decoration: none;
     font-size: 10pt;
     color: blue;
 }
-.linkAiuti:hover{
+.linkAiuti:hover {
     text-decoration: underline;
 }
-.linkUser{
+.linkUser {
     text-decoration: none;
     color: red;
     font-size: 12pt;
 }
-.linkUser:hover{
+.linkUser:hover {
     text-decoration: underline;
 }
-.loginForm{
+.loginForm {
     background-color: #5F8CFF; /* Celeste scuro */
     margin: 10px;
     padding: 10px;
@@ -109,7 +148,7 @@ body{
 
 
 /***************************** CONTENUTO DELLA PAGINA **************************/
-.contenuto{
+.contenuto {
     width: 100%;
 }
 
@@ -118,26 +157,26 @@ body{
 
 
 /**************** IMPOSTAZIONE DELLA STAMPA DI UN REPORT ***********************/
-.reportTabella{
+.reportTabella {
     background-color: #C1C1C3; /* Grigio chiaro */
     -moz-border-radius: 5px;
     margin: 5px;
     border-collapse: collapse;
     border: 2px solid black;
 }
-.reportRigaTitoli{
+.reportRigaTitoli {
     background-color: #1569C7; /* Celeste scuro */
     color: white;
     font-weight: bold;
 }
-.reportRigaDati{
+.reportRigaDati {
     background-color: #D9DADE; /* Grigio quasi bianco */
 }
-tr.reportRigaDati:hover{
+tr.reportRigaDati:hover {
     background-color: #C6DEFF; /* Celeste chiaro */
 }
 
-.reportCella{
+.reportCella {
     padding: 3px 8px 3px 8px;
     border: 1px solid black;
 }
@@ -146,7 +185,7 @@ tr.reportRigaDati:hover{
 
 
 /**************** IMPOSTAZIONE DELLA STAMPA DI UN FORM *************************/
-.standartFormContainer{
+.standartFormContainer {
     background-color: #5F8CFF; /* Celeste scuro */
     -moz-border-radius: 5px;
     border: 2px solid black;
