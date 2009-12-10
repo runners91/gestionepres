@@ -11,15 +11,14 @@
         <title>Gestione Presenze</title>
         <link rel="stylesheet" href="style.css" type="text/css" />
     </head>
-    <body OnLoad="document.loginForm.username.focus();">
+    <body>
+        <div id="pagina">
         <div id="header">
-           <div class="mainTitle"><img class="titleImg" src="img/titolo.png" alt="titolo" /></div>
            <?php if(isset($_SESSION['username'])){ ?>
            <table class="menu">
                <tr>
                    <td class="menuItem">
-                        <a class="menuLink" href="?page=item1">Item 1</a>
-
+                        <a class="menuLink" href="#S">Item 1</a>
                    </td>
                    <td class="menuItem">
                        <a class="menuLink" href="#">Item 2</a>
@@ -33,19 +32,35 @@
                    <td class="menuItem">
                        <a class="menuLink" href="#">Item 5</a>
                    </td>
-                   <td class="menuSpace">
-                       
+                   <td>
+                       <div class="mainTitle">Gestione Presenze</div>
                    </td>
                    <td class="messaggioUtente">
                        <?php stampaMessaggio(); ?>
                    </td>
                </tr>
-           </table>
-           <?php } ?>
+           </table> <?php
+           }
+           else{ ?>
+                <div class="mainTitle">Gestione Presenze</div> <?php
+           } ?>
         </div>
+
+        
+
         <div id="corpo">
-           <?php include("pagine/home.php"); ?>
+           <?php
+                if(!isset($_SESSION['username'])){
+                    login();
+                }
+                else{
+                    include("pagine/home.php");
+                }
+           ?>
         </div>
+        </div>
+
+
         <div id="footer">
             Copyright &copy 2010 by Bryan & Ethan
         </div>
