@@ -1,23 +1,9 @@
-<?php
-?>
-<table class="contenuto">
-    <tr>
-        <td colspan="2" align="center">
-            <?php
-            login();
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td align="center"> <?php
-            if(isset($_SESSION['username'])) {
-                Assenze::stampaReportAssenze();
-            }?>
-        </td>
-        <td align="center"> <?php
-            if(isset($_SESSION['username'])) {
-                Assenze::inserisciReportInserimento();
-            }?>
-        </td>
-    </tr>
-</table>
+<div>
+    <ul id="tabList">
+        <li id="selectedTab"><a href="#">Item one</a></li>
+        <li><a href="#">Item two</a></li>
+        <li><a href="#">Item three</a></li>
+        <li><a href="#">Item four</a></li>
+        <li><a href="#">Item five</a></li>
+    </ul>
+</div>
