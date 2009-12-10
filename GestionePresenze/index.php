@@ -21,7 +21,7 @@
                         <nobr><a class="menuLink" href="?page=item1">Item 1</a></nobr>
                    </td>
                    <td class="menuItem">
-                   <nobr><a class="menuLink" href="#">Item 2</a></nobr>
+                       <nobr><a class="menuLink" href="#">Item 2</a></nobr>
                    </td>
                    <td class="menuItem">
                        <nobr><a class="menuLink" href="#">Item 3</a></nobr>
@@ -43,27 +43,7 @@
            <?php } ?>
         </div>
         <div id="corpo">
-            <table class="contenuto">
-                <tr>
-                    <td colspan="2" align="center">
-                        <?php
-                            login();
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center"> <?php
-                        if(isset($_SESSION['username'])){
-                            Assenze::stampaReportAssenze();
-                        }?>
-                    </td>
-                    <td align="center"> <?php
-                        if(isset($_SESSION['username'])){
-                            Assenze::inserisciReportInserimento();
-                        }?>
-                    </td>
-                </tr>
-            </table>
+           <?php include("pagine/home.php"); ?>
         </div>
         <div id="footer">
             Copyright &copy 2010 by Bryan & Ethan
