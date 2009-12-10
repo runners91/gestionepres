@@ -4,7 +4,7 @@ body{
     background-color: #F2F0F0; /* grigio chiarissimo */
 }
 #header{
-    border-bottom: 1px solid black;
+
 }
 #corpo{
     padding: 30px;
@@ -26,15 +26,13 @@ body{
 
 }
 .mainTitle{
-    text-align: center;
+    text-align: left;
     font-weight: bold;
     font-size: 28pt;
     text-decoration: underline;
     font-family: heleverica;
 }
 .titleImg{
-    -moz-border-radius: 5px;
-    border: 1px solid black;
     margin: 2px;
     padding: 5px;
     background-color: white;
@@ -47,9 +45,10 @@ body{
 /******************************** COMPONENTI DEL MENU **************************/
 .menu{
     width: 100%;
+    margin-top: 10px;
+    border: 1px solid black;
 }
 .menuItem{
-    -moz-border-radius: 5px;
     border: 1px solid black;
     padding: 4px 8px 4px 8px;
     background-color: #5F8CFF; /* Celeste scuro */
