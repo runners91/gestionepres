@@ -77,13 +77,14 @@ body {
 ul#tabList {
     font: bold 11px verdana, arial, sans-serif;
     list-style-type: none;
+    padding-left:0;
     padding-bottom: 24px;
     margin: 0;
 }
 ul#tabList li {
     float: left;
     background-color: #736F6E; /* grigio */
-    margin: 2px 2px 0 2px;
+    margin: 2px 2px 0 0px;
     border: 1px solid blue;
     padding: 0 5px 0 5px;
 }
