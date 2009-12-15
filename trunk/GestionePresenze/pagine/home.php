@@ -23,7 +23,6 @@
             else{
                 include("tab/".$_GET['tab'].".php");
             }
-
         ?>
     </div>
 </div>

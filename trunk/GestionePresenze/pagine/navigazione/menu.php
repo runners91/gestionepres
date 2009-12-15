@@ -13,6 +13,10 @@ function creaMenuItem($paginaAttuale,$pagina){
 function creaMenu($pagina){
     if($pagina=="") $pagina = "home"; ?>
 
+<div class="messaggioUtente">
+    <?php stampaMessaggio(); ?>
+</div>
+
 <table class="menu">
     <tr>
         <?php
@@ -20,13 +24,9 @@ function creaMenu($pagina){
             creaMenuItem($pagina,"assenze");
             creaMenuItem($pagina,"festivi");
             creaMenuItem($pagina,"straordinari");
+            creaMenuItem($pagina, "utente")
          ?>
-
         <td></td>
-
-        <td class="messaggioUtente">
-            <?php stampaMessaggio(); ?>
-        </td>
     </tr>
 </table>
 
