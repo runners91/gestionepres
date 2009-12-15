@@ -20,11 +20,9 @@ function creaMenu($pagina){
             creaMenuItem($pagina,"assenze");
             creaMenuItem($pagina,"festivi");
             creaMenuItem($pagina,"straordinari");
-        ?>
+         ?>
 
-        <td>
-            <div class="mainTitle">Gestione Presenze</div>
-        </td>
+        <td></td>
 
         <td class="messaggioUtente">
             <?php stampaMessaggio(); ?>

@@ -18,34 +18,27 @@
     </head>
     <body>
         <div id="pagina">
-        <div id="header">
-           <?php
-           if(isset($_SESSION['username'])){
-               creaMenu($_GET['pagina']);
-           }
-           else{ ?>
-                <div class="mainTitle">Gestione Presenze</div> <?php
-           } ?>
+            <div id="header">
+                <div class="mainTitle">Gestione Presenze</div>
+               <?php
+               if(isset($_SESSION['username'])){
+                   creaMenu($_GET['pagina']);
+               }?>
+            </div>
+            <div id="corpo">
+               <?php
+                    if(!isset($_SESSION['username'])){
+                        login();
+                    }
+                    else if(!$_GET){
+                        include("pagine/home.php");
+                    }
+                    else{
+                        include("pagine/".$_GET['pagina'].".php");
+                    }
+               ?>
+            </div>
         </div>
-
-        
-
-        <div id="corpo">
-           <?php
-                if(!isset($_SESSION['username'])){
-                    login();
-                }
-                else if(!$_GET){
-                    include("pagine/home.php");
-                }
-                else{
-                    include("pagine/".$_GET['pagina'].".php");
-                }
-           ?>
-        </div>
-        </div>
-
-
         <div id="footer">
             Copyright &copy 2010 by Bryan & Ethan
         </div>
