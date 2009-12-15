@@ -15,10 +15,12 @@ function creaMenu($pagina){
 
 <table class="menu">
     <tr>
-        <?php creaMenuItem($pagina,"home")?>
-        <?php creaMenuItem($pagina,"assenze")?>
-        <?php creaMenuItem($pagina,"festivi")?>
-        <?php creaMenuItem($pagina,"straordinari")?>
+        <?php
+            creaMenuItem($pagina,"home");
+            creaMenuItem($pagina,"assenze");
+            creaMenuItem($pagina,"festivi");
+            creaMenuItem($pagina,"straordinari");
+        ?>
 
         <td>
             <div class="mainTitle">Gestione Presenze</div>
