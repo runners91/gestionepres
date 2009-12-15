@@ -7,6 +7,7 @@
     include("classi/Assenze.php");
     include("classi/Database.php");
     include("pagine/login.php");
+    include("pagine/menu.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -18,32 +19,9 @@
     <body>
         <div id="pagina">
         <div id="header">
-           <?php if(isset($_SESSION['username'])){ ?>
-           <table class="menu">
-               <tr>
-                   <td class="menuItem">
-                        <a class="menuLink" href="?pagina=test">Item 1</a>
-                   </td>
-                   <td class="menuItem">
-                       <a class="menuLink" href="#">Item 2</a>
-                   </td>
-                   <td class="menuItem">
-                       <a class="menuLink" href="#">Item 3</a>
-                   </td>
-                   <td class="menuItem">
-                       <a class="menuLink" href="#">Item 4</a>
-                   </td>
-                   <td class="menuItem">
-                       <a class="menuLink" href="#">Item 5</a>
-                   </td>
-                   <td>
-                       <div class="mainTitle">Gestione Presenze</div>
-                   </td>
-                   <td class="messaggioUtente">
-                       <?php stampaMessaggio(); ?>
-                   </td>
-               </tr>
-           </table> <?php
+           <?php
+           if(isset($_SESSION['username'])){
+               creaMenu($_GET['pagina']);
            }
            else{ ?>
                 <div class="mainTitle">Gestione Presenze</div> <?php
@@ -61,7 +39,7 @@
                     include("pagine/home.php");
                 }
                 else{
-                    include("pagine/".$_GET['pagina'].".php");
+                    include("pagine/".$_GET['pagina']);
                 }
            ?>
         </div>
