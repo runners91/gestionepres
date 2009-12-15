@@ -2,6 +2,7 @@
     session_start();
     if($_GET['azione'] == "logout"){
         session_destroy();
+        header( 'Location: index.php' ) ;
     }
     include("classi/Assenze.php");
     include("classi/Database.php");
