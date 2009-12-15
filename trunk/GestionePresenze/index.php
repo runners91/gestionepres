@@ -6,8 +6,8 @@
     }
     include("classi/Assenze.php");
     include("classi/Database.php");
-    include("pagine/login.php");
-    include("pagine/menu.php");
+    include("login.php");
+    include("pagine/navigazione/menu.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
