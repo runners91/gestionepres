@@ -54,6 +54,10 @@ body {
     background-color: #5F8CFF; /* Celeste scuro */
     width: 60px;
 }
+.menuItemSelected {
+    font-weight: bold;
+    background-color: red;
+}
 .menuLink {
     font-size: 12pt;
     color: #C6DEFF; /* bianco celeste */
