@@ -56,6 +56,7 @@ body {
     text-align: center;
 }
 .menuItemSelected {
+    border: 2px solid blue;
     font-weight: bold;
     background-color: #1F5CFF; /* Celeste scuro */
 }
