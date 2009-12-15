@@ -15,6 +15,13 @@
     </ul>
 
     <div id="contenuto">
-        Questa è la pagina assenze
+        <?php
+            if(!isset($_GET['tab'])){
+                include("tab/panoramica.php");
+            }
+            else{
+                include("tab/".$_GET['tab'].".php");
+            }
+        ?>
     </div>
 </div>

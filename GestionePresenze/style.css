@@ -9,7 +9,6 @@ body {
 }
 #corpo {
     padding-top: 20px;
-    width: 100%;
 }
 #contenuto{
     border: 1px solid blue;
@@ -77,6 +76,9 @@ body {
     -moz-border-radius: 5px;
     text-align:center;
     width: 200px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
 }
 /*******************************************************************************/
 

@@ -14,6 +14,13 @@
     </ul>
 
     <div id="contenuto">
-        Questa è la pagina festivi
+        <?php
+            if(!isset($_GET['tab'])){
+                include("tab/panoramica.php");
+            }
+            else{
+                include("tab/".$_GET['tab'].".php");
+            }
+        ?>
     </div>
 </div>
