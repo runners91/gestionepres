@@ -10,6 +10,8 @@
 
             creaSubmenuItem($paginaAttuale, $tabAttuale, "panoramica", "HOME");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "test", "TEST");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "p1", "SEGNALA ASSENZA");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "p2", "GESTIONE GIORNI FESTIVI");
         ?>
     </ul>
 

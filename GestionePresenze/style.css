@@ -8,7 +8,8 @@ body {
     margin-top: 20px;
 }
 #corpo {
-    padding: 20px;
+    padding-top: 20px;
+    width: 100%;
 }
 #contenuto{
     border: 1px solid blue;
