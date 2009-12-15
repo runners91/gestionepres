@@ -1,7 +1,8 @@
-<?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+<div>
 
-?>
+    <?php include("submenu.php"); ?>
+
+    <div id="contenuto">
+        Questa è la pagina straordinari
+    </div>
+</div>
