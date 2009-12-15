@@ -9,28 +9,28 @@ function creaMenu($pagina){
             <td class="menuItem menuItemSelected">
         <?php } else{ ?>
             <td class="menuItem"> <?php } ?>
-                <a class="menuLink" href="?pagina=home.php">Home</a>
+                <a class="menuLink" href="?pagina=home">Home</a>
             </td>
 
         <?php if($pagina=="assenze.php"){ ?>
             <td class="menuItem menuItemSelected">
         <?php } else{ ?>
             <td class="menuItem"> <?php } ?>
-                <a class="menuLink" href="?pagina=assenze.php">Assenze</a>
+                <a class="menuLink" href="?pagina=assenze">Assenze</a>
                 </td>
 
         <?php if($pagina=="festivi.php"){ ?>
             <td class="menuItem menuItemSelected">
         <?php } else{ ?>
             <td class="menuItem"> <?php } ?>
-                <a class="menuLink" href="?pagina=festivi.php">Festivi</a>
+                <a class="menuLink" href="?pagina=festivi">Festivi</a>
             </td>
 
         <?php if($pagina=="straordinari.php"){ ?>
             <td class="menuItem menuItemSelected">
         <?php } else{ ?>
             <td class="menuItem"> <?php } ?>
-                <a class="menuLink" href="?pagina=straordinari.php">Straordinari</a>
+                <a class="menuLink" href="?pagina=straordinari">Straordinari</a>
             </td>
 
         <td>
