@@ -22,7 +22,7 @@
            <table class="menu">
                <tr>
                    <td class="menuItem">
-                        <a class="menuLink" href="?pagina=test.php">Item 1</a>
+                        <a class="menuLink" href="?pagina=test">Item 1</a>
                    </td>
                    <td class="menuItem">
                        <a class="menuLink" href="#">Item 2</a>
@@ -61,7 +61,7 @@
                     include("pagine/home.php");
                 }
                 else{
-                    include("pagine/".$_GET['pagina']);
+                    include("pagine/".$_GET['pagina'].".php");
                 }
            ?>
         </div>
