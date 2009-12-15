@@ -39,7 +39,7 @@
                     include("pagine/home.php");
                 }
                 else{
-                    include("pagine/".$_GET['pagina']);
+                    include("pagine/".$_GET['pagina'].".php");
                 }
            ?>
         </div>
