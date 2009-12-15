@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if($_GET['azione'] == "logout"){
+        session_destroy();
+    }
     include("classi/Assenze.php");
     include("classi/Database.php");
     include("pagine/login.php");
