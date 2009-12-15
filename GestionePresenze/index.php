@@ -57,6 +57,9 @@
                 if(!isset($_SESSION['username'])){
                     login();
                 }
+                else if(!$_GET){
+                    include("pagine/home.php");
+                }
                 else{
                     include("pagine/".$_GET['pagina']);
                 }
