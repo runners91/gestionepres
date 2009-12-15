@@ -36,7 +36,6 @@ body {
     text-align: center;
     font-weight: bold;
     font-size: 21pt;
-    font-style: italic;
 }
 /*******************************************************************************/
 
@@ -52,12 +51,13 @@ body {
 .menuItem {
     border: 1px solid black;
     padding: 2px 8px 2px 8px;
-    background-color: #5F8CFF; /* Celeste scuro */
+    background-color: #5F8CFF; /* Celeste */
     width: 60px;
+    text-align: center;
 }
 .menuItemSelected {
     font-weight: bold;
-    background-color: red;
+    background-color: #1F5CFF; /* Celeste scuro */
 }
 .menuLink {
     font-size: 12pt;
