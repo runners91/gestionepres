@@ -40,10 +40,12 @@ class Utilita {
      /**
      * Stampa il calendario
      */
-    static function stampaCalendario(){
+    static function stampaCalendario($m = 0){
+        $date = mktime(0,0,0,(date("n",time())+$m),1,date("o",time()));
+ 
         $mesi = array(1=>'gennaio', 'febbraio', 'marzo', 'aprile','maggio', 'giugno', 'luglio', 'agosto','settembre', 'ottobre', 'novembre','dicembre');
         $giorni = array('domenica','lunedì','marted','mercoledì','giovedì','venerdì','sabato');
-        $date = time(); ?>
+     ?>
 
         <table>
             <tr>
@@ -73,7 +75,7 @@ class Utilita {
                 </td>
             </tr>
             <?php
-                $nrGiorno = 1-(date("N",mktime(0, 0, 0, date("m",$date), 1)));
+                $nrGiorno = 1-date("N",$date);
                 for(;;){
                     echo '<tr>';
                         for($j=$nrGiorno;$j<=($nrGiorno+7);$j++){
@@ -83,7 +85,7 @@ class Utilita {
                                 echo '</td>';
                             }
                             else{
-                                if(date("j-n",$date)==date("j-n",mktime(0,0,0,date("n",$date),$j)))
+                                if(date("j-n",time())==date("j-n",mktime(0,0,0,date("n",$date),$j)))
                                     echo '<td class="cellaData cellaDataOggi">';
                                 else
                                     echo '<td class="cellaData">';

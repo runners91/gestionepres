@@ -1,3 +1,3 @@
 <?php
-    Utilita::stampaCalendario();
+    Utilita::stampaCalendario($_GET['m']);
 ?>
