@@ -66,34 +66,37 @@ class Utilita {
                     Venerd&igrave;
                 </td>
                 <td class="cellaGiorno">
-                    Sabato/Domenica
+                    Sabato
+                </td>
+                <td class="cellaGiorno">
+                    Domenica
                 </td>
             </tr>
             <?php
-                for($i=0;$i<5;$i++){
+                $nrGiorno = 1-(date("N",mktime(0, 0, 0, date("m",$date), 1)));
+                for(;;){
                     echo '<tr>';
-                        echo '<td class="cellaSettimana">';
-                            
-                        echo '</td>';
-                        echo '<td class="cellaData">';
-                            echo 'Luned&igrave;';
-                        echo '</td>';
-                        echo '<td class="cellaData">';
-                            echo 'Marted&igrave;';
-                        echo '</td>';
-                        echo '<td class="cellaData">';
-                            echo 'Mercoled&igrave;';
-                        echo '</td>';
-                        echo '<td class="cellaData">';
-                            echo 'Gioved&igrave;';
-                        echo '</td>';
-                        echo '<td class="cellaData">';
-                            echo 'Venerd&igrave;';
-                        echo '</td>';
-                        echo '<td class="cellaData">';
-                            echo 'Sabato/Domenica';
-                        echo '</td>';
+                        for($j=$nrGiorno;$j<=($nrGiorno+7);$j++){
+                            if($j==$nrGiorno){
+                                echo '<td class="cellaSettimana">';
+                                    echo "Settimana ".date("W",mktime(0, 0, 0, date("n",$date), $j));
+                                echo '</td>';
+                            }
+                            else{
+                                if(date("j-n",$date)==date("j-n",mktime(0,0,0,date("n",$date),$j)))
+                                    echo '<td class="cellaData cellaDataOggi">';
+                                else
+                                    echo '<td class="cellaData">';
+
+                                    echo date("d",mktime(0,0,0,date("n",$date),$j));
+                                echo '</td>';
+                            }
+                        }
+                        $nrGiorno += 7;
                     echo '</tr>';
+                    if(date("n",mktime(0, 0, 0, date("n",$date), $j))!=date("n",$date) || j>31){
+                        break;
+                    }
                 }
             ?>
         </table>
