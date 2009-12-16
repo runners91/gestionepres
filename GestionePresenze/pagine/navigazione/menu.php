@@ -21,10 +21,9 @@ function creaMenu($pagina){
     <tr>
         <?php
             creaMenuItem($pagina,"home");
-            creaMenuItem($pagina,"assenze");
-            creaMenuItem($pagina,"festivi");
-            creaMenuItem($pagina,"straordinari");
-            creaMenuItem($pagina, "utente")
+            creaMenuItem($pagina,"amministrazione");
+            creaMenuItem($pagina,"statistiche");
+            creaMenuItem($pagina,"utente")
          ?>
         <td></td>
     </tr>
