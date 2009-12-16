@@ -1,1 +1,3 @@
-Calendario
+<?php
+    Utilita::stampaCalendario();
+?>
