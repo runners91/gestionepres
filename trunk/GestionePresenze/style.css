@@ -206,4 +206,17 @@ tr.reportRigaDati:hover {
     width: 100px;
     text-align: center;
 }
+.cellaSettimana {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+}
+.cellaData {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+}
+.cellaDataOggi {
+    background-color: red;
+}
 /*******************************************************************************/
