@@ -41,6 +41,7 @@ class Utilita {
      * Stampa il calendario
      */
     static function stampaCalendario($m = 0){
+        date_default_timezone_set();
         $date = mktime(0,0,0,(date("n",time())+$m),1,date("o",time()));
  
         $mesi = array(1=>'gennaio', 'febbraio', 'marzo', 'aprile','maggio', 'giugno', 'luglio', 'agosto','settembre', 'ottobre', 'novembre','dicembre');
