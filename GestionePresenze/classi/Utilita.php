@@ -37,6 +37,70 @@ class Utilita {
         echo '</table>';
     }
 
+     /**
+     * Stampa il calendario
+     */
+    static function stampaCalendario(){
+        $mesi = array(1=>'gennaio', 'febbraio', 'marzo', 'aprile','maggio', 'giugno', 'luglio', 'agosto','settembre', 'ottobre', 'novembre','dicembre');
+        $giorni = array('domenica','lunedì','marted','mercoledì','giovedì','venerdì','sabato');
+        $date = time(); ?>
+
+        <table>
+            <tr>
+                <td class="cellaMese">
+                    <?php echo ucfirst($mesi[date("n",$date)]); ?>
+                </td>
+                <td class="cellaGiorno">
+                    Luned&igrave;
+                </td>
+                <td class="cellaGiorno">
+                    Marted&igrave;
+                </td>
+                <td class="cellaGiorno">
+                    Mercoled&igrave;
+                </td>
+                <td class="cellaGiorno">
+                    Gioved&igrave;
+                </td>
+                <td class="cellaGiorno">
+                    Venerd&igrave;
+                </td>
+                <td class="cellaGiorno">
+                    Sabato/Domenica
+                </td>
+            </tr>
+            <?php
+                for($i=0;$i<5;$i++){
+                    echo '<tr>';
+                        echo '<td class="cellaSettimana">';
+                            
+                        echo '</td>';
+                        echo '<td class="cellaData">';
+                            echo 'Luned&igrave;';
+                        echo '</td>';
+                        echo '<td class="cellaData">';
+                            echo 'Marted&igrave;';
+                        echo '</td>';
+                        echo '<td class="cellaData">';
+                            echo 'Mercoled&igrave;';
+                        echo '</td>';
+                        echo '<td class="cellaData">';
+                            echo 'Gioved&igrave;';
+                        echo '</td>';
+                        echo '<td class="cellaData">';
+                            echo 'Venerd&igrave;';
+                        echo '</td>';
+                        echo '<td class="cellaData">';
+                            echo 'Sabato/Domenica';
+                        echo '</td>';
+                    echo '</tr>';
+                }
+            ?>
+        </table>
+        <?php
+        
+    }
+
     /**
      *
      * Controlla se una data e' valida

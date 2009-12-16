@@ -1,11 +1,17 @@
 <?php
 function creaSubmenuItem($paginaAttuale,$tabAttuale,$tab,$testo){
 
-    if($tabAttuale==$tab)
+    if($tabAttuale==$tab){
         echo '<li id="selectedTab">';
-    else
+        $preText = "";
+        $postText = "";
+    }
+    else{
         echo '<li>';
+        $preText = '<a href="?pagina='.$paginaAttuale.'&tab='.$tab.'">';
+        $postText = '</a>';
+    }
 
-            echo '<a href="?pagina='.$paginaAttuale.'&tab='.$tab.'">'.$testo.'</a>';
+            echo $preText.$testo.$postText;
         echo '</li>';
 }

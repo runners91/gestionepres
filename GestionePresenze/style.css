@@ -75,7 +75,7 @@ body {
     border: 1px solid black;
     -moz-border-radius: 5px;
     text-align:center;
-    width: 200px;
+    width: 220px;
     position: absolute;
     right: 5px;
     top: 5px;
@@ -190,3 +190,20 @@ tr.reportRigaDati:hover {
 /*******************************************************************************/
 
 
+/*********************** STAMPA DEL CALENDARIO *********************************/
+.cellaMese {
+    font-weight: bold;
+    font-size: 13pt;
+    border: 1px solid black;
+    padding: 10px;
+    width: 100px;
+    text-align: center;
+}
+.cellaGiorno {
+    border: 1px solid black;
+    padding: 10px;
+    font-size: 10pt;
+    width: 100px;
+    text-align: center;
+}
+/*******************************************************************************/

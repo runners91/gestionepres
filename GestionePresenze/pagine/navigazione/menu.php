@@ -2,11 +2,16 @@
 
 function creaMenuItem($paginaAttuale,$pagina){
     $class = "";
+    $preText = '<a class="menuLink" href="?pagina='.$pagina.'">';
+    $postText = '</a>';
+
     if($paginaAttuale==$pagina){
         $class = " menuItemSelected";
+        $preText = "";
+        $postText = "";
     } ?>
     <td class="menuItem<?php echo $class ?>">
-        <a class="menuLink" href="?pagina=<?php echo $pagina; ?>"><?php echo ucfirst($pagina); ?></a>
+        <?php echo $preText.ucfirst($pagina).$postText; ?>
     </td>
 <?php }
 
