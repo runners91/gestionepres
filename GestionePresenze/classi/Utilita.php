@@ -49,31 +49,46 @@ class Utilita {
         $mesi = array(1=>'gennaio', 'febbraio', 'marzo', 'aprile','maggio', 'giugno', 'luglio', 'agosto','settembre', 'ottobre', 'novembre','dicembre');
         $giorni = array('domenica','lunedì','marted','mercoledì','giovedì','venerdì','sabato');
      ?>
-
+    <div id="calendario">
         <form name="intCalendario" action="#" method="POST">
-            <select name="anno"><?php
-                for($i=1990;$i<2020;$i++){
-                    if(date("Y",$date)==$i)
-                        echo '<option value="'.$i.'" selected>'.$i.'</option>';
-                    else
-                        echo '<option value="'.$i.'">'.$i.'</option>';
-                }
-            ?></select>
-            <select name="mese"><?php
-                foreach ($mesi as $key => $value) {
-                    if(date("n",$date)==$key)
-                        echo '<option value="'.$key.'" selected>'.$value.'</option>';
-                    else
-                        echo '<option value="'.$key.'">'.$value.'</option>';
-                }
-            ?></select>
-            <input type="submit" value="Vai" />
+            <table>
+                <tr>
+                    <td class="cellaMese">
+                        <input type="button" value="<" />
+                        <?php echo ucfirst($mesi[date("n",$date)])." ".date("Y",$date); ?>
+                        <input type="button" value=">" />
+                    </td>
+                    <td>
+                        <select name="anno"><?php
+                        for($i=1990;$i<2020;$i++){
+                            if(date("Y",$date)==$i)
+                                echo '<option value="'.$i.'" selected>'.$i.'</option>';
+                            else
+                                echo '<option value="'.$i.'">'.$i.'</option>';
+                        }
+                        ?></select>
+                    </td>
+                    <td>
+                        <select name="mese"><?php
+                            foreach ($mesi as $key => $value) {
+                                if(date("n",$date)==$key)
+                                    echo '<option value="'.$key.'" selected>'.$value.'</option>';
+                                else
+                                    echo '<option value="'.$key.'">'.$value.'</option>';
+                            }
+                        ?></select>
+                    </td>
+                    <td>
+                        <input type="submit" value="Vai" />
+                    </td>
+                </tr>
+            </table>
         </form>
-
+        
         <table>
             <tr>
-                <td class="cellaMese">
-                    <?php echo ucfirst($mesi[date("n",$date)])." ".date("Y",$date); ?>
+                <td>
+                    
                 </td>
                 <td class="cellaGiorno">
                     Luned&igrave;
@@ -125,6 +140,7 @@ class Utilita {
                 }
             ?>
         </table>
+    </div>
         <?php
         
     }
