@@ -41,7 +41,7 @@ class Utilita {
      * Stampa il calendario
      */
     static function stampaCalendario(){
-        if($_POST['anno']=="") $anno = date("o",time()); else $anno = ()$_POST['anno'];
+        if($_POST['anno']=="") $anno = date("o",time()); else $anno = $_POST['anno'];
         if($_POST['mese']=="") $mese = date("n",time()); else $mese = $_POST['mese'];
         date_default_timezone_set("Europe/Zurich");
         $date = mktime(0,0,0,$mese,1,$anno);
@@ -62,9 +62,9 @@ class Utilita {
             <select name="mese"><?php
                 foreach ($mesi as $key => $value) {
                     if(date("n",$date)==$key)
-                        echo '<option value="'.$value.'" selected>'.$value.'</option>';
+                        echo '<option value="'.$key.'" selected>'.$value.'</option>';
                     else
-                        echo '<option value="'.$value.'">'.$value.'</option>';
+                        echo '<option value="'.$key.'">'.$value.'</option>';
                 }
             ?></select>
             <input type="submit" value="Vai" />
