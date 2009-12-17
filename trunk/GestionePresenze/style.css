@@ -191,25 +191,31 @@ tr.reportRigaDati:hover {
 
 
 /*********************** STAMPA DEL CALENDARIO *********************************/
+#calendario {
+    border: 1px solid black;
+    padding: 15px;
+}
+#calParCont {
+    text-align: center;
+}
 .cellaMese {
     font-weight: bold;
     font-size: 13pt;
-    border: 1px solid black;
-    padding: 10px;
-    width: 100px;
+    padding: 10px 50px 10px 100px;
     text-align: center;
+    color: red;
 }
 .cellaGiorno {
-    border: 1px solid black;
     padding: 10px;
-    font-size: 10pt;
+    font-size: 11pt;
+    font-weight: bold;
     width: 100px;
     text-align: center;
 }
 .cellaSettimana {
-    border: 1px solid black;
     padding: 10px;
-    text-align: center;
+    text-align: right;
+    font-size: 8pt;
 }
 .cellaData {
     border: 1px solid black;
@@ -217,6 +223,6 @@ tr.reportRigaDati:hover {
     text-align: center;
 }
 .cellaDataOggi {
-    background-color: red;
+    background-color: inherit;
 }
 /*******************************************************************************/
