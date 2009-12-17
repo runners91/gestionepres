@@ -52,7 +52,7 @@ class Utilita {
 
         <form name="intCalendario" action="#" method="POST">
             <select name="anno"><?php
-                for($i=1970;$i<2100;$i++){
+                for($i=1990;$i<2020;$i++){
                     if(date("Y",$date)==$i)
                         echo '<option value="'.$i.'" selected>'.$i.'</option>';
                     else
@@ -104,22 +104,22 @@ class Utilita {
                         for($j=$nrGiorno;$j<=($nrGiorno+7);$j++){
                             if($j==$nrGiorno){
                                 echo '<td class="cellaSettimana">';
-                                    echo "Settimana ".date("W",mktime(0,0,0,date("n",$date),$j,date("o",$date)));
+                                    echo "Settimana ".date("W",mktime(0,0,0,date("n",$date),$j,date("Y",$date)));
                                 echo '</td>';
                             }
                             else{
-                                if(date("j-n-o",time())==date("j-n-o",mktime(0,0,0,date("n",$date),$j,date("o",$date))))
+                                if(date("j-n-o",time())==date("j-n-o",mktime(0,0,0,date("n",$date),$j,date("Y",$date))))
                                     echo '<td class="cellaData cellaDataOggi">';
                                 else
                                     echo '<td class="cellaData">';
 
-                                    echo date("d",mktime(0,0,0,date("n",$date),$j,date("o",$date)));
+                                    echo date("d",mktime(0,0,0,date("n",$date),$j,date("Y",$date)));
                                 echo '</td>';
                             }
                         }
                         $nrGiorno += 7;
                     echo '</tr>';
-                    if(date("n",mktime(0,0,0,date("n",$date),$j,date("o",$date)))!=date("n",$date) || j>31){
+                    if(date("n",mktime(0,0,0,date("n",$date),$j,date("Y",$date)))!=date("n",$date) || j>31){
                         break;
                     }
                 }
