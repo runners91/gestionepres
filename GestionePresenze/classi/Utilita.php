@@ -40,9 +40,9 @@ class Utilita {
      /**
      * Stampa il calendario
      */
-    static function stampaCalendario(){
+    static function stampaCalendario($m = 0){
         if($_POST['anno']=="") $anno = date("Y",time()); else $anno = $_POST['anno'];
-        if($_POST['mese']=="") $mese = date("n",time()); else $mese = $_POST['mese'];
+        if($_POST['mese']=="") $mese = date("n",time()) + $m; else $mese = $_POST['mese'] + $m;
         date_default_timezone_set("Europe/Zurich");
         $date = mktime(0,0,0,$mese,1,$anno);
  
@@ -53,10 +53,18 @@ class Utilita {
         <form name="intCalendario" action="#" method="POST">
             <table>
                 <tr>
+                    <td>
+                        <input type="submit" value="<" onmousedown="document.getElementById('m').value=-1" />
+                    </td>
                     <td class="cellaMese">
-                        <input type="button" value="<" />
+                        <input type="hidden" id="m" name="m" />
                         <?php echo ucfirst($mesi[date("n",$date)])." ".date("Y",$date); ?>
-                        <input type="button" value=">" />
+                    </td>
+                    <td>
+                        <input type="submit" value=">" onmousedown="document.getElementById('m').value=1" />
+                    </td>
+                    <td class="cellaSpazio">
+
                     </td>
                     <td>
                         <select name="anno"><?php
