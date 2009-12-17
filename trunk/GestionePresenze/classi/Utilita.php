@@ -41,7 +41,7 @@ class Utilita {
      * Stampa il calendario
      */
     static function stampaCalendario(){
-        if($_POST['anno']=="") $anno = date("o",time()); else $anno = $_POST['anno'];
+        if($_POST['anno']=="") $anno = date("Y",time()); else $anno = $_POST['anno'];
         if($_POST['mese']=="") $mese = date("n",time()); else $mese = $_POST['mese'];
         date_default_timezone_set("Europe/Zurich");
         $date = mktime(0,0,0,$mese,1,$anno);
@@ -53,7 +53,7 @@ class Utilita {
         <form name="intCalendario" action="#" method="POST">
             <select name="anno"><?php
                 for($i=1970;$i<2100;$i++){
-                    if(date("o",$date)==$i)
+                    if(date("Y",$date)==$i)
                         echo '<option value="'.$i.'" selected>'.$i.'</option>';
                     else
                         echo '<option value="'.$i.'">'.$i.'</option>';
@@ -73,7 +73,7 @@ class Utilita {
         <table>
             <tr>
                 <td class="cellaMese">
-                    <?php echo ucfirst($mesi[date("n",$date)])." ".date("o",$date); ?>
+                    <?php echo ucfirst($mesi[date("n",$date)])." ".date("Y",$date); ?>
                 </td>
                 <td class="cellaGiorno">
                     Luned&igrave;
