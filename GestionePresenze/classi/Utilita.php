@@ -40,18 +40,40 @@ class Utilita {
      /**
      * Stampa il calendario
      */
-    static function stampaCalendario($m = 0){
+    static function stampaCalendario(){
+        if($_POST['anno']=="") $anno = date("o",time()); else $anno = ()$_POST['anno'];
+        if($_POST['mese']=="") $mese = date("n",time()); else $mese = $_POST['mese'];
         date_default_timezone_set("Europe/Zurich");
-        $date = mktime(0,0,0,(date("n",time())+$m),1,date("o",time()));
+        $date = mktime(0,0,0,$mese,1,$anno);
  
         $mesi = array(1=>'gennaio', 'febbraio', 'marzo', 'aprile','maggio', 'giugno', 'luglio', 'agosto','settembre', 'ottobre', 'novembre','dicembre');
         $giorni = array('domenica','lunedì','marted','mercoledì','giovedì','venerdì','sabato');
      ?>
 
+        <form name="intCalendario" action="#" method="POST">
+            <select name="anno"><?php
+                for($i=1970;$i<2100;$i++){
+                    if(date("o",$date)==$i)
+                        echo '<option value="'.$i.'" selected>'.$i.'</option>';
+                    else
+                        echo '<option value="'.$i.'">'.$i.'</option>';
+                }
+            ?></select>
+            <select name="mese"><?php
+                foreach ($mesi as $key => $value) {
+                    if(date("n",$date)==$key)
+                        echo '<option value="'.$value.'" selected>'.$value.'</option>';
+                    else
+                        echo '<option value="'.$value.'">'.$value.'</option>';
+                }
+            ?></select>
+            <input type="submit" value="Vai" />
+        </form>
+
         <table>
             <tr>
                 <td class="cellaMese">
-                    <?php echo ucfirst($mesi[date("n",$date)]); ?>
+                    <?php echo ucfirst($mesi[date("n",$date)])." ".date("o",$date); ?>
                 </td>
                 <td class="cellaGiorno">
                     Luned&igrave;
@@ -82,22 +104,22 @@ class Utilita {
                         for($j=$nrGiorno;$j<=($nrGiorno+7);$j++){
                             if($j==$nrGiorno){
                                 echo '<td class="cellaSettimana">';
-                                    echo "Settimana ".date("W",mktime(0, 0, 0, date("n",$date), $j));
+                                    echo "Settimana ".date("W",mktime(0,0,0,date("n",$date),$j,date("o",$date)));
                                 echo '</td>';
                             }
                             else{
-                                if(date("j-n",time())==date("j-n",mktime(0,0,0,date("n",$date),$j)))
+                                if(date("j-n-o",time())==date("j-n-o",mktime(0,0,0,date("n",$date),$j,date("o",$date))))
                                     echo '<td class="cellaData cellaDataOggi">';
                                 else
                                     echo '<td class="cellaData">';
 
-                                    echo date("d",mktime(0,0,0,date("n",$date),$j));
+                                    echo date("d",mktime(0,0,0,date("n",$date),$j,date("o",$date)));
                                 echo '</td>';
                             }
                         }
                         $nrGiorno += 7;
                     echo '</tr>';
-                    if(date("n",mktime(0, 0, 0, date("n",$date), $j))!=date("n",$date) || j>31){
+                    if(date("n",mktime(0,0,0,date("n",$date),$j,date("o",$date)))!=date("n",$date) || j>31){
                         break;
                     }
                 }
