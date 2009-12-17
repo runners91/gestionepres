@@ -201,9 +201,9 @@ tr.reportRigaDati:hover {
 .cellaMese {
     font-weight: bold;
     font-size: 13pt;
-    padding: 10px 50px 10px 100px;
     text-align: center;
     color: red;
+    width: 160px;
 }
 .cellaGiorno {
     padding: 10px;
@@ -224,5 +224,8 @@ tr.reportRigaDati:hover {
 }
 .cellaDataOggi {
     background-color: inherit;
+}
+.cellaSpazio {
+    width: 80px;
 }
 /*******************************************************************************/
