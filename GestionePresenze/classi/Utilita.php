@@ -159,7 +159,7 @@ class Utilita {
                             }
                             $nrGiorno += 7;
                         echo '</tr>';
-                        if($j>31)
+                        if(date("n",mktime(0,0,0,date("n",$data),$j+1,date("Y",$data)))!=date("n",$data) && $j>7)
                             break;
                     }
                 ?>
