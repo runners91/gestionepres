@@ -41,113 +41,130 @@ class Utilita {
      * Stampa il calendario
      */
     static function stampaCalendario($m = 0){
-        if($_POST['anno']=="") $anno = date("Y",time()); else $anno = $_POST['anno'];
-        if($_POST['mese']=="") $mese = date("n",time()) + $m; else $mese = $_POST['mese'] + $m;
         date_default_timezone_set("Europe/Zurich");
-        $date = mktime(0,0,0,$mese,1,$anno);
+
+        if($m=="r"){
+            $anno = date("Y",time());
+            $mese = date("n",time());
+        }
+        else{
+            if($_POST['anno']=="") $anno = date("Y",time()); else $anno = $_POST['anno'];
+            if($_POST['mese']=="") $mese = date("n",time()) + $m; else $mese = $_POST['mese'] + $m;
+        }
+        $data = mktime(0,0,0,$mese,1,$anno);
  
         $mesi = array(1=>'gennaio', 'febbraio', 'marzo', 'aprile','maggio', 'giugno', 'luglio', 'agosto','settembre', 'ottobre', 'novembre','dicembre');
         $giorni = array('domenica','lunedì','marted','mercoledì','giovedì','venerdì','sabato');
      ?>
     <div id="calendario">
-        <form name="intCalendario" action="#" method="POST">
+        <form name="calendario" action="#" method="POST">
             <table>
                 <tr>
                     <td>
-                        <input type="submit" value="<" onmousedown="document.getElementById('m').value=-1" />
                     </td>
-                    <td class="cellaMese">
-                        <input type="hidden" id="m" name="m" />
-                        <?php echo ucfirst($mesi[date("n",$date)])." ".date("Y",$date); ?>
-                    </td>
+                    <td colspan="7" class="parCalendario">
+                        <table>
+                            <tr>
+                                <td>
+                                    <input class="bottCalendario" type="submit" value="<" onmousedown="document.getElementById('m').value=-1" />
+                                </td>
+                                <td class="cellaMese">
+                                    <input type="hidden" id="m" name="m" />
+                                    <?php echo ucfirst($mesi[date("n",$data)])." ".date("Y",$data); ?>
+                                </td>
+                                <td>
+                                    <input class="bottCalendario" type="submit" value=">" onmousedown="document.getElementById('m').value=1" />
+                                </td>
+                                <td class="cellaSpazio">
+
+                                </td>
+                                <td>
+                                    <select class="selectCalendario" name="anno"><?php
+                                    for($i=1990;$i<2020;$i++){
+                                        if(date("Y",$data)==$i)
+                                            echo '<option value="'.$i.'" selected>'.$i.'</option>';
+                                        else
+                                            echo '<option value="'.$i.'">'.$i.'</option>';
+                                    }
+                                    ?></select>
+                                </td>
+                                <td>
+                                    <select class="selectCalendario" name="mese"><?php
+                                        foreach ($mesi as $key => $value) {
+                                            if(date("n",$data)==$key)
+                                                echo '<option value="'.$key.'" selected>'.$value.'</option>';
+                                            else
+                                                echo '<option value="'.$key.'">'.$value.'</option>';
+                                        }
+                                    ?></select>
+                                </td>
+                                <td>
+                                    <input class="bottCalendario" type="submit" value="Vai" />
+                                </td>
+                                <td>
+                                    <input class="bottCalendario" type="submit" value="Oggi" onmousedown="document.getElementById('m').value='r'" />
+                                </td>
+                            </tr>
+                        </table>
+                </tr>
+                <tr height="20"></tr>
+                <tr>
                     <td>
-                        <input type="submit" value=">" onmousedown="document.getElementById('m').value=1" />
-                    </td>
-                    <td class="cellaSpazio">
 
                     </td>
-                    <td>
-                        <select name="anno"><?php
-                        for($i=1990;$i<2020;$i++){
-                            if(date("Y",$date)==$i)
-                                echo '<option value="'.$i.'" selected>'.$i.'</option>';
-                            else
-                                echo '<option value="'.$i.'">'.$i.'</option>';
-                        }
-                        ?></select>
+                    <td class="cellaGiorno">
+                        Luned&igrave;
                     </td>
-                    <td>
-                        <select name="mese"><?php
-                            foreach ($mesi as $key => $value) {
-                                if(date("n",$date)==$key)
-                                    echo '<option value="'.$key.'" selected>'.$value.'</option>';
-                                else
-                                    echo '<option value="'.$key.'">'.$value.'</option>';
-                            }
-                        ?></select>
+                    <td class="cellaGiorno">
+                        Marted&igrave;
                     </td>
-                    <td>
-                        <input type="submit" value="Vai" />
+                    <td class="cellaGiorno">
+                        Mercoled&igrave;
+                    </td>
+                    <td class="cellaGiorno">
+                        Gioved&igrave;
+                    </td>
+                    <td class="cellaGiorno">
+                        Venerd&igrave;
+                    </td>
+                    <td class="cellaGiorno">
+                        Sabato
+                    </td>
+                    <td class="cellaGiorno">
+                        Domenica
                     </td>
                 </tr>
+                <?php
+                    $nrGiorno = 1-date("N",$data);
+                    for(;;){
+                        echo '<tr>';
+                            for($j=$nrGiorno;$j<=($nrGiorno+7);$j++){
+                                $dataGiorno = mktime(0,0,0,date("n",$data),$j,date("Y",$data));
+                                if($j==$nrGiorno){
+                                    echo '<td class="cellaSettimana">';
+                                        echo "Settimana ".date("W",$dataGiorno);
+                                    echo '</td>';
+                                }
+                                else{
+                                    if(date("j-n-o",time())==date("j-n-o",$dataGiorno))
+                                        echo '<td class="cellaData cellaDataOggi">';
+                                    else if(date("n",$dataGiorno)!=date("n",$data))
+                                        echo '<td class="cellaData cellaDataGrigia">';
+                                    else
+                                        echo '<td class="cellaData">';
+
+                                        echo date("d",$dataGiorno);
+                                    echo '</td>';
+                                }
+                            }
+                            $nrGiorno += 7;
+                        echo '</tr>';
+                        if($j>31)
+                            break;
+                    }
+                ?>
             </table>
         </form>
-        
-        <table>
-            <tr>
-                <td>
-                    
-                </td>
-                <td class="cellaGiorno">
-                    Luned&igrave;
-                </td>
-                <td class="cellaGiorno">
-                    Marted&igrave;
-                </td>
-                <td class="cellaGiorno">
-                    Mercoled&igrave;
-                </td>
-                <td class="cellaGiorno">
-                    Gioved&igrave;
-                </td>
-                <td class="cellaGiorno">
-                    Venerd&igrave;
-                </td>
-                <td class="cellaGiorno">
-                    Sabato
-                </td>
-                <td class="cellaGiorno">
-                    Domenica
-                </td>
-            </tr>
-            <?php
-                $nrGiorno = 1-date("N",$date);
-                for(;;){
-                    echo '<tr>';
-                        for($j=$nrGiorno;$j<=($nrGiorno+7);$j++){
-                            if($j==$nrGiorno){
-                                echo '<td class="cellaSettimana">';
-                                    echo "Settimana ".date("W",mktime(0,0,0,date("n",$date),$j,date("Y",$date)));
-                                echo '</td>';
-                            }
-                            else{
-                                if(date("j-n-o",time())==date("j-n-o",mktime(0,0,0,date("n",$date),$j,date("Y",$date))))
-                                    echo '<td class="cellaData cellaDataOggi">';
-                                else
-                                    echo '<td class="cellaData">';
-
-                                    echo date("d",mktime(0,0,0,date("n",$date),$j,date("Y",$date)));
-                                echo '</td>';
-                            }
-                        }
-                        $nrGiorno += 7;
-                    echo '</tr>';
-                    if(date("n",mktime(0,0,0,date("n",$date),$j,date("Y",$date)))!=date("n",$date) || j>31){
-                        break;
-                    }
-                }
-            ?>
-        </table>
     </div>
         <?php
         
