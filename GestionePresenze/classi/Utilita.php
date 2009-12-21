@@ -167,8 +167,8 @@ class Utilita {
             <form name="taskCalendario" action="#" method="POST">
                 <table>
                     <tr>
-                        <td colspan="2">
-                            <?php echo $giorni[date("w",$_GET['date'])].' '.date("d",$_GET['date']).' '.$mesi[date("n",$_GET['date'])].' '.date("Y",$_GET['date']); ?>
+                        <td class="cellaDataTask" colspan="2">
+                            <?php echo $giorni[date("N",$_GET['date'])].' '.date("d",$_GET['date']).' '.$mesi[date("n",$_GET['date'])].' '.date("Y",$_GET['date']); ?>
                         </td>
                     </tr>
                     <tr>

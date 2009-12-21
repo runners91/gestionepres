@@ -9,7 +9,7 @@
             ?>
         </td>
         <td>
-            <?php Utilita::stampaFormAggiungiTask(); ?>
+            <?php if(isset($_GET['date'])) Utilita::stampaFormAggiungiTask(); ?>
         </td>
     </tr>
 </table>
