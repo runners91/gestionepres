@@ -1,19 +1,23 @@
 <?php
 
 function creaMenuItem($paginaAttuale,$pagina){
-    $class = "";
-    $preText = '<a class="menuLink" href="?pagina='.$pagina.'">';
-    $postText = '</a>';
+    if(Utilita::verificaAccesso($pagina)){
+        $class = "";
+        $preText = '<a class="menuLink" href="?pagina='.$pagina.'">';
+        $postText = '</a>';
 
-    if($paginaAttuale==$pagina){
-        $class = " menuItemSelected";
-        $preText = "";
-        $postText = "";
-    } ?>
-    <td class="menuItem<?php echo $class ?>">
-        <?php echo $preText.ucfirst($pagina).$postText; ?>
-    </td>
-<?php }
+        if($paginaAttuale==$pagina){
+            $class = " menuItemSelected";
+            $preText = "";
+            $postText = "";
+        } ?>
+        <td class="menuItem<?php echo $class ?>">
+            <?php echo $preText.ucfirst($pagina).$postText; ?>
+        </td>
+<?php 
+    }
+
+}
 
 function creaMenu($pagina){
     if($pagina=="") $pagina = "home"; ?>

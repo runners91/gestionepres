@@ -22,36 +22,6 @@ CREATE DATABASE IF NOT EXISTS gestione_presenze;
 USE gestione_presenze;
 
 --
--- Definition of table `accedono`
---
-
-DROP TABLE IF EXISTS `accedono`;
-CREATE TABLE `accedono` (
-  `fk_gruppo` int(11) NOT NULL,
-  `fk_pagina` int(11) NOT NULL,
-  PRIMARY KEY (`fk_gruppo`,`fk_pagina`),
-  KEY `fk_gruppi_has_pagine_gruppi1` (`fk_gruppo`),
-  KEY `fk_gruppi_has_pagine_pagine1` (`fk_pagina`),
-  CONSTRAINT `fk_gruppi_has_pagine_gruppi1` FOREIGN KEY (`fk_gruppo`) REFERENCES `gruppi` (`id_gruppo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_gruppi_has_pagine_pagine1` FOREIGN KEY (`fk_pagina`) REFERENCES `pagine` (`id_pagina`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `accedono`
---
-
-/*!40000 ALTER TABLE `accedono` DISABLE KEYS */;
-INSERT INTO `accedono` (`fk_gruppo`,`fk_pagina`) VALUES 
- (1,1),
- (1,2),
- (1,3),
- (1,4),
- (2,1),
- (2,4);
-/*!40000 ALTER TABLE `accedono` ENABLE KEYS */;
-
-
---
 -- Definition of table `assenze`
 --
 
@@ -108,33 +78,6 @@ INSERT INTO `dipendenti` (`id_dipendente`,`nome`,`cognome`,`username`,`password`
  (4,'Bryan','Daepp','daepp','e10adc3949ba59abbe56e057f20f883e',3),
  (5,'Ethan','Winiger','ethan','e10adc3949ba59abbe56e057f20f883e',4);
 /*!40000 ALTER TABLE `dipendenti` ENABLE KEYS */;
-
-
---
--- Definition of table `dipendenti_gruppi`
---
-
-DROP TABLE IF EXISTS `dipendenti_gruppi`;
-CREATE TABLE `dipendenti_gruppi` (
-  `fk_dipendente` int(10) unsigned NOT NULL,
-  `fk_gruppo` int(11) NOT NULL,
-  PRIMARY KEY (`fk_dipendente`,`fk_gruppo`),
-  KEY `fk_dipendenti_has_gruppi_dipendenti1` (`fk_dipendente`),
-  KEY `fk_dipendenti_has_gruppi_gruppi1` (`fk_gruppo`),
-  CONSTRAINT `fk_dipendenti_has_gruppi_dipendenti1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_dipendenti_has_gruppi_gruppi1` FOREIGN KEY (`fk_gruppo`) REFERENCES `gruppi` (`id_gruppo`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `dipendenti_gruppi`
---
-
-/*!40000 ALTER TABLE `dipendenti_gruppi` DISABLE KEYS */;
-INSERT INTO `dipendenti_gruppi` (`fk_dipendente`,`fk_gruppo`) VALUES 
- (3,2),
- (4,1),
- (5,1);
-/*!40000 ALTER TABLE `dipendenti_gruppi` ENABLE KEYS */;
 
 
 --
@@ -206,28 +149,6 @@ CREATE TABLE `filiali` (
 
 /*!40000 ALTER TABLE `filiali` DISABLE KEYS */;
 /*!40000 ALTER TABLE `filiali` ENABLE KEYS */;
-
-
---
--- Definition of table `gruppi`
---
-
-DROP TABLE IF EXISTS `gruppi`;
-CREATE TABLE `gruppi` (
-  `id_gruppo` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_gruppo`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `gruppi`
---
-
-/*!40000 ALTER TABLE `gruppi` DISABLE KEYS */;
-INSERT INTO `gruppi` (`id_gruppo`,`nome`) VALUES 
- (1,'admin'),
- (2,'utente');
-/*!40000 ALTER TABLE `gruppi` ENABLE KEYS */;
 
 
 --
@@ -309,30 +230,6 @@ INSERT INTO `paesi` (`id_paese`,`nome`,`codice_avv`,`fk_nazione`) VALUES
  (4,'Roma','0001',2),
  (5,'Milano','0002',2);
 /*!40000 ALTER TABLE `paesi` ENABLE KEYS */;
-
-
---
--- Definition of table `pagine`
---
-
-DROP TABLE IF EXISTS `pagine`;
-CREATE TABLE `pagine` (
-  `id_pagina` int(11) NOT NULL AUTO_INCREMENT,
-  `url` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_pagina`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `pagine`
---
-
-/*!40000 ALTER TABLE `pagine` DISABLE KEYS */;
-INSERT INTO `pagine` (`id_pagina`,`url`) VALUES 
- (1,'home'),
- (2,'amministrazione'),
- (3,'statistiche'),
- (4,'utente');
-/*!40000 ALTER TABLE `pagine` ENABLE KEYS */;
 
 
 --
