@@ -193,6 +193,7 @@ tr.reportRigaDati:hover {
 /*********************** STAMPA DEL CALENDARIO *********************************/
 #calendario {
     padding: 20px;
+    float: left;
 }
 .parCalendario {
     border: 1px solid black;
@@ -207,7 +208,6 @@ tr.reportRigaDati:hover {
 }
 .cellaGiorno {
     padding: 10px;
-    font-size: 11pt;
     font-weight: bold;
     width: 80px;
     text-align: center;
@@ -219,12 +219,13 @@ tr.reportRigaDati:hover {
 }
 .cellaData {
     border: 1px solid black;
-    padding: 10px;
-    text-align: center;
+    font-size: 10pt;
     height: 80px;
+    vertical-align: text-top;
+    padding: 5px;
 }
 .cellaDataOggi {
-    background-color: red;
+    background-color: #FA5858; /* rosso chiaro */
 }
 .cellaDataGrigia {
     background-color: #D7D7D7; /* grigio */
@@ -240,5 +241,18 @@ tr.reportRigaDati:hover {
 }
 .selectCalendario {
     
+}
+.linkGiorno {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+.linkGiorno:hover {
+    text-decoration: underline;
+}
+.aggiungiTaskContainer {
+    float: right;
+    border: 1px solid black;
+    padding: 20px;
 }
 /*******************************************************************************/
