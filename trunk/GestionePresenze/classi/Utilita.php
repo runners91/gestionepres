@@ -39,6 +39,7 @@ class Utilita {
 
      /**
      * Stampa il calendario
+     * @param m indica lo spostamento di mese (+1/-1) di default è 0
      */
     static function stampaCalendario($m = 0){
         date_default_timezone_set("Europe/Zurich");
@@ -167,7 +168,7 @@ class Utilita {
         </form>
         <?php
         if(isset($_GET['date'])){
-            echo ciao;
+            echo 'Hai selezionato: '.date("d-M-Y",$_GET['date']);
         }
         ?>
     </div>
