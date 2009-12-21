@@ -48,8 +48,8 @@ class Utilita {
             $mese = date("n",time());
         }
         else{
-            if($_POST['anno']=="") $anno = date("Y",time()); else $anno = $_POST['anno'];
-            if($_POST['mese']=="") $mese = date("n",time()) + $m; else $mese = $_POST['mese'] + $m;
+            if(isset($_POST['anno'])) $anno = $_POST['anno']; else $anno = date("Y",time());
+            if(isset($_POST['mese'])) $mese = $_POST['mese'] + $m; else $mese = date("n",time()) + $m;
         }
         $data = mktime(0,0,0,$mese,1,$anno);
  
@@ -142,7 +142,7 @@ class Utilita {
                                 $dataGiorno = mktime(0,0,0,date("n",$data),$j,date("Y",$data));
                                 if($j==$nrGiorno){
                                     echo '<td class="cellaSettimana">';
-                                        echo "Settimana ".date("W",$dataGiorno);
+                                        echo "Settimana ".date("W",mktime(0,0,0,date("n",$data),$j+7,date("Y",$date)));
                                     echo '</td>';
                                 }
                                 else{
@@ -153,7 +153,7 @@ class Utilita {
                                     else
                                         echo '<td class="cellaData">';
 
-                                        echo date("d",$dataGiorno);
+                                    echo '<a href="?pagina=home&date='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
                                     echo '</td>';
                                 }
                             }
@@ -165,6 +165,11 @@ class Utilita {
                 ?>
             </table>
         </form>
+        <?php
+        if(isset($_GET['date'])){
+            echo ciao;
+        }
+        ?>
     </div>
         <?php
         
