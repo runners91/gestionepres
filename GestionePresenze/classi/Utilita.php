@@ -53,9 +53,9 @@ class Utilita {
             if(isset($_POST['mese'])) $mese = $_POST['mese'] + $m; else $mese = date("n",time()) + $m;
         }
         $data = mktime(0,0,0,$mese,1,$anno);
- 
-        $mesi = array(1=>'gennaio', 'febbraio', 'marzo', 'aprile','maggio', 'giugno', 'luglio', 'agosto','settembre', 'ottobre', 'novembre','dicembre');
-        $giorni = array('domenica','lunedì','marted','mercoledì','giovedì','venerdì','sabato');
+
+        $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
+        $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
      ?>
     <div id="calendario">
         <form name="calendario" action="#" method="POST">
@@ -71,7 +71,7 @@ class Utilita {
                                 </td>
                                 <td class="cellaMese">
                                     <input type="hidden" id="m" name="m" />
-                                    <?php echo ucfirst($mesi[date("n",$data)])." ".date("Y",$data); ?>
+                                    <?php echo $mesi[date("n",$data)]." ".date("Y",$data); ?>
                                 </td>
                                 <td>
                                     <input class="bottCalendario" type="submit" value=">" onmousedown="document.getElementById('m').value=1" />
@@ -112,28 +112,13 @@ class Utilita {
                 <tr>
                     <td>
 
-                    </td>
-                    <td class="cellaGiorno">
-                        Luned&igrave;
-                    </td>
-                    <td class="cellaGiorno">
-                        Marted&igrave;
-                    </td>
-                    <td class="cellaGiorno">
-                        Mercoled&igrave;
-                    </td>
-                    <td class="cellaGiorno">
-                        Gioved&igrave;
-                    </td>
-                    <td class="cellaGiorno">
-                        Venerd&igrave;
-                    </td>
-                    <td class="cellaGiorno">
-                        Sabato
-                    </td>
-                    <td class="cellaGiorno">
-                        Domenica
-                    </td>
+                    </td><?php
+                        foreach($giorni as $value){
+                           echo '<td class="cellaGiorno">';
+                              echo $value;
+                           echo '</td>';
+                        }
+                        ?>
                 </tr>
                 <?php
                     $nrGiorno = 1-date("N",$data);
@@ -154,7 +139,7 @@ class Utilita {
                                     else
                                         echo '<td class="cellaData">';
 
-                                    echo '<a href="?pagina=home&date='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
+                                    echo '<a class="linkGiorno" href="?pagina=home&date='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
                                     echo '</td>';
                                 }
                             }
@@ -166,14 +151,42 @@ class Utilita {
                 ?>
             </table>
         </form>
-        <?php
-        if(isset($_GET['date'])){
-            echo 'Hai selezionato: '.date("d-M-Y",$_GET['date']);
-        }
-        ?>
     </div>
         <?php
         
+    }
+
+     /**
+     * Stampa il form per aggiungere assenze/vacanze/ecc...
+     */
+    static function stampaFormAggiungiTask(){
+        $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
+        $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
+        ?>
+        <div class="aggiungiTaskContainer">
+            <form name="taskCalendario" action="#" method="POST">
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <?php echo $giorni[date("w",$_GET['date'])].' '.date("d",$_GET['date']).' '.$mesi[date("n",$_GET['date'])].' '.date("Y",$_GET['date']); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Nuovo:
+                        </td>
+                        <td>
+                            <select>
+                                <option value="1">Assenza</option>
+                                <option value="2">Vacanza</option>
+                                <option value="3">Presenza fuori sede</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    <?php
     }
 
     /**
