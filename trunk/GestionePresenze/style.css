@@ -255,4 +255,9 @@ tr.reportRigaDati:hover {
     border: 1px solid black;
     padding: 20px;
 }
+.cellaDataTask {
+    color: red;
+    font-weight: bold;
+    padding: 10px 0 10px 0;
+}
 /*******************************************************************************/
