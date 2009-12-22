@@ -48,9 +48,17 @@ class Utilita {
             $anno = date("Y",time());
             $mese = date("n",time());
         }
+        else if(isset($_POST['anno']) && isset($_POST['mese'])){
+            $anno = $_POST['anno'];
+            $mese = $_POST['mese'] + $m;
+        }
+        else if(isset($_GET['data'])){
+            $anno = date("Y",$_GET['data']);
+            $mese = date("n",$_GET['data']) + $m;
+        }
         else{
-            if(isset($_POST['anno'])) $anno = $_POST['anno']; else $anno = date("Y",time());
-            if(isset($_POST['mese'])) $mese = $_POST['mese'] + $m; else $mese = date("n",time()) + $m;
+            $anno = date("Y",time());
+            $mese = date("n",time());
         }
         $data = mktime(0,0,0,$mese,1,$anno);
 
@@ -139,7 +147,7 @@ class Utilita {
                                     else
                                         echo '<td class="cellaData">';
 
-                                    echo '<a class="linkGiorno" href="?pagina=home&date='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
+                                    echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
                                     echo '</td>';
                                 }
                             }
@@ -168,7 +176,7 @@ class Utilita {
                 <table>
                     <tr>
                         <td class="cellaDataTask" colspan="2">
-                            <?php echo $giorni[date("N",$_GET['date'])].' '.date("d",$_GET['date']).' '.$mesi[date("n",$_GET['date'])].' '.date("Y",$_GET['date']); ?>
+                            <?php echo $giorni[date("N",$_GET['data'])].' '.date("d",$_GET['data']).' '.$mesi[date("n",$_GET['data'])].' '.date("Y",$_GET['data']); ?>
                         </td>
                     </tr>
                     <tr>

@@ -1,15 +1,10 @@
 <table>
     <tr>
         <td>
-            <?php
-                if($_POST)
-                    Utilita::stampaCalendario($_POST['m']);
-                else
-                    Utilita::stampaCalendario($_GET['m']);
-            ?>
+            <?php Utilita::stampaCalendario($_POST['m']); ?>
         </td>
         <td>
-            <?php if(isset($_GET['date'])) Utilita::stampaFormAggiungiTask(); ?>
+            <?php if(isset($_GET['data'])) Utilita::stampaFormAggiungiTask(); ?>
         </td>
     </tr>
 </table>
