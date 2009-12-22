@@ -16,7 +16,6 @@ function creaMenuItem($paginaAttuale,$pagina){
         </td>
 <?php 
     }
-
 }
 
 function creaMenu($pagina){
