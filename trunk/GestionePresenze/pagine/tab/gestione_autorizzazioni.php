@@ -1,14 +1,16 @@
 <?php
-$id = stampaUtenti();
-if($_POST["azione"]== "aggiungi"){
-    Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi values (".$_POST["utente"].",".$_POST["gruppo"].");");
-}else if($_POST["azione"]== "elimina") {
-    Database::getInstance()->eseguiQuery("DELETE FROM dipendenti_gruppi where fk_dipendente = ".$_POST["utente"]." AND fk_gruppo = ".$_POST["gruppo"].";");
-}
-if(isset($_POST["utente"]))
-    $id = $_POST["utente"];
+    $id = stampaUtenti();
 
-stampaGruppi($id);
+    if($_POST["azione"]== "aggiungi"){
+        Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi values (".$_POST["utente"].",".$_POST["gruppo"].");");
+    }
+    else if($_POST["azione"]== "elimina"){
+        Database::getInstance()->eseguiQuery("DELETE FROM dipendenti_gruppi where fk_dipendente = ".$_POST["utente"]." AND fk_gruppo = ".$_POST["gruppo"].";");
+    }
+    if(isset($_POST["utente"]))
+        $id = $_POST["utente"];
+
+    stampaGruppi($id);
 
 
 ?>
@@ -38,7 +40,7 @@ function stampaFormGruppi($azione,$utente,$idGruppo,$nomeGruppo,$img){
         <input type="hidden" name="utente" value="<?php echo $utente; ?>">
         <input type="hidden" name="gruppo" value="<?php echo $idGruppo; ?>">
         <?php echo $nomeGruppo; ?>
-        <img onclick="form_<?php echo $idGruppo ?>.submit();" src="/GestionePresenze/img/<?php echo $img; ?>.png" alt="aggiungi" />
+        <img onclick="form_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/<?php echo $img; ?>.png" alt="aggiungi" />
     </form>
 <?php
 }
@@ -53,7 +55,8 @@ function stampaGruppi($utente){
     while(!$rs->EOF){
         if($rs->fields["appartiene"]){
             stampaFormGruppi("elimina",$utente,$rs->fields["id"],$rs->fields["nome"],"remove");
-        }else {
+        }
+        else {
             stampaFormGruppi("aggiungi",$utente,$rs->fields["id"],$rs->fields["nome"],"add");
         }
         $rs->MoveNext();
