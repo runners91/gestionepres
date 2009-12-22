@@ -227,6 +227,9 @@ tr.reportRigaDati:hover {
 .cellaDataOggi {
     background-color: #FA5858; /* rosso chiaro */
 }
+.cellaDataSelezionata {
+    background-color: #A9D0F5;
+}
 .cellaDataGrigia {
     background-color: #D7D7D7; /* grigio */
 }
@@ -256,8 +259,30 @@ tr.reportRigaDati:hover {
     padding: 20px;
 }
 .cellaDataTask {
-    color: red;
+    color: #5D92FA; /* celeste */
     font-weight: bold;
     padding: 10px 0 10px 0;
+}
+.spazioTop {
+    margin-top: 20px;
+}
+.imgCal {
+    margin: 0;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    border: none;
+}
+.superfluo {    
+    font-weight: bold;
+    color: gray;
+}
+.ordinario {
+    font-weight: bold;
+    color: orange;
+}
+.importante {
+    font-weight: bold;
+    color: red;
 }
 /*******************************************************************************/

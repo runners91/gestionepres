@@ -142,6 +142,8 @@ class Utilita {
                                 else{
                                     if(date("j-n-o",time())==date("j-n-o",$dataGiorno))
                                         echo '<td class="cellaData cellaDataOggi">';
+                                    else if(date("j-n-o",$_GET['data'])==date("j-n-o",$dataGiorno))
+                                        echo '<td class="cellaData cellaDataSelezionata">';
                                     else if(date("n",$dataGiorno)!=date("n",$data))
                                         echo '<td class="cellaData cellaDataGrigia">';
                                     else
@@ -176,7 +178,29 @@ class Utilita {
                 <table>
                     <tr>
                         <td class="cellaDataTask" colspan="2">
-                            <?php echo $giorni[date("N",$_GET['data'])].' '.date("d",$_GET['data']).' '.$mesi[date("n",$_GET['data'])].' '.date("Y",$_GET['data']); ?>
+                            <?php echo 'Evento';//$giorni[date("N",$_GET['data'])].' '.date("d",$_GET['data']).' '.$mesi[date("n",$_GET['data'])].' '.date("Y",$_GET['data']); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Da:
+                        </td>
+                        <td>
+                            <input class="calTextfield" type="textfield" name="dataDa" />
+                        </td>
+                        <td>
+                            <a href="#"><img class="imgCal" src="./img/cal.png" alt="calendario"></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            A:
+                        </td>
+                        <td>
+                            <input class="calTextfield" type="textfield" name="dataA" />
+                        </td>
+                        <td>
+                            <a href="#"><img class="imgCal" src="./img/cal.png" alt="calendario" /></a>
                         </td>
                     </tr>
                     <tr>
@@ -193,7 +217,20 @@ class Utilita {
                     </tr>
                     <tr>
                         <td>
-                            <input type="button" onclick="location.href = '?pagina=home&data=' + <?php echo $_GET['data']; ?> + '&event=N'" value="Annulla" />
+                            Importanza:
+                        </td>
+                        <td>
+                            <span class="superfluo"><input type="radio" name="etichetta" value="1" checked="checked" />1</span>
+                            <span class="ordinario"><input type="radio" name="etichetta" value="2" />2</span>
+                            <span class="importante"><input type="radio" name="etichetta" value="3" />3</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="bottCalendario spazioTop" type="button" onclick="location.href = '?pagina=home&data=' + <?php echo $_GET['data']; ?> + '&event=N'" value="Annulla" />
+                        </td>
+                        <td>
+                            <input class="bottCalendario spazioTop" type="submit" value="Salva" />
                         </td>
                     </tr>
                 </table>
