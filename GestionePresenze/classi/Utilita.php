@@ -147,7 +147,7 @@ class Utilita {
                                     else
                                         echo '<td class="cellaData">';
 
-                                    echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
+                                    echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'&event=Y">'.date("d",$dataGiorno).'</a>';
                                     echo '</td>';
                                 }
                             }
@@ -193,7 +193,7 @@ class Utilita {
                     </tr>
                     <tr>
                         <td>
-                            <input type="button" onclick="location.href = '?pagina=home'" value="Annulla" />
+                            <input type="button" onclick="location.href = '?pagina=home&data=' + <?php echo $_GET['data']; ?> + '&event=N'" value="Annulla" />
                         </td>
                     </tr>
                 </table>
