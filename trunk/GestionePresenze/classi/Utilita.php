@@ -191,6 +191,11 @@ class Utilita {
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <input type="button" onclick="location.href = '?pagina=home'" value="Annulla" />
+                        </td>
+                    </tr>
                 </table>
             </form>
         </div>
