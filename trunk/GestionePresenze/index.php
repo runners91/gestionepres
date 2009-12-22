@@ -2,15 +2,16 @@
     session_start();
     if($_GET['azione'] == "logout"){
         session_destroy();
-        header( 'Location: index.php' );
+        header('Location:index.php');
     }
     include("classi/Assenze.php");
     include("classi/Database.php");
     include("login.php");
     include("pagine/navigazione/menu.php");
 
-    if(isset($_SESSION["username"]) && !Utilita::verificaAccesso($_GET["pagina"]))
-        header('Location: index.php?pagina=home');
+    if(isset($_SESSION['username']) && isset($_GET['pagina']))
+        if(!Utilita::verificaAccesso($_GET['pagina']))
+            header('Location:index.php');
     
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -26,7 +27,6 @@
                 <div class="mainTitle">Gestione Presenze</div>
 
                <?php
-
                if(isset($_SESSION['username'])){
                    creaMenu($_GET['pagina']);
                }?>
