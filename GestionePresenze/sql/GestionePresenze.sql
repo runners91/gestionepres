@@ -22,36 +22,6 @@ CREATE DATABASE IF NOT EXISTS gestione_presenze;
 USE gestione_presenze;
 
 --
--- Definition of table `accedono`
---
-
-DROP TABLE IF EXISTS `accedono`;
-CREATE TABLE `accedono` (
-  `fk_gruppo` int(11) NOT NULL,
-  `fk_pagina` int(11) NOT NULL,
-  PRIMARY KEY (`fk_gruppo`,`fk_pagina`),
-  KEY `fk_gruppi_has_pagine_gruppi1` (`fk_gruppo`),
-  KEY `fk_gruppi_has_pagine_pagine1` (`fk_pagina`),
-  CONSTRAINT `fk_gruppi_has_pagine_gruppi1` FOREIGN KEY (`fk_gruppo`) REFERENCES `gruppi` (`id_gruppo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_gruppi_has_pagine_pagine1` FOREIGN KEY (`fk_pagina`) REFERENCES `pagine` (`id_pagina`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `accedono`
---
-
-/*!40000 ALTER TABLE `accedono` DISABLE KEYS */;
-INSERT INTO `accedono` (`fk_gruppo`,`fk_pagina`) VALUES 
- (1,1),
- (1,2),
- (1,3),
- (1,4),
- (2,1),
- (2,4);
-/*!40000 ALTER TABLE `accedono` ENABLE KEYS */;
-
-
---
 -- Definition of table `assenze`
 --
 
@@ -228,6 +198,36 @@ INSERT INTO `gruppi` (`id_gruppo`,`nome`) VALUES
  (1,'admin'),
  (2,'utente');
 /*!40000 ALTER TABLE `gruppi` ENABLE KEYS */;
+
+
+--
+-- Definition of table `gruppi_pagine`
+--
+
+DROP TABLE IF EXISTS `gruppi_pagine`;
+CREATE TABLE `gruppi_pagine` (
+  `fk_gruppo` int(11) NOT NULL,
+  `fk_pagina` int(11) NOT NULL,
+  PRIMARY KEY (`fk_gruppo`,`fk_pagina`),
+  KEY `fk_gruppi_has_pagine_gruppi1` (`fk_gruppo`),
+  KEY `fk_gruppi_has_pagine_pagine1` (`fk_pagina`),
+  CONSTRAINT `fk_gruppi_has_pagine_gruppi1` FOREIGN KEY (`fk_gruppo`) REFERENCES `gruppi` (`id_gruppo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_gruppi_has_pagine_pagine1` FOREIGN KEY (`fk_pagina`) REFERENCES `pagine` (`id_pagina`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `gruppi_pagine`
+--
+
+/*!40000 ALTER TABLE `gruppi_pagine` DISABLE KEYS */;
+INSERT INTO `gruppi_pagine` (`fk_gruppo`,`fk_pagina`) VALUES 
+ (1,1),
+ (1,2),
+ (1,3),
+ (1,4),
+ (2,1),
+ (2,4);
+/*!40000 ALTER TABLE `gruppi_pagine` ENABLE KEYS */;
 
 
 --
