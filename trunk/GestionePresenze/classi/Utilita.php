@@ -111,7 +111,7 @@ class Utilita {
                                     <input class="bottCalendario" type="submit" value="Vai" />
                                 </td>
                                 <td>
-                                    <input class="bottCalendario" type="submit" value="Oggi" onmousedown="document.getElementById('m').value='r'" />
+                                    <input class="bottCalendario" type="button" value="Oggi" onclick="location.href = '?pagina=home'" />
                                 </td>
                             </tr>
                         </table>
