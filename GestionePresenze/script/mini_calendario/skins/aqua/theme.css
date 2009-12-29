@@ -124,7 +124,8 @@ div.calendar { position: relative; }
   font-weight: bold;
   border: 1px solid #797979;
   padding: 1px 3px 1px 1px;
-  background: url("active-bg.gif"); color: #fff;
+  background: url("active-bg.gif");
+  color: #fff;
 }
 
 .calendar tbody .disabled { color: #999; }
@@ -147,7 +148,8 @@ div.calendar { position: relative; }
 
 .calendar tfoot .ttip { /* Tooltip (status bar) cell <TD> */
   padding: 2px;
-  background: url("status-bg.gif") repeat-x 0 0; color: #000;
+  background: url("status-bg.gif");
+  color: #000;
 }
 
 .calendar tfoot .hilite { /* Hover style for buttons in footer */
