@@ -186,10 +186,10 @@ class Utilita {
                             Da:
                         </td>
                         <td>
-                            <input class="calTextfield" type="textfield" name="dataDa" />
+                            <input id="sel1" class="calTextfield" type="textfield" name="dataDa" />
                         </td>
                         <td>
-                            <a href="#"><img class="imgCal" src="./img/cal.png" alt="calendario"></a>
+                            <input value="" type="reset" onclick="return showCalendar('sel1', '%d/%m/%Y');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>
@@ -197,10 +197,10 @@ class Utilita {
                             A:
                         </td>
                         <td>
-                            <input class="calTextfield" type="textfield" name="dataA" />
+                            <input id="sel2" class="calTextfield" type="textfield" name="dataA" />
                         </td>
                         <td>
-                            <a href="#"><img class="imgCal" src="./img/cal.png" alt="calendario" /></a>
+                            <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>
