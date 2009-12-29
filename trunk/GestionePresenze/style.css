@@ -123,6 +123,7 @@ li#selectedTab a {
     color: red;
     font-weight: bold;
     font-style: italic;
+    padding: 15px 0 15px 0;
 }
 .linkAiuti {
     text-decoration: none;
@@ -253,15 +254,22 @@ tr.reportRigaDati:hover {
 .linkGiorno:hover {
     text-decoration: underline;
 }
+/*******************************************************************************/
+
+
+
+
+/*********************** STAMPA DEL FORM AGGIUNGI TASK *************************/
 .aggiungiTaskContainer {
     float: right;
     border: 1px solid black;
     padding: 20px;
 }
-.cellaDataTask {
+.cellaTitoloTask {
     color: #5D92FA; /* celeste */
     font-weight: bold;
-    padding: 10px 0 10px 0;
+    padding: 10px 0 25px 0;
+    text-decoration: underline;
 }
 .spazioTop {
     margin-top: 20px;
