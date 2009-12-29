@@ -172,13 +172,21 @@ class Utilita {
     static function stampaFormAggiungiTask(){
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
+
+        if(isset($_POST['dataDa']) && isset($_POST['dataA'])){
+            $messaggio = Utilita::checkData($_POST['dataDa']);
+            if($messaggio == null){
+                header("Location:index.php");
+            }
+        }
+
         ?>
         <div class="aggiungiTaskContainer" id="sel">
             <form name="taskCalendario" action="#" method="POST">
                 <table>
                     <tr>
-                        <td class="cellaDataTask" colspan="2">
-                            <?php echo 'Evento';//$giorni[date("N",$_GET['data'])].' '.date("d",$_GET['data']).' '.$mesi[date("n",$_GET['data'])].' '.date("Y",$_GET['data']); ?>
+                        <td class="cellaTitoloTask" colspan="2">
+                            <?php echo 'Nuovo Evento'; ?>
                         </td>
                     </tr>
                     <tr>
@@ -186,7 +194,7 @@ class Utilita {
                             Da:
                         </td>
                         <td>
-                            <input id="sel1" class="calTextfield" type="textfield" name="dataDa" />
+                            <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php echo date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:00'; ?>" />
                         </td>
                         <td>
                             <input value="" type="reset" onclick="return showCalendar('sel1', '%d/%m/%Y - %H:%M');" class="imgCal" />
@@ -197,15 +205,15 @@ class Utilita {
                             A:
                         </td>
                         <td>
-                            <input id="sel2" class="calTextfield" type="textfield" name="dataA" />
+                            <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php echo date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:30'; ?>" />
                         </td>
                         <td>
-                            <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y - %a:%b');" class="imgCal" />
+                            <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y - %H:%M');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Nuovo:
+                            Tipo:
                         </td>
                         <td>
                             <select>
@@ -226,6 +234,11 @@ class Utilita {
                         </td>
                     </tr>
                     <tr>
+                        <td colspan="3" class="messaggioErrore">
+                            <?php echo $messaggio; ?>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>
                             <input class="bottCalendario spazioTop" type="button" onclick="location.href = '?pagina=home&data=' + <?php echo $_GET['data']; ?> + '&event=N'" value="Annulla" />
                         </td>
@@ -241,15 +254,30 @@ class Utilita {
 
     /**
      *
-     * Controlla se una data e' valida
+     * Controlla se una data e' valida (dd/mm/yyyy - hh:mm) se esiste ritorna true, altrimenti ritorna false
      * @param String $d Contiene la data da controllare
      */
     static function checkData($d){
-        
+        $return = "";
+        if(!strpos($d,"-")) $return = "- Il formato data non è corretto. ('-' tra data e ora non trovato)<br/>";
+
+        $data   = explode("/",$d);
+        $giorno = $data[0];
+        $mese   = $data[1];
+        $anno   = substr($data[2],0,4);
+        if(!checkdate($mese, $giorno, $anno)) $return .= "- La data immessa non esiste<br/>";
+
+        $orario = explode(":",$d);
+        $ore    = substr($orario[0],-2);
+        $min    = $orario[1];
+        if($ore>23 || $ore<0) $return .= "- L'ora indicata non è valida<br/>";
+        if($min>60 || $min<0) $return .= "- I minuti indicati non sono validi<br/>";
+
+        return $return;
     }
 
     /**
-     *  Controlla se l'utente ha accesso alla pagina
+     *  Controlla se l'utente ha accesso alla pagina, ritorna true se è si, altrimenti ritorna false
      * @param String $pagina Contiente la pagina da visualizzare
      */
     static function verificaAccesso($pagina){
