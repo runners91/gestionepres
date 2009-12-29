@@ -173,7 +173,7 @@ class Utilita {
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         ?>
-        <div class="aggiungiTaskContainer">
+        <div class="aggiungiTaskContainer" id="sel">
             <form name="taskCalendario" action="#" method="POST">
                 <table>
                     <tr>
@@ -189,7 +189,7 @@ class Utilita {
                             <input id="sel1" class="calTextfield" type="textfield" name="dataDa" />
                         </td>
                         <td>
-                            <input value="" type="reset" onclick="return showCalendar('sel1', '%d/%m/%Y');" class="imgCal" />
+                            <input value="" type="reset" onclick="return showCalendar('sel1', '%d/%m/%Y - %H:%M');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>
@@ -200,7 +200,7 @@ class Utilita {
                             <input id="sel2" class="calTextfield" type="textfield" name="dataA" />
                         </td>
                         <td>
-                            <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y');" class="imgCal" />
+                            <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y - %a:%b');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>

@@ -51,7 +51,7 @@ function showCalendar(id, format, showsTime, showsOtherMonths) {
   _dynarch_popupCalendar.parseDate(el.value);      // try to parse the text in field
   _dynarch_popupCalendar.sel = el;                 // inform it what input field we use
 
-  _dynarch_popupCalendar.showAtElement(el.nextSibling, "Br");        // show the calendar
+  _dynarch_popupCalendar.showAtElement(el, "Br");        // show the calendar
 
   return false;
 }
