@@ -272,6 +272,7 @@ tr.reportRigaDati:hover {
     width: 20px;
     height: 20px;
     border: none;
+    background-image: url("img/cal.png");
 }
 .superfluo {    
     font-weight: bold;

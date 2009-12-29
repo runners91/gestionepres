@@ -20,6 +20,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Gestione Presenze</title>
         <link rel="stylesheet" href="style.css" type="text/css" />
+        <link rel="stylesheet" type="text/css" media="all" href="script/mini_calendario/skins/aqua/theme.css" title="Aqua" />
+        <script type="text/javascript" src="script/mini_calendario/calendar.js"></script>
+        <script type="text/javascript" src="script/mini_calendario/calendar-it.js"></script>
+        <script type="text/javascript" src="script/mini_calendario/script.js"></script>
     </head>
     <body>
         <div id="pagina">
