@@ -174,7 +174,8 @@ class Utilita {
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
 
         if(isset($_POST['dataDa']) && isset($_POST['dataA'])){
-            $messaggio = Utilita::checkData($_POST['dataDa']);
+            $messaggio = Utilita::checkData($_POST['dataDa'],"Da:");
+            $messaggio .= Utilita::checkData($_POST['dataA'], "A:");
             if($messaggio == null){
                 header("Location:index.php");
             }
@@ -194,7 +195,12 @@ class Utilita {
                             Da:
                         </td>
                         <td>
-                            <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php echo date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:00'; ?>" />
+                            <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php
+                            if($messaggio == null)
+                                echo trim(date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:00');
+                            else
+                                echo $_POST['dataDa'];
+                            ?>" />
                         </td>
                         <td>
                             <input value="" type="reset" onclick="return showCalendar('sel1', '%d/%m/%Y - %H:%M');" class="imgCal" />
@@ -205,7 +211,12 @@ class Utilita {
                             A:
                         </td>
                         <td>
-                            <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php echo date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:30'; ?>" />
+                            <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php
+                            if($messaggio == null)
+                                echo trim(date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:30');
+                            else
+                                echo $_POST['dataA'];
+                            ?>" />
                         </td>
                         <td>
                             <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y - %H:%M');" class="imgCal" />
@@ -254,24 +265,25 @@ class Utilita {
 
     /**
      *
-     * Controlla se una data e' valida (dd/mm/yyyy - hh:mm) se esiste ritorna true, altrimenti ritorna false
+     * Controlla se una data e' valida (dd/mm/yyyy - hh:mm) se esiste ritorna "", altrimenti ritorna i messaggi di errore
      * @param String $d Contiene la data da controllare
+     * @param String $name Contiene il nome della data che viene controllata
      */
-    static function checkData($d){
+    static function checkData($d,$name){
         $return = "";
-        if(!strpos($d,"-")) $return = "- Il formato data non è corretto. ('-' tra data e ora non trovato)<br/>";
+        if(!strpos($d,"-")) $return = "- Il formato della data ".$name." non è corretto. ('-' tra data e ora non trovato)<br/>";
 
         $data   = explode("/",$d);
         $giorno = $data[0];
         $mese   = $data[1];
         $anno   = substr($data[2],0,4);
-        if(!checkdate($mese, $giorno, $anno)) $return .= "- La data immessa non esiste<br/>";
+        if(!checkdate($mese, $giorno, $anno)) $return .= "- La data ".$name." immessa non esiste<br/>";
 
         $orario = explode(":",$d);
         $ore    = substr($orario[0],-2);
         $min    = $orario[1];
-        if($ore>23 || $ore<0) $return .= "- L'ora indicata non è valida<br/>";
-        if($min>60 || $min<0) $return .= "- I minuti indicati non sono validi<br/>";
+        if($ore>23 || $ore<0) $return .= "- L'ora ".$name." indicata non è valida<br/>";
+        if($min>60 || $min<0) $return .= "- I minuti ".$name." indicati non sono validi<br/>";
 
         return $return;
     }
