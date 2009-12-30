@@ -6,6 +6,7 @@
     }
     include("classi/Assenze.php");
     include("classi/Database.php");
+    include("classi/Calendario.php");
     include("login.php");
     include("pagine/navigazione/menu.php");
 
