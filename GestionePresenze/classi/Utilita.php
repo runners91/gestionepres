@@ -172,14 +172,7 @@ class Utilita {
     static function stampaFormAggiungiTask(){
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
-
-        if(isset($_POST['dataDa']) && isset($_POST['dataA'])){
-            $messaggio = Utilita::checkData($_POST['dataDa'],"Da:");
-            $messaggio .= Utilita::checkData($_POST['dataA'], "A:");
-            if($messaggio == null){
-                header("Location:index.php");
-            }
-        }
+        $ok = true;
 
         ?>
         <div class="aggiungiTaskContainer" id="sel">
@@ -196,7 +189,7 @@ class Utilita {
                         </td>
                         <td>
                             <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php
-                            if($messaggio == null)
+                            if(!$_POST)
                                 echo trim(date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:00');
                             else
                                 echo $_POST['dataDa'];
@@ -207,12 +200,25 @@ class Utilita {
                         </td>
                     </tr>
                     <tr>
+                        <td></td>
+                        <td colspan="2">
+                            <div class="messaggioTaskErr">
+                                <?php 
+                                    if(!Utilita::checkData($_POST['dataDa'],"",false) && $_POST){
+                                        $ok = false;
+                                        echo Utilita::checkData($_POST['dataDa'],"Da:",true);
+                                    }
+                                ?>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>
                             A:
                         </td>
                         <td>
                             <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php
-                            if($messaggio == null)
+                            if(!$_POST)
                                 echo trim(date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:30');
                             else
                                 echo $_POST['dataA'];
@@ -223,15 +229,62 @@ class Utilita {
                         </td>
                     </tr>
                     <tr>
+                        <td></td>
+                        <td colspan="2">
+                            <div class="messaggioTaskErr">
+                                <?php
+                                    if(!Utilita::checkData($_POST['dataA'],"",false) && $_POST){
+                                        $ok = false;
+                                        echo Utilita::checkData($_POST['dataA'],"A:",true);
+                                    }
+                                ?>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>
                             Tipo:
                         </td>
                         <td>
-                            <select>
-                                <option value="1">Assenza</option>
-                                <option value="2">Vacanza</option>
-                                <option value="3">Presenza fuori sede</option>
+                            <select name="tipo" class="selectField">
+                                <option value="0">-</option>
+                             <?php
+                                $rs = Database::getInstance()->eseguiQuery("SELECT e.nome as d, e.id_evento as r FROM eventi e");
+                                while(!$rs->EOF){
+                                    if($rs->fields['r']==$_POST['tipo'])
+                                        echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                    else
+                                        echo '<option value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                    $rs->MoveNext();
+                                }
+                             ?>
                             </select>
+                            <div class="messaggioTaskErr">
+                                <?php if($_POST && $_POST['tipo']==0){ $ok = false; echo "- Tipo non inserito<br/>"; }?>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Utente:
+                        </td>
+                        <td>
+                            <select name="utente" class="selectField">
+                                <option value="0">-</option>
+                             <?php
+                                $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
+                                while(!$rs->EOF){
+                                    if($rs->fields['r']==$_POST['utente'])
+                                        echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                    else
+                                        echo '<option value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                    $rs->MoveNext();
+                                }
+                             ?>
+                            </select>
+                            <div class="messaggioTaskErr">
+                                <?php if($_POST && $_POST['utente']==0){ $ok = false; echo "- Utente non inserito<br/>"; }?>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -245,8 +298,8 @@ class Utilita {
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="messaggioErrore">
-                            <?php echo $messaggio; ?>
+                        <td colspan="3" class="messaggioTaskOk">
+                            <?php if($ok && $_POST) echo "Evento salvato con successo !"; ?>
                         </td>
                     </tr>
                     <tr>
@@ -265,27 +318,48 @@ class Utilita {
 
     /**
      *
-     * Controlla se una data e' valida (dd/mm/yyyy - hh:mm) se esiste ritorna "", altrimenti ritorna i messaggi di errore
+     * Controlla se una data e' valida (dd/mm/yyyy - hh:mm)
+     * ritorna i messaggi di errore se $conMessaggi = true altrimenti ritorna true/false (data ok/non ok)
      * @param String $d Contiene la data da controllare
      * @param String $name Contiene il nome della data che viene controllata
+     * @param boolean $conMessaggi Indica se la funzione deve ritornare
      */
-    static function checkData($d,$name){
+    static function checkData($d,$name,$conMessaggi){
         $return = "";
-        if(!strpos($d,"-")) $return = "- Il formato della data ".$name." non è corretto. ('-' tra data e ora non trovato)<br/>";
+        $returnB = true;
+        if($d == null){
+            $returnB = false;
+            $return = "- Data ".$name." non inserita<br/>";
+            if($conMessaggi) return $return; else return $returnB;
+        }
+        if(!strpos($d,"-")){
+            $return = "- Il formato della data ".$name." non è corretto. ('-' tra data e ora non trovato)<br/>";
+            $returnB = false;
+            if($conMessaggi) return $return; else return $returnB;
+        }
 
         $data   = explode("/",$d);
         $giorno = $data[0];
         $mese   = $data[1];
         $anno   = substr($data[2],0,4);
-        if(!checkdate($mese, $giorno, $anno)) $return .= "- La data ".$name." immessa non esiste<br/>";
+        if(!checkdate($mese, $giorno, $anno)){
+            $return .= "- La data ".$name." immessa non esiste<br/>";
+            $returnB = false;
+        }
 
         $orario = explode(":",$d);
         $ore    = substr($orario[0],-2);
         $min    = $orario[1];
-        if($ore>23 || $ore<0) $return .= "- L'ora ".$name." indicata non è valida<br/>";
-        if($min>60 || $min<0) $return .= "- I minuti ".$name." indicati non sono validi<br/>";
+        if($ore>23 || $ore<0){
+            $return .= "- L'ora ".$name." indicata non è valida<br/>";
+            $returnB = false;
+        }
+        if($min>60 || $min<0){
+            $return .= "- I minuti ".$name." indicati non sono validi<br/>";
+            $returnB = false;
+        }
 
-        return $return;
+        if($conMessaggi) return $return; else return $returnB;
     }
 
     /**
