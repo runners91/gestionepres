@@ -34,7 +34,7 @@ class Database{
     }
 
     function getConnection(){
-        return $conn;
+        return $this->conn;
     }
 
     /**
