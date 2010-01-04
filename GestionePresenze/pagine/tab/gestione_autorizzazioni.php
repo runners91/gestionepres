@@ -50,15 +50,17 @@ function stampaFormGruppi($azione,$utente,$idGruppo,$nomeGruppo,$img){
 
 
 function stampaGruppi($utente){
-    $rs = Database::getInstance()->eseguiQuery("SELECT g.id_gruppo id, g.nome ,CASE WHEN d.id_dipendente = dg.fk_dipendente AND dg.fk_gruppo = g.id_gruppo THEN 1 ELSE 0 END as appartiene FROM gruppi g,dipendenti d, dipendenti_gruppi dg where d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente." ORDER BY appartiene desc;");
-    
+    $rs = Database::getInstance()->eseguiQuery("SELECT g.* from gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.";");
+
     while(!$rs->EOF){
-        if($rs->fields["appartiene"]){
-            stampaFormGruppi("elimina",$utente,$rs->fields["id"],$rs->fields["nome"],"remove");
-        }
-        else {
-            stampaFormGruppi("aggiungi",$utente,$rs->fields["id"],$rs->fields["nome"],"add");
-        }
+        stampaFormGruppi("elimina",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"],"remove");
+        $rs->MoveNext();
+    }
+
+    $rs = Database::getInstance()->eseguiQuery("Select * from gruppi where id_gruppo not in(SELECT g.id_gruppo FROM gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = 3);");
+
+    while(!$rs->EOF){
+        stampaFormGruppi("aggiungi",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"],"add");
         $rs->MoveNext();
     }
 }
