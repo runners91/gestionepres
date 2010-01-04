@@ -57,7 +57,7 @@ function stampaGruppi($utente){
         $rs->MoveNext();
     }
 
-    $rs = Database::getInstance()->eseguiQuery("Select * from gruppi where id_gruppo not in(SELECT g.id_gruppo FROM gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = 3);");
+    $rs = Database::getInstance()->eseguiQuery("Select * from gruppi where id_gruppo not in(SELECT g.id_gruppo FROM gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.");");
 
     while(!$rs->EOF){
         stampaFormGruppi("aggiungi",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"],"add");
