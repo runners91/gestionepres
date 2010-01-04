@@ -21,7 +21,7 @@ function stampaUtenti(){
     echo '<form action="?pagina=amministrazione&tab=gestione_autorizzazioni" method="POST">';
     $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente id,nome,cognome FROM dipendenti;");
     $firstId = $rs->fields['id'];
-    echo "<select name='utente' onchange='this.form.submit();'>";
+    echo "<select name='utente' style='float:left;' onchange='this.form.submit();'>";
     while(!$rs->EOF){
         $selected="";
         if($rs->fields['id']==$_POST["utente"])
@@ -51,12 +51,19 @@ function stampaFormGruppi($azione,$utente,$idGruppo,$nomeGruppo,$img){
 
 function stampaGruppi($utente){
     $rs = Database::getInstance()->eseguiQuery("SELECT g.* from gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.";");
-
+    ?>
+    <fieldset style="width:150px;float:left;height:200px;margin-left:100px;">
+    <legend>Gruppi dell'utente:</legend>
+<?php
     while(!$rs->EOF){
         stampaFormGruppi("elimina",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"],"remove");
         $rs->MoveNext();
     }
-
+?>
+    </fieldset>
+    <fieldset style="width:150px;height:200px;margin-left:100px;">
+    <legend>Altri Gruppi:</legend>
+<?php
     $rs = Database::getInstance()->eseguiQuery("Select * from gruppi where id_gruppo not in(SELECT g.id_gruppo FROM gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.");");
 
     while(!$rs->EOF){
@@ -64,7 +71,5 @@ function stampaGruppi($utente){
         $rs->MoveNext();
     }
 }
-
-
 ?>
-
+   </fieldset>
