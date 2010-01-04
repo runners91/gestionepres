@@ -41,7 +41,7 @@ class Calendario {
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
      ?>
     <div id="calendario">
-        <form name="calendario" action="#" method="POST">
+        <form name="calendario" action="?pagina=home" method="POST">
             <table>
                 <tr>
                     <td>
@@ -155,7 +155,7 @@ class Calendario {
                 <table>
                     <tr>
                         <td class="cellaTitoloTask" colspan="2">
-                            <?php echo 'Nuovo Evento'; ?>
+                            Nuovo Evento
                         </td>
                     </tr>
                     <tr>
