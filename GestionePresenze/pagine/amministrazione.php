@@ -11,6 +11,7 @@
             creaSubmenuItem($paginaAttuale, $tabAttuale, "inserisci_assenza", "INSERISCI ASSENZA");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "inserisci_festivo", "INSERISCI FESTIVO");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_autorizzazioni", "AUTORIZZAZIONI");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_gruppi", "GRUPPI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_costanti", "MODIFICA DATI");
         ?>
     </ul>
