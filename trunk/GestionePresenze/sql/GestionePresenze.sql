@@ -66,7 +66,7 @@ CREATE TABLE `dipendenti` (
   UNIQUE KEY `unique_username` (`username`),
   KEY `FK_dipendenti_1` (`fk_filiale`),
   CONSTRAINT `FK_dipendenti_1` FOREIGN KEY (`fk_filiale`) REFERENCES `filiali` (`id_filiale`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i dati che riguardano i dipendenti';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i dati che riguardano i dipendenti';
 
 --
 -- Dumping data for table `dipendenti`
@@ -105,6 +105,30 @@ INSERT INTO `dipendenti_gruppi` (`fk_dipendente`,`fk_gruppo`) VALUES
  (4,1),
  (5,1);
 /*!40000 ALTER TABLE `dipendenti_gruppi` ENABLE KEYS */;
+
+
+--
+-- Definition of table `eventi`
+--
+
+DROP TABLE IF EXISTS `eventi`;
+CREATE TABLE `eventi` (
+  `id_evento` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nome` varchar(75) NOT NULL,
+  PRIMARY KEY (`id_evento`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `eventi`
+--
+
+/*!40000 ALTER TABLE `eventi` DISABLE KEYS */;
+INSERT INTO `eventi` (`id_evento`,`nome`) VALUES 
+ (1,'assenza'),
+ (2,'presenza fuori sede'),
+ (3,'vacanza'),
+ (4,'medico');
+/*!40000 ALTER TABLE `eventi` ENABLE KEYS */;
 
 
 --
