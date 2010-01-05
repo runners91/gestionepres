@@ -45,7 +45,7 @@ class Utilita {
      * ritorna i messaggi di errore se $conMessaggi = true altrimenti ritorna true/false (data ok/non ok)
      * @param String $d Contiene la data da controllare
      * @param String $name Contiene il nome della data che viene controllata
-     * @param boolean $conMessaggi Indica se la funzione deve ritornare
+     * @param boolean $conMessaggi Indica cosa la funzione deve ritornare
      */
     static function checkData($d,$name,$conMessaggi){
         $return = "";
@@ -83,6 +83,22 @@ class Utilita {
         }
 
         if($conMessaggi) return $return; else return $returnB;
+    }
+
+     /**
+     *  Prende una data in formato dd/mm/yyyy hh:mm e la ritorna in timestamp
+     * @param String $d Contiente la data da convertire
+     */
+    static function getTimestamp($d){
+        $data   = explode("/",$d);
+        $giorno = $data[0];
+        $mese   = $data[1];
+        $anno   = substr($data[2],0,4);
+        $orario = explode(":",$d);
+        $ore    = substr($orario[0],-2);
+        $min    = $orario[1];
+
+        return mktime($ore, $min, 0, $mese, $giorno, $anno);
     }
 
     /**

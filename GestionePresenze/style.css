@@ -274,6 +274,12 @@ tr.reportRigaDati:hover {
 .spazioTop {
     margin-top: 20px;
 }
+.label {
+    font-size: 10pt;
+}
+.required {
+    font-weight: bold;
+}
 .imgCal {
     margin: 0;
     padding: 0;
