@@ -15,6 +15,7 @@
             Database::getInstance()->eseguiQuery("DELETE FROM dipendenti_gruppi where fk_gruppo = ".$_POST["gruppo"].";");
             Database::getInstance()->eseguiQuery("DELETE FROM gruppi_pagine where fk_gruppo = ".$_POST["gruppo"].";");
             Database::getInstance()->eseguiQuery("DELETE FROM gruppi where id_gruppo = ".$_POST["gruppo"].";");
+            unset($_POST["gruppo"]);
         }
         $id = stampaGruppi();
 
