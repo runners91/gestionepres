@@ -38,10 +38,8 @@
     function stampaGruppi(){
         $rs = Database::getInstance()->eseguiQuery("SELECT * from gruppi;");
         $id = $rs->fields["id_gruppo"];
-        ?>
-        <form action="?pagina=amministrazione&tab=gestione_gruppi" method="POST">
-            <select name="gruppo" onchange="this.form.submit();">
-                <?php
+        echo '<form action="?pagina=amministrazione&tab=gestione_gruppi" method="POST">';
+            echo '<select name="gruppo" onchange="this.form.submit();">';
                 while(!$rs->EOF){
                     $selected="";
                     if($rs->fields['id_gruppo']==$_POST["gruppo"] || $_POST["azione"]=="crea")
@@ -49,8 +47,8 @@
                     echo '<option value="'.$rs->fields["id_gruppo"].'" '.$selected.'>'.$rs->fields["nome"].'</option>';
                     $rs->MoveNext();
                 }
-        echo '</select> </form>';
-
+            echo '</select>';
+        echo '</form>';
         if($_POST["azione"]=="crea"){
             $rs->MoveLast();
             return $rs->fields['id_gruppo'];
@@ -59,27 +57,24 @@
             return $id;
     }
     function stampaPagine($gruppo){
-?>
-        <fieldset style="width:150px;float:left;height:200px;margin-left:150px;">
-            <legend>Altre Pagine:</legend>
-            <?php
-                $rs = Database::getInstance()->eseguiQuery("SELECT * from pagine p where p.id_pagina not in (SELECT p.id_pagina FROM gruppi_pagine gp,pagine p where p.id_pagina = gp.fk_pagina AND fk_gruppo = ".$gruppo.");");
-                while(!$rs->EOF){
-                    stampaFormPagine("aggiungi",$gruppo,$rs->fields["id_pagina"],$rs->fields["url"]);
-                    $rs->MoveNext();
-                }
-            ?>
-        </fieldset>
-        <fieldset style="width:150px;height:200px;margin-left:150px;">
-            <legend>Pagine del Gruppo:</legend>
-            <?php
-                $rs = Database::getInstance()->eseguiQuery("SELECT p.* FROM gruppi_pagine gp,pagine p where p.id_pagina = gp.fk_pagina AND fk_gruppo = ".$gruppo.";");
-                while(!$rs->EOF){
-                    stampaFormPagine("elimina",$gruppo,$rs->fields["id_pagina"],$rs->fields["url"]);
-                    $rs->MoveNext();
-                }
-            ?>
-        </fieldset>
+
+        echo '<fieldset style="width:150px;float:left;height:200px;margin-left:150px;">';
+            echo '<legend>Altre Pagine:</legend>';
+            $rs = Database::getInstance()->eseguiQuery("SELECT * from pagine p where p.id_pagina not in (SELECT p.id_pagina FROM gruppi_pagine gp,pagine p where p.id_pagina = gp.fk_pagina AND fk_gruppo = ".$gruppo.");");
+            while(!$rs->EOF){
+                stampaFormPagine("aggiungi",$gruppo,$rs->fields["id_pagina"],$rs->fields["url"]);
+                $rs->MoveNext();
+            }
+        echo '</fieldset>';
+        echo '<fieldset style="width:150px;height:200px;margin-left:150px;">';
+            echo '<legend>Pagine del Gruppo:</legend>';
+            $rs = Database::getInstance()->eseguiQuery("SELECT p.* FROM gruppi_pagine gp,pagine p where p.id_pagina = gp.fk_pagina AND fk_gruppo = ".$gruppo.";");
+            while(!$rs->EOF){
+                stampaFormPagine("elimina",$gruppo,$rs->fields["id_pagina"],$rs->fields["url"]);
+                $rs->MoveNext();
+            }
+        echo '</fieldset>';
+        ?>
         <form action="#" method="POST">
             <input type="hidden" name="azione" value="nuovo">
             <input class="bottCalendario" type="submit" value="Aggiungi Gruppo"/>
