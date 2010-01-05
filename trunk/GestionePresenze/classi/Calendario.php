@@ -159,7 +159,7 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="label required">
                             Da:
                         </td>
                         <td>
@@ -188,7 +188,7 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="label required">
                             A:
                         </td>
                         <td>
@@ -217,14 +217,14 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="label required">
                             Tipo:
                         </td>
                         <td>
                             <select name="tipo" class="selectField">
                                 <option value="0">-</option>
                              <?php
-                                $rs = Database::getInstance()->eseguiQuery("SELECT e.nome as d, e.id_evento as r FROM eventi e");
+                                $rs = Database::getInstance()->eseguiQuery("SELECT c.nome as d, c.id_motivo as r FROM causali c");
                                 while(!$rs->EOF){
                                     if($rs->fields['r']==$_POST['tipo'])
                                         echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
@@ -240,7 +240,7 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="label required">
                             Utente:
                         </td>
                         <td>
@@ -263,18 +263,33 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            Importanza:
+                        <td class="label required">
+                            Priorit&agrave:
                         </td>
                         <td>
-                            <span class="superfluo"><input type="radio" name="etichetta" value="1" checked="checked" />1</span>
-                            <span class="ordinario"><input type="radio" name="etichetta" value="2" />2</span>
-                            <span class="importante"><input type="radio" name="etichetta" value="3" />3</span>
+                            <?php $txt = ""; if($_POST['etichetta']==1) $txt = "checked='checked'"; ?>
+                            <span class="superfluo"><input type="radio" name="etichetta" value="1" <?php echo $txt; ?> />1</span>
+                            <?php $txt = ""; if($_POST['etichetta']==2) $txt = "checked='checked'"; ?>
+                            <span class="ordinario"><input type="radio" name="etichetta" value="2" <?php echo $txt; ?> />2</span>
+                            <?php $txt = ""; if($_POST['etichetta']==3) $txt = "checked='checked'"; ?>
+                            <span class="importante"><input type="radio" name="etichetta" value="3" <?php echo $txt; ?> />3</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            Commento:
+                        </td>
+                        <td>
+                            <input type="textflied" name="commento" value="<?php echo $_POST['commento']; ?>" />
                         </td>
                     </tr>
                     <tr>
                         <td colspan="3" class="messaggioTaskOk">
-                            <?php if($ok && $_POST) echo "Evento salvato con successo !"; ?>
+                            <?php 
+                                if($ok && $_POST){
+                                    Calendario::inserisciDatiEvento();
+                                }
+                            ?>
                         </td>
                     </tr>
                     <tr>
@@ -291,5 +306,16 @@ class Calendario {
     <?php
     }
 
+    static function inserisciDatiEvento(){
+        $sql =  "insert into eventi(data_da,data_a,fk_dipendente,fk_motivo,commento) ";
+        $sql .= "values (".Utilita::getTimestamp($_POST['dataA']).",".Utilita::getTimestamp($_POST['dataDa']).",".$_POST['utente'].",".$_POST['tipo'].",'".$_POST['commento']."');";
+        
+        if (Database::getInstance()->getConnection()->execute($sql) === false) {
+            echo 'Error inserting: '.$conn->ErrorMsg().'<BR>';
+        }
+        else{
+            echo "Evento salvato con successo !";
+        }
+    }
 }
 ?>
