@@ -10,6 +10,11 @@
         else if($_POST["azione"] == "crea"){
             Database::getInstance()->eseguiQuery("INSERT INTO gruppi (nome) values ('".$_POST["nome"]."');");
         }
+        else if($_POST["azione"] == "eliminaGruppo"){
+            Database::getInstance()->eseguiQuery("DELETE FROM dipendenti_gruppi where fk_gruppo = ".$_POST["gruppo"].";");
+            Database::getInstance()->eseguiQuery("DELETE FROM gruppi_pagine where fk_gruppo = ".$_POST["gruppo"].";");
+            Database::getInstance()->eseguiQuery("DELETE FROM gruppi where id_gruppo = ".$_POST["gruppo"].";");
+        }
         $id = stampaGruppi();
 
         if(isset($_POST["gruppo"]))
@@ -77,6 +82,11 @@
         <form action="#" method="POST">
             <input type="hidden" name="azione" value="nuovo">
             <input class="bottCalendario" type="submit" value="Aggiungi Gruppo"/>
+        </form>
+        <form action="#" method="POST">
+            <input type="hidden" name="azione" value="eliminaGruppo">
+            <input type="hidden" name="gruppo" value="<?php echo $gruppo; ?>">
+            <input class="bottCalendario" type="submit" value="Elimina Gruppo"/>
         </form>
 <?php
      }
