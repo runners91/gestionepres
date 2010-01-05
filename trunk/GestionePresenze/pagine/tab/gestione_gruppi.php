@@ -1,6 +1,5 @@
 <?php
     if($_POST["azione"] != "nuovo"){
-       
         if($_POST["azione"] == "aggiungi"){
             Database::getInstance()->eseguiQuery("INSERT INTO gruppi_pagine values (".$_POST["gruppo"].",".$_POST["pagina"].");");
         }
@@ -57,7 +56,6 @@
             return $id;
     }
     function stampaPagine($gruppo){
-
         echo '<fieldset style="width:150px;float:left;height:200px;margin-left:150px;">';
             echo '<legend>Altre Pagine:</legend>';
             $rs = Database::getInstance()->eseguiQuery("SELECT * from pagine p where p.id_pagina not in (SELECT p.id_pagina FROM gruppi_pagine gp,pagine p where p.id_pagina = gp.fk_pagina AND fk_gruppo = ".$gruppo.");");
