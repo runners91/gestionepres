@@ -29,7 +29,7 @@ function stampaUtenti(){
                 echo '<option value="'.$rs->fields['id'].'" '.$selected.'>'.$rs->fields['nome'].' '.$rs->fields['cognome'].'</option>';
                 $rs->MoveNext();
             }
-        echo "</select> </form>";
+        echo "</select>";
     echo "</form>";
     return $firstId;
 }
