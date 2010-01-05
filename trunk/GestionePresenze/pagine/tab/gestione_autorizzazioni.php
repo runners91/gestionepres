@@ -33,26 +33,6 @@ function stampaUtenti(){
     return $firstId;
 }
 
-function stampaFormGruppi($azione,$utente,$idGruppo,$nomeGruppo,$img){
-?>
-    <form action="?pagina=amministrazione&tab=gestione_autorizzazioni" name="form_<?php echo $idGruppo?>" method="POST">
-        <input type="hidden" name="azione" value="<?php echo $azione; ?>">
-        <input type="hidden" name="utente" value="<?php echo $utente; ?>">
-        <input type="hidden" name="gruppo" value="<?php echo $idGruppo; ?>">
-        <?php echo $nomeGruppo; ?>
-        <img style="float:right;" onclick="formModifica_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/edit.png" alt="modifica" />
-        <img style="float:right;" onclick="form_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/<?php echo $img; ?>.png" alt="aggiungi" />
-    </form>
-    <form action="?pagina=amministrazione&tab=gestione_gruppi" name="formModifica_<?php echo $idGruppo?>" method="POST">
-        <input type="hidden" name="gruppo" value="<?php echo $idGruppo; ?>">
-    </form>
-<?php
-}
-?>
-       
-<?php
-
-
 function stampaGruppi($utente){
     ?>
     <fieldset style="width:150px;float:left;height:200px;margin-left:100px;">
@@ -61,7 +41,7 @@ function stampaGruppi($utente){
             $rs = Database::getInstance()->eseguiQuery("Select * from gruppi where id_gruppo not in(SELECT g.id_gruppo FROM gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.");");
 
             while(!$rs->EOF){
-                stampaFormGruppi("aggiungi",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"],"add");
+                stampaFormGruppi("aggiungi",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"]);
                 $rs->MoveNext();
             }
         ?>
@@ -71,14 +51,31 @@ function stampaGruppi($utente){
         <?php
         $rs = Database::getInstance()->eseguiQuery("SELECT g.* from gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.";");
             while(!$rs->EOF){
-                stampaFormGruppi("elimina",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"],"remove");
+                stampaFormGruppi("elimina",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"]);
                 $rs->MoveNext();
             }
         }
         ?>
     </fieldset>
-    <form action="?pagina=amministrazione&tab=gestione_gruppi" method="POST">
-        <input type="hidden" name="azione" value="nuovo">
-        <input class="bottCalendario" type="submit" value="Aggiungi Gruppo" class/>
-    </form>
+<?php
+    function stampaFormGruppi($azione,$utente,$idGruppo,$nomeGruppo){
+?>
+        <form action="?pagina=amministrazione&tab=gestione_autorizzazioni" name="form_<?php echo $idGruppo?>" method="POST">
+            <input type="hidden" name="azione" value="<?php echo $azione; ?>">
+            <input type="hidden" name="utente" value="<?php echo $utente; ?>">
+            <input type="hidden" name="gruppo" value="<?php echo $idGruppo; ?>">
+            <?php echo $nomeGruppo; ?>
+            <img style="float:right;" onclick="formModifica_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/modifica.png" alt="modifica" />
+            <img style="float:right;" onclick="form_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/<?php echo $azione; ?>.png" alt="aggiungi" />
+        </form>
+        <form action="?pagina=amministrazione&tab=gestione_gruppi" name="formModifica_<?php echo $idGruppo?>" method="POST">
+            <input type="hidden" name="gruppo" value="<?php echo $idGruppo; ?>">
+        </form>
+<?php
+    }
+?>
+<form action="?pagina=amministrazione&tab=gestione_gruppi" method="POST">
+    <input type="hidden" name="azione" value="nuovo">
+    <input class="bottCalendario" type="submit" value="Aggiungi Gruppo"/>
+</form>
     
