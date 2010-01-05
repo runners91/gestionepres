@@ -19,19 +19,22 @@
 
 function stampaUtenti(){
     echo '<form action="?pagina=amministrazione&tab=gestione_autorizzazioni" method="POST">';
-        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente id,nome,cognome FROM dipendenti;");
-        $firstId = $rs->fields['id'];
+        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente id,nome,cognome,username FROM dipendenti;");
+        $id = $rs->fields['id'];
         echo "<select name='utente' style='float:left;' onchange='this.form.submit();'>";
             while(!$rs->EOF){
                 $selected="";
-                if($rs->fields['id']==$_POST["utente"])
+                if($rs->fields['id'] == $_POST["utente"] || $rs->fields['username'] == $_GET["utente"]){
                     $selected="selected";
+                    $id = $rs->fields['id'];
+                }
+
                 echo '<option value="'.$rs->fields['id'].'" '.$selected.'>'.$rs->fields['nome'].' '.$rs->fields['cognome'].'</option>';
                 $rs->MoveNext();
             }
         echo "</select>";
     echo "</form>";
-    return $firstId;
+    return $id;
 }
 
 function stampaGruppi($utente){
