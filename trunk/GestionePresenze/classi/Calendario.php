@@ -340,9 +340,26 @@ class Calendario {
         else{
             echo "Evento salvato con successo !";
         }
-        ?><script language="javascript" type="text/javascript">
-            window.setTimeout("redirect('index.php')",1300);
-        </script><?php
+        $href = "index.php?pagina=home&data=".$_GET['data'];
+        ?>
+        <script language="javascript" type="text/javascript">
+            window.setTimeout("redirect('<?php echo $href ?>')",1000);
+        </script>
+        <?php
+    }
+
+
+     /**
+     * Stampa un report contenente gli eventi del giorno selezionato
+     */
+    static function stampaReportEventi(){
+        $dataGiorno = $_GET['data'];
+        $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
+        $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
+        echo $da." ".$a;
+        $sql = "SELECT c.nome as nome,e.priorita as priorita FROM eventi e,causali c WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale ORDER BY DATA_DA";
+        $rs = Database::getInstance()->eseguiQuery($sql);
+        if($rs->fields) Utilita::stampaTabella($rs);
     }
 }
 ?>
