@@ -45,9 +45,9 @@ class Evento {
                         <td colspan="2">
                             <div class="messaggioTaskErr">
                                 <?php
-                                    if(!Utilita::checkData($_POST['dataDa'],"",false) && $_POST){
+                                    if(!Calendario::checkData($_POST['dataDa'],"",false) && $_POST){
                                         $ok = false;
-                                        echo Utilita::checkData($_POST['dataDa'],"Da:",true);
+                                        echo Calendario::checkData($_POST['dataDa'],"Da:",true);
                                     }
                                 ?>
                             </div>
@@ -74,9 +74,9 @@ class Evento {
                         <td colspan="2">
                             <div class="messaggioTaskErr">
                                 <?php
-                                    if(!Utilita::checkData($_POST['dataA'],"",false) && $_POST){
+                                    if(!Calendario::checkData($_POST['dataA'],"",false) && $_POST){
                                         $ok = false;
-                                        echo Utilita::checkData($_POST['dataA'],"A:",true);
+                                        echo Calendario::checkData($_POST['dataA'],"A:",true);
                                     }
                                 ?>
                             </div>
@@ -152,7 +152,7 @@ class Evento {
                         <td colspan="3" class="messaggioTaskOk">
                             <?php
                                 if($ok && $_POST){
-                                    Calendario::inserisciDatiEvento();
+                                    Evento::inserisciDatiEvento();
                                 }
                             ?>
                         </td>
@@ -176,7 +176,7 @@ class Evento {
      */
     static function inserisciDatiEvento(){
         $sql =  "insert into eventi(data_da,data_a,fk_dipendente,fk_causale,commento,priorita) ";
-        $sql .= "values (".Utilita::getTimestamp($_POST['dataDa']).",".Utilita::getTimestamp($_POST['dataA']).",".$_POST['utente'].",".$_POST['tipo'].",'".$_POST['commento']."',".$_POST['etichetta'].");";
+        $sql .= "values (".Calendario::getTimestamp($_POST['dataDa']).",".Calendario::getTimestamp($_POST['dataA']).",".$_POST['utente'].",".$_POST['tipo'].",'".$_POST['commento']."',".$_POST['etichetta'].");";
 
         if (Database::getInstance()->getConnection()->execute($sql) === false) {
             echo 'Error inserting: '.$conn->ErrorMsg().'<BR>';
@@ -200,8 +200,10 @@ class Evento {
         $dataGiorno = $_GET['data'];
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
+        $preTxt = '<a href="#" onclick="setItem(\'id_evento\',';
+        $postTxt = ')"><img border="0" src="./img/modifica.png" /></a>';
 
-        $sql = "SELECT c.nome as Nome,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y %H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y %H:%i') as Al,e.priorita as Prt,e.commento as Commento FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.id_dipendente = e.fk_dipendente ORDER BY DATA_DA";
+        $sql = "SELECT CONCAT(".$preTxt.",e.id_evento,".$linkTxt.") as Edit, c.nome as Nome,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.priorita as Prt,e.commento as Commento FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.id_dipendente = e.fk_dipendente ORDER BY DATA_DA";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields){
             echo '<p class="cellaTitoloTask">Eventi di oggi</p>';
