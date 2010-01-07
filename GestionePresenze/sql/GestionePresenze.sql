@@ -1,4 +1,4 @@
--- MySQL Administrator  dump 1.4
+-- MySQL Administrator dump 1.4
 --
 -- ------------------------------------------------------
 -- Server version	5.1.30-community
@@ -99,8 +99,9 @@ CREATE TABLE `dipendenti_gruppi` (
 
 /*!40000 ALTER TABLE `dipendenti_gruppi` DISABLE KEYS */;
 INSERT INTO `dipendenti_gruppi` (`fk_dipendente`,`fk_gruppo`) VALUES 
- (3,1),
+ (3,2),
  (4,1),
+ (4,3),
  (5,1),
  (5,2);
 /*!40000 ALTER TABLE `dipendenti_gruppi` ENABLE KEYS */;
@@ -226,7 +227,7 @@ CREATE TABLE `gruppi` (
   `id_gruppo` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(45) NOT NULL,
   PRIMARY KEY (`id_gruppo`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `gruppi`
@@ -235,7 +236,8 @@ CREATE TABLE `gruppi` (
 /*!40000 ALTER TABLE `gruppi` DISABLE KEYS */;
 INSERT INTO `gruppi` (`id_gruppo`,`nome`) VALUES 
  (1,'admin'),
- (2,'utente');
+ (2,'utente'),
+ (3,'fighi');
 /*!40000 ALTER TABLE `gruppi` ENABLE KEYS */;
 
 
@@ -265,7 +267,11 @@ INSERT INTO `gruppi_pagine` (`fk_gruppo`,`fk_pagina`) VALUES
  (1,3),
  (1,4),
  (2,1),
- (2,4);
+ (2,4),
+ (3,1),
+ (3,2),
+ (3,3),
+ (3,4);
 /*!40000 ALTER TABLE `gruppi_pagine` ENABLE KEYS */;
 
 
