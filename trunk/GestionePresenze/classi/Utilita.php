@@ -37,69 +37,6 @@ class Utilita {
         echo '</table>';
     }
 
-    
-
-    /**
-     *
-     * Controlla se una data e' valida (dd/mm/yyyy - hh:mm)
-     * ritorna i messaggi di errore se $conMessaggi = true altrimenti ritorna true/false (data ok/non ok)
-     * @param String $d Contiene la data da controllare
-     * @param String $name Contiene il nome della data che viene controllata
-     * @param boolean $conMessaggi Indica cosa la funzione deve ritornare
-     */
-    static function checkData($d,$name,$conMessaggi){
-        $return = "";
-        $returnB = true;
-        if($d == null){
-            $returnB = false;
-            $return = "- Data ".$name." non inserita<br/>";
-            if($conMessaggi) return $return; else return $returnB;
-        }
-        if(!strpos($d,"-")){
-            $return = "- Il formato della data ".$name." non è corretto. ('-' tra data e ora non trovato)<br/>";
-            $returnB = false;
-            if($conMessaggi) return $return; else return $returnB;
-        }
-
-        $data   = explode("/",$d);
-        $giorno = $data[0];
-        $mese   = $data[1];
-        $anno   = substr($data[2],0,4);
-        if(!checkdate($mese, $giorno, $anno)){
-            $return .= "- La data ".$name." immessa non esiste<br/>";
-            $returnB = false;
-        }
-
-        $orario = explode(":",$d);
-        $ore    = substr($orario[0],-2);
-        $min    = $orario[1];
-        if($ore>23 || $ore<0){
-            $return .= "- L'ora ".$name." indicata non è valida<br/>";
-            $returnB = false;
-        }
-        if($min>60 || $min<0){
-            $return .= "- I minuti ".$name." indicati non sono validi<br/>";
-            $returnB = false;
-        }
-
-        if($conMessaggi) return $return; else return $returnB;
-    }
-
-     /**
-     *  Prende una data in formato dd/mm/yyyy hh:mm e la ritorna in timestamp
-     * @param String $d Contiente la data da convertire
-     */
-    static function getTimestamp($d){
-        $data   = explode("/",$d);
-        $giorno = $data[0];
-        $mese   = $data[1];
-        $anno   = substr($data[2],0,4);
-        $orario = explode(":",$d);
-        $ore    = substr($orario[0],-2);
-        $min    = $orario[1];
-
-        return mktime($ore, $min, 0, $mese, $giorno, $anno);
-    }
 
     /**
      *  Controlla se l'utente ha accesso alla pagina, ritorna true se è si, altrimenti ritorna false
