@@ -7,6 +7,7 @@
     else if($_POST["azione"]== "elimina"){
         Database::getInstance()->eseguiQuery("DELETE FROM dipendenti_gruppi where fk_dipendente = ".$_POST["utente"]." AND fk_gruppo = ".$_POST["gruppo"].";");
     }
+   
     if(isset($_POST["utente"]))
         $id = $_POST["utente"];
 
@@ -75,4 +76,8 @@ function stampaGruppi($utente){
     <input type="hidden" name="azione" value="nuovo">
     <input class="bottCalendario" type="submit" value="Aggiungi Gruppo"/>
 </form>
-    
+<form action="?pagina=amministrazione&tab=gestione_utente" method="POST">
+    <input type="hidden" name="azione" value="formModificaUtente">
+    <input type="hidden" name="utente" value="<?php echo $id;?>">
+    <input class="bottCalendario" type="submit" value="Modifica Utente"/>
+</form>
