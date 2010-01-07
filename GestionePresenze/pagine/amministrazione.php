@@ -8,11 +8,9 @@
             if($tabAttuale=="")
                 $tabAttuale = "inserisci_assenza";
 
-            creaSubmenuItem($paginaAttuale, $tabAttuale, "inserisci_assenza", "INSERISCI ASSENZA");
-            creaSubmenuItem($paginaAttuale, $tabAttuale, "inserisci_festivo", "INSERISCI FESTIVO");
-            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_utente", "UTENTI");
-            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_autorizzazioni", "AUTORIZZAZIONI");
-            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_gruppi", "GRUPPI");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_utente", "GESTIONE UTENTI");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_autorizzazioni", "GESTIONE AUTORIZZAZIONI");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_gruppi", "GESTIONE GRUPPI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_costanti", "MODIFICA DATI");
         ?>
     </ul>
