@@ -125,6 +125,7 @@ class Calendario {
                                         echo '<td class="cellaData">';
 
                                     echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'&event=Y">'.date("d",$dataGiorno).'</a>';
+                                    Calendario::stampaEventiGiorno($dataGiorno);
                                     echo '</td>';
                                 }
                             }
@@ -140,6 +141,27 @@ class Calendario {
         <?php
 
     }
+
+     /**
+     * Stampa all'interno dell cella di un giorno i suoi eventi
+     */
+    static function stampaEventiGiorno($dataGiorno){
+        $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
+        $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
+        
+        $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale ORDER BY DATA_DA LIMIT 3";
+        $rs = Database::getInstance()->eseguiQuery($sql);
+        while(!$rs->EOF) {
+            echo "<p class='prio".$rs->fields['priorita']."'>".$rs->fields['nome']."</p>";
+            $rs->MoveNext();
+        }
+        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi WHERE DATA_DA <= ".$da." and DATA_A >= ".$a);
+        if($rs->fields["c"]>3){
+            echo ($rs->fields["c"]-3)." more...";
+        }
+
+    }
+
 
      /**
      * Stampa il form per aggiungere assenze/vacanze/ecc...
@@ -159,13 +181,13 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td class="label required">
+                        <td class="label">
                             Da:
                         </td>
                         <td>
                             <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php
                             if(!$_POST)
-                                echo trim(date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:00');
+                                echo trim(date("d",$_GET['data']).'/'.date("m",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:00');
                             else
                                 echo $_POST['dataDa'];
                             ?>" />
@@ -188,13 +210,13 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td class="label required">
+                        <td class="label">
                             A:
                         </td>
                         <td>
                             <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php
                             if(!$_POST)
-                                echo trim(date("d",$_GET['data']).'/'.date("n",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:30');
+                                echo trim(date("d",$_GET['data']).'/'.date("m",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:30');
                             else
                                 echo $_POST['dataA'];
                             ?>" />
@@ -217,7 +239,7 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td class="label required">
+                        <td class="label">
                             Tipo:
                         </td>
                         <td>
@@ -240,7 +262,7 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td class="label required">
+                        <td class="label">
                             Utente:
                         </td>
                         <td>
@@ -263,24 +285,23 @@ class Calendario {
                         </td>
                     </tr>
                     <tr>
-                        <td class="label required">
-                            Priorit&agrave:
-                        </td>
-                        <td>
-                            <?php $txt = ""; if($_POST['etichetta']==1) $txt = "checked='checked'"; ?>
-                            <span class="superfluo"><input type="radio" name="etichetta" value="1" <?php echo $txt; ?> />1</span>
-                            <?php $txt = ""; if($_POST['etichetta']==2) $txt = "checked='checked'"; ?>
-                            <span class="ordinario"><input type="radio" name="etichetta" value="2" <?php echo $txt; ?> />2</span>
-                            <?php $txt = ""; if($_POST['etichetta']==3) $txt = "checked='checked'"; ?>
-                            <span class="importante"><input type="radio" name="etichetta" value="3" <?php echo $txt; ?> />3</span>
-                        </td>
-                    </tr>
-                    <tr>
                         <td class="label">
                             Commento:
                         </td>
                         <td>
                             <input type="textflied" name="commento" value="<?php echo $_POST['commento']; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            Priorit&agrave:
+                        </td>
+                        <td>
+                            <span class="superfluo"><input type="radio" name="etichetta" value="1" checked="checked" />1</span>
+                            <?php $txt = ""; if($_POST['etichetta']==2) $txt = "checked='checked'"; ?>
+                            <span class="ordinario"><input type="radio" name="etichetta" value="2" <?php echo $txt; ?> />2</span>
+                            <?php $txt = ""; if($_POST['etichetta']==3) $txt = "checked='checked'"; ?>
+                            <span class="importante"><input type="radio" name="etichetta" value="3" <?php echo $txt; ?> />3</span>
                         </td>
                     </tr>
                     <tr>
@@ -294,10 +315,10 @@ class Calendario {
                     </tr>
                     <tr>
                         <td>
-                            <input class="bottCalendario spazioTop" type="button" onclick="location.href = '?pagina=home&data=' + <?php echo $_GET['data']; ?> + '&event=N'" value="Annulla" />
+                            <input class="bottCalendario" type="button" onclick="location.href = '?pagina=home&data=' + <?php echo $_GET['data']; ?> + '&event=N'" value="Annulla" />
                         </td>
                         <td>
-                            <input class="bottCalendario spazioTop" type="submit" value="Salva" />
+                            <input class="bottCalendario" type="submit" value="Salva" />
                         </td>
                     </tr>
                 </table>
@@ -306,9 +327,12 @@ class Calendario {
     <?php
     }
 
+     /**
+     * Inserisce i dati dell'evento in POST nel DataBase
+     */
     static function inserisciDatiEvento(){
-        $sql =  "insert into eventi(data_da,data_a,fk_dipendente,fk_motivo,commento) ";
-        $sql .= "values (".Utilita::getTimestamp($_POST['dataA']).",".Utilita::getTimestamp($_POST['dataDa']).",".$_POST['utente'].",".$_POST['tipo'].",'".$_POST['commento']."');";
+        $sql =  "insert into eventi(data_da,data_a,fk_dipendente,fk_causale,commento,priorita) ";
+        $sql .= "values (".Utilita::getTimestamp($_POST['dataDa']).",".Utilita::getTimestamp($_POST['dataA']).",".$_POST['utente'].",".$_POST['tipo'].",'".$_POST['commento']."',".$_POST['etichetta'].");";
         
         if (Database::getInstance()->getConnection()->execute($sql) === false) {
             echo 'Error inserting: '.$conn->ErrorMsg().'<BR>';

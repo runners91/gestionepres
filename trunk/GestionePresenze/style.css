@@ -196,10 +196,6 @@ tr.reportRigaDati:hover {
     padding: 20px;
     float: left;
 }
-.parCalendario {
-    border: 1px solid black;
-    padding: 15px;
-}
 .cellaMese {
     font-weight: bold;
     font-size: 13pt;
@@ -221,7 +217,7 @@ tr.reportRigaDati:hover {
 .cellaData {
     border: 1px solid black;
     font-size: 10pt;
-    height: 80px;
+    height: 94px;
     vertical-align: text-top;
     padding: 5px;
 }
@@ -262,7 +258,7 @@ tr.reportRigaDati:hover {
 /*********************** STAMPA DEL FORM AGGIUNGI TASK *************************/
 .aggiungiTaskContainer {
     float: right;
-    border: 1px solid black;
+    --border: 1px solid black;
     padding: 20px;
 }
 .cellaTitoloTask {
@@ -271,13 +267,8 @@ tr.reportRigaDati:hover {
     padding: 10px 0 25px 0;
     text-decoration: underline;
 }
-.spazioTop {
-    margin-top: 20px;
-}
 .label {
     font-size: 10pt;
-}
-.required {
     font-weight: bold;
 }
 .imgCal {
@@ -291,18 +282,6 @@ tr.reportRigaDati:hover {
 .selectField {
     width: 145px;
 }
-.superfluo {    
-    font-weight: bold;
-    color: gray;
-}
-.ordinario {
-    font-weight: bold;
-    color: orange;
-}
-.importante {
-    font-weight: bold;
-    color: red;
-}
 .messaggioTaskOk {
     padding: 10px 0 10px 0;
     font-weight: bold;
@@ -312,6 +291,27 @@ tr.reportRigaDati:hover {
 .messaggioTaskErr {
     color: red;
     font-size: 9pt;
+}
+.prio1 {
+    font-weight: bold;
+    color: gray;
+    font-size: 9pt;
+    padding: 0;
+    margin: 0;
+}
+.prio2 {
+    font-weight: bold;
+    color: orange;
+    font-size: 9pt;
+    padding: 0;
+    margin: 0;
+}
+.prio3 {
+    font-weight: bold;
+    color: red;
+    font-size: 9pt;
+    padding: 0;
+    margin: 0;
 }
 /*******************************************************************************/
 
