@@ -340,6 +340,9 @@ class Calendario {
         else{
             echo "Evento salvato con successo !";
         }
+        ?><script language="javascript" type="text/javascript">
+            window.setTimeout("redirect('index.php')",1300);
+        </script><?php
     }
 }
 ?>
