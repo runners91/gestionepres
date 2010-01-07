@@ -22,7 +22,7 @@ class Utilita {
 
         echo '<tr class="reportRigaTitoli">';
         foreach ($rs->fields as $key => $value){
-            echo '<th class="reportCella"> '.$key.' </th>';
+            echo '<th class="reportCella"> '.$key.' </th>'; 
         }
         echo '</tr>';
 
