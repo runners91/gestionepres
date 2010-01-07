@@ -156,10 +156,8 @@ li#selectedTab a {
 /**************** IMPOSTAZIONE DELLA STAMPA DI UN REPORT ***********************/
 .reportTabella {
     background-color: #C1C1C3; /* Grigio chiaro */
-    -moz-border-radius: 5px;
-    margin: 5px;
     border-collapse: collapse;
-    border: 2px solid black;
+    font-size: 8pt;
 }
 .reportRigaTitoli {
     background-color: #1569C7; /* Celeste scuro */
@@ -175,7 +173,7 @@ tr.reportRigaDati:hover {
 
 .reportCella {
     padding: 3px 8px 3px 8px;
-    border: 1px solid black;
+    border: 1px solid gray;
 }
 /*******************************************************************************/
 
@@ -257,14 +255,14 @@ tr.reportRigaDati:hover {
 
 /*********************** STAMPA DEL FORM AGGIUNGI TASK *************************/
 .aggiungiTaskContainer {
-    float: right;
+    --float: right;
     --border: 1px solid black;
     padding: 20px;
 }
 .cellaTitoloTask {
     color: #5D92FA; /* celeste */
     font-weight: bold;
-    padding: 10px 0 25px 0;
+    padding: 0 0 5px 0;
     text-decoration: underline;
 }
 .label {
@@ -315,7 +313,8 @@ tr.reportRigaDati:hover {
 }
 /*******************************************************************************/
 
-/*********************** GESTIONE AUTORIZZAZIONI *************************/
+
+/*********************** GESTIONE AUTORIZZAZIONI *******************************/
 .errore {
     border: 1px solid red;
     background-color: #fff3f3;

@@ -8,7 +8,7 @@
         </td>
     </tr>
     <tr>
-        <td>
+        <td class="eventiOggi">
             <?php if(isset($_GET['data']) && $_GET['event']=="Y") Calendario::stampaReportEventi(); ?>
         </td>
     </tr>
