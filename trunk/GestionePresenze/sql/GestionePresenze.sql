@@ -1,4 +1,4 @@
--- MySQL Administrator dump 1.4
+-- MySQL Administrator  dump 1.4
 --
 -- ------------------------------------------------------
 -- Server version	5.1.30-community
@@ -22,32 +22,30 @@ CREATE DATABASE IF NOT EXISTS gestione_presenze;
 USE gestione_presenze;
 
 --
--- Definition of table `assenze`
+-- Definition of table `causali`
 --
 
-DROP TABLE IF EXISTS `assenze`;
-CREATE TABLE `assenze` (
-  `id_assenza` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `data` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'data dell''assenza',
-  `quantita` float NOT NULL COMMENT '0.5 = mezza giornata, 1 = un giorno',
-  `fk_dipendente` int(10) unsigned NOT NULL COMMENT 'id del dipendente assentato',
-  `fk_motivo` int(10) unsigned NOT NULL COMMENT 'id dalla tabella motivi (del motivo dell''assenza)',
-  PRIMARY KEY (`id_assenza`),
-  KEY `FK_assenze_1` (`fk_dipendente`),
-  KEY `FK_assenze_2` (`fk_motivo`),
-  CONSTRAINT `FK_assenze_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`),
-  CONSTRAINT `FK_assenze_2` FOREIGN KEY (`fk_motivo`) REFERENCES `motivi` (`id_motivo`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='Contiene tutte le possibili assenze che avvengono in azienda';
+DROP TABLE IF EXISTS `causali`;
+CREATE TABLE `causali` (
+  `id_motivo` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nome` varchar(45) NOT NULL,
+  `descrizione` varchar(4000) NOT NULL,
+  `quantita` float NOT NULL COMMENT '0.5 o 1',
+  PRIMARY KEY (`id_motivo`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i vari motivi di assenza che l''azienda preved';
 
 --
--- Dumping data for table `assenze`
+-- Dumping data for table `causali`
 --
 
-/*!40000 ALTER TABLE `assenze` DISABLE KEYS */;
-INSERT INTO `assenze` (`id_assenza`,`data`,`quantita`,`fk_dipendente`,`fk_motivo`) VALUES 
- (1,'0000-00-00 00:00:00',0.5,3,1),
- (2,'0000-00-00 00:00:00',1,4,3);
-/*!40000 ALTER TABLE `assenze` ENABLE KEYS */;
+/*!40000 ALTER TABLE `causali` DISABLE KEYS */;
+INSERT INTO `causali` (`id_motivo`,`nome`,`descrizione`,`quantita`) VALUES 
+ (1,'MALATTIA','Quando un dipendente è malato',0),
+ (2,'CONGEDO','In caso di matrimoni, funerali, traslochi, ecc...',0),
+ (3,'SCUOLA','In caso di presenza scolastica del dipendente',0),
+ (4,'VACANZA','In caso di vacanza del dipendente',0),
+ (5,'VACANZA 0.5','In caso di mezza giornata di vacanza del dipendente',0);
+/*!40000 ALTER TABLE `causali` ENABLE KEYS */;
 
 
 --
@@ -101,9 +99,10 @@ CREATE TABLE `dipendenti_gruppi` (
 
 /*!40000 ALTER TABLE `dipendenti_gruppi` DISABLE KEYS */;
 INSERT INTO `dipendenti_gruppi` (`fk_dipendente`,`fk_gruppo`) VALUES 
- (3,2),
+ (3,1),
  (4,1),
- (5,1);
+ (5,1),
+ (5,2);
 /*!40000 ALTER TABLE `dipendenti_gruppi` ENABLE KEYS */;
 
 
@@ -113,21 +112,37 @@ INSERT INTO `dipendenti_gruppi` (`fk_dipendente`,`fk_gruppo`) VALUES
 
 DROP TABLE IF EXISTS `eventi`;
 CREATE TABLE `eventi` (
-  `id_evento` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `nome` varchar(75) NOT NULL,
-  PRIMARY KEY (`id_evento`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `id_assenza` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `data_da` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'data dell''assenza',
+  `fk_dipendente` int(10) unsigned NOT NULL COMMENT 'id del dipendente assentato',
+  `fk_motivo` int(10) unsigned NOT NULL COMMENT 'id dalla tabella motivi (del motivo dell''assenza)',
+  `data_a` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `commento` varchar(4000) NOT NULL,
+  `priorita` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_assenza`),
+  KEY `FK_assenze_1` (`fk_dipendente`),
+  KEY `FK_assenze_2` (`fk_motivo`),
+  CONSTRAINT `FK_assenze_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`),
+  CONSTRAINT `FK_assenze_2` FOREIGN KEY (`fk_motivo`) REFERENCES `causali` (`id_motivo`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='Contiene tutte le possibili assenze che avvengono in azienda';
 
 --
 -- Dumping data for table `eventi`
 --
 
 /*!40000 ALTER TABLE `eventi` DISABLE KEYS */;
-INSERT INTO `eventi` (`id_evento`,`nome`) VALUES 
- (1,'assenza'),
- (2,'presenza fuori sede'),
- (3,'vacanza'),
- (4,'medico');
+INSERT INTO `eventi` (`id_assenza`,`data_da`,`fk_dipendente`,`fk_motivo`,`data_a`,`commento`,`priorita`) VALUES 
+ (1,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','cazzo teh',0),
+ (2,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','cazzo teh',0),
+ (3,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0),
+ (4,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0),
+ (5,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0),
+ (6,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0),
+ (7,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0),
+ (8,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0),
+ (9,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0),
+ (10,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0),
+ (11,'0000-00-00 00:00:00',4,3,'0000-00-00 00:00:00','da',0);
 /*!40000 ALTER TABLE `eventi` ENABLE KEYS */;
 
 
@@ -252,32 +267,6 @@ INSERT INTO `gruppi_pagine` (`fk_gruppo`,`fk_pagina`) VALUES
  (2,1),
  (2,4);
 /*!40000 ALTER TABLE `gruppi_pagine` ENABLE KEYS */;
-
-
---
--- Definition of table `motivi`
---
-
-DROP TABLE IF EXISTS `motivi`;
-CREATE TABLE `motivi` (
-  `id_motivo` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `nome` varchar(45) NOT NULL,
-  `descrizione` varchar(4000) NOT NULL,
-  PRIMARY KEY (`id_motivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i vari motivi di assenza che l''azienda preved';
-
---
--- Dumping data for table `motivi`
---
-
-/*!40000 ALTER TABLE `motivi` DISABLE KEYS */;
-INSERT INTO `motivi` (`id_motivo`,`nome`,`descrizione`) VALUES 
- (1,'MALATTIA','Quando un dipendente è malato'),
- (2,'CONGEDO','In caso di matrimoni, funerali, traslochi, ecc...'),
- (3,'SCUOLA','In caso di presenza scolastica del dipendente'),
- (4,'VACANZA','In caso di vacanza del dipendente'),
- (5,'VACANZA 0.5','In caso di mezza giornata di vacanza del dipendente');
-/*!40000 ALTER TABLE `motivi` ENABLE KEYS */;
 
 
 --
