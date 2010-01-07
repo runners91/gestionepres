@@ -200,10 +200,10 @@ class Evento {
         $dataGiorno = $_GET['data'];
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
-        $preTxt = '<a href="#" onclick="setItem(\'id_evento\',';
+        $preTxt = '<a href="#" onclick="setItem(id_evento,';
         $postTxt = ')"><img border="0" src="./img/modifica.png" /></a>';
 
-        $sql = "SELECT CONCAT(".$preTxt.",e.id_evento,".$linkTxt.") as Edit, c.nome as Nome,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.priorita as Prt,e.commento as Commento FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.id_dipendente = e.fk_dipendente ORDER BY DATA_DA";
+        $sql = "SELECT CONCAT('".$preTxt."',e.id_evento,'".$postTxt."') as Edit, c.nome as Nome,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.priorita as Prt,e.commento as Commento FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.id_dipendente = e.fk_dipendente ORDER BY DATA_DA";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields){
             echo '<p class="cellaTitoloTask">Eventi di oggi</p>';
