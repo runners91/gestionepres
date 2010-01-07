@@ -6,6 +6,7 @@
     }
     include("classi/Assenze.php");
     include("classi/Database.php");
+    include("classi/Dipendente.php");
     include("classi/Calendario.php");
     include("login.php");
     include("pagine/navigazione/menu.php");
@@ -13,7 +14,7 @@
     if(isset($_SESSION['username']) && isset($_GET['pagina']))
         if(!Utilita::verificaAccesso($_GET['pagina']))
             header('Location:index.php');
-    
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
