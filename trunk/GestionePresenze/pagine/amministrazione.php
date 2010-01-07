@@ -6,7 +6,7 @@
             $tabAttuale = $_GET['tab'];
 
             if($tabAttuale=="")
-                $tabAttuale = "inserisci_assenza";
+                $tabAttuale = "gestione_utente";
 
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_utente", "GESTIONE UTENTI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_autorizzazioni", "GESTIONE AUTORIZZAZIONI");
@@ -18,7 +18,7 @@
     <div id="contenuto">
         <?php
             if(!isset($_GET['tab'])){
-                include("tab/inserisci_assenza.php");
+                include("tab/gestione_utente.php");
             }
             else{
                 include("tab/".$_GET['tab'].".php");
