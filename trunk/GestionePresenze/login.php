@@ -17,6 +17,10 @@ function login($stampa = true){
             $rs = Database::getInstance()->eseguiQuery("select username as c from dipendenti where (BINARY username = '".$username."') and password = md5('".$password."')");
             if($rs->RecordCount() == 1){
                 $_SESSION['username'] = $username;
+                $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as inizio FROM dipendenti WHERE username = '".$username."' and password = md5('inizio');");
+                if($rs->fields["inizio"] == 1)
+                    header("Location:index.php?pagina=utente&tab=cambia_password&login=1");
+
             }
             else{
                 $msg = "Username o password errati !";
