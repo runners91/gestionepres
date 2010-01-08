@@ -111,7 +111,7 @@ class Calendario {
                                 $dataGiorno = mktime(0,0,0,date("n",$data),$j,date("Y",$data));
                                 if($j==$nrGiorno){
                                     echo '<td class="cellaSettimana">';
-                                        echo "Settimana ".date("W",mktime(0,0,0,date("n",$data),$j+7,date("Y",$date)));
+                                        echo "Sett-".date("W",mktime(0,0,0,date("n",$data),$j+7,date("Y",$date)));
                                     echo '</td>';
                                 }
                                 else{
