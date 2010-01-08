@@ -41,12 +41,6 @@ class Calendario {
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
      ?>
     <div id="calendario">
-            <?php
-                $flt = new Filtro("calendario");
-                $flt->addParam("prio", $_GET['prio']);
-                $flt->addParam("utn", $_GET['utn']);
-                $flt->addParam("tipo", $_GET['tipo']);
-            ?>
             <table>
                 <tr>
                     <td>
@@ -94,7 +88,7 @@ class Calendario {
                             <tr>
                                 <td>
                                     <?php $selected = Utilita::getValoreFiltro($_GET['prio']); ?>
-                                    <select name="filtroPrio" onchange="redirect('<?php echo Utilita::getUrlCompleto(); ?>&prio='+this.value)">
+                                    <select name="filtroPrio" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&prio='+this.value)">
                                         <option value="0">- Priorit&agrave;</option>
                                         <?php if($selected==1) $txt = 'selected="selected"'; ?>
                                         <option value="1" <?php echo $txt; ?>>Priotit&agrave 1</option>
@@ -105,7 +99,7 @@ class Calendario {
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="filtroUtente" onchange="redirect('<?php echo Utilita::getUrlCompleto(); ?>&utn='+this.value)">
+                                    <select name="filtroUtente" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&utn='+this.value)">
                                         <option value="0">- Utente</option>
                                         <?php
                                             $selected = Utilita::getValoreFiltro($_GET['utn']);
@@ -121,7 +115,7 @@ class Calendario {
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="filtroTipo" onchange="redirect('<?php echo Utilita::getUrlCompleto(); ?>&tipo='+this.value)">
+                                    <select name="filtroTipo" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&tipo='+this.value)">
                                         <option value="0">- Causale</option>
                                         <?php
                                             $selected = Utilita::getValoreFiltro($_GET['tipo']);
@@ -177,7 +171,7 @@ class Calendario {
                                         echo '<td class="cellaData">';
 
                                
-                                    echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'&event=Y">'.date("d",$dataGiorno).'</a>';
+                                    echo '<a class="linkGiorno" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&event=Y">'.date("d",$dataGiorno).'</a>';
                                     Calendario::stampaEventiGiorno($dataGiorno);
                                     echo '</td>';
                                 }
