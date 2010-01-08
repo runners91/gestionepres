@@ -80,7 +80,16 @@ class Evento {
             <?php
         }
     }
-    
+
+    function getTitoloForm(){
+        if($this->id_evento){
+            return "Evento Nr. ".$this->id_evento;
+        }
+        else{
+            return "Nuovo evento";
+        }
+    }
+
     function getNomeBottone(){
         if($this->id_evento){
             return "Salva";
