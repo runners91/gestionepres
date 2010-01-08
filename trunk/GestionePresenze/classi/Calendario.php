@@ -41,12 +41,18 @@ class Calendario {
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
      ?>
     <div id="calendario">
-        <form name="calendario" action="?pagina=home" method="POST">
+            <?php
+                $flt = new Filtro("calendario");
+                $flt->addParam("prio", $_GET['prio']);
+                $flt->addParam("utn", $_GET['utn']);
+                $flt->addParam("tipo", $_GET['tipo']);
+            ?>
             <table>
                 <tr>
                     <td>
                     </td>
-                    <td colspan="7" class="parCalendario">
+                    <td colspan="3" class="parCalendario">
+                        <form name="calendarioNav" action="?pagina=home" method="POST">
                         <table>
                             <tr>
                                 <td>
@@ -58,12 +64,6 @@ class Calendario {
                                 </td>
                                 <td>
                                     <input class="bottCalendario" type="submit" value=">" onmousedown="document.getElementById('m').value=1" />
-                                </td>
-                                <td class="cellaSpazio">
-
-                                </td>
-                                <td colspan="5" style="font-weight:bold;">
-                                    Filtra per:
                                 </td>
                             </tr>
                             <tr>
@@ -85,12 +85,16 @@ class Calendario {
                                         }
                                     ?></select>
                                 </td>
-                                <td class="cellaSpazio">
-
-                                </td>
+                            </tr>
+                        </table>
+                        </form>
+                    </td>
+                    <td colspan="4">
+                        <table>
+                            <tr>
                                 <td>
-                                    <?php if(!$_POST) $selected = $_GET['prio']; else $selected = $_POST['filtroPrio']; ?>
-                                    <select name="filtroPrio" onchange="submit()">
+                                    <?php $selected = Utilita::getValoreFiltro($_GET['prio']); ?>
+                                    <select name="filtroPrio" onchange="redirect('<?php echo Utilita::getUrlCompleto(); ?>&prio='+this.value)">
                                         <option value="0">- Priorit&agrave;</option>
                                         <?php if($selected==1) $txt = 'selected="selected"'; ?>
                                         <option value="1" <?php echo $txt; ?>>Priotit&agrave 1</option>
@@ -101,10 +105,10 @@ class Calendario {
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="filtroUtente" onchange="submit()">
+                                    <select name="filtroUtente" onchange="redirect('<?php echo Utilita::getUrlCompleto(); ?>&utn='+this.value)">
                                         <option value="0">- Utente</option>
                                         <?php
-                                            if(!$_POST) $selected = $_GET['utn']; else $selected = $_POST['filtroUtente'];
+                                            $selected = Utilita::getValoreFiltro($_GET['utn']);
                                             $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
                                             while(!$rs->EOF){
                                                 if($rs->fields['r']==$selected)
@@ -117,10 +121,10 @@ class Calendario {
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="filtroTipo" onchange="submit()">
+                                    <select name="filtroTipo" onchange="redirect('<?php echo Utilita::getUrlCompleto(); ?>&tipo='+this.value)">
                                         <option value="0">- Causale</option>
                                         <?php
-                                            if(!$_POST) $selected = $_GET['tipo']; else $selected = $_POST['filtroTipo'];
+                                            $selected = Utilita::getValoreFiltro($_GET['tipo']);
                                             $rs = Database::getInstance()->eseguiQuery("SELECT c.nome as d, c.id_motivo as r FROM causali c");
                                             while(!$rs->EOF){
                                                 if($rs->fields['r']==$selected)
@@ -130,13 +134,14 @@ class Calendario {
                                                 $rs->MoveNext();
                                             }
                                          ?>
-                                    </select>          
+                                    </select>
                                 </td>
                                 <td>
                                     <input class="bottCalendario" type="button" value="reset" onclick="location.href = '?pagina=home'" />
                                 </td>
                             </tr>
                         </table>
+                    </td>
                 </tr>
                 <tr height="20"></tr>
                 <tr>
@@ -171,11 +176,8 @@ class Calendario {
                                     else
                                         echo '<td class="cellaData">';
 
-                                    $parString = "";
-                                    if($_POST['filtroPrio']>0) $parString .= "&prio=".$_POST['filtroPrio'];
-                                    if($_POST['filtroUtente']>0) $parString .= "&utn=".$_POST['filtroUtente'];
-                                    if($_POST['filtroTipo']>0) $parString .= "&tipo=".$_POST['filtroTipo'];
-                                    echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'&event=Y'.$parString.'">'.date("d",$dataGiorno).'</a>';
+                               
+                                    echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'&event=Y">'.date("d",$dataGiorno).'</a>';
                                     Calendario::stampaEventiGiorno($dataGiorno);
                                     echo '</td>';
                                 }
@@ -187,7 +189,6 @@ class Calendario {
                     }
                 ?>
             </table>
-        </form>
     </div>
         <?php
 
@@ -199,9 +200,10 @@ class Calendario {
     static function stampaEventiGiorno($dataGiorno){
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
-        if(!$_POST['filtroPrio']) $prio = 0; else $prio = $_POST['filtroPrio'];
-        if(!$_POST['filtroTipo']) $tipo = 0; else $tipo = $_POST['filtroTipo'];
-        if(!$_POST['filtroUtente']) $utente = 0; else $utente = $_POST['filtroUtente'];
+
+        $prio    = Utilita::getValoreFiltro($_GET['prio']);
+        $utente  = Utilita::getValoreFiltro($_GET['utn']);
+        $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
         
         $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) ORDER BY DATA_DA LIMIT 3";
         $rs = Database::getInstance()->eseguiQuery($sql);

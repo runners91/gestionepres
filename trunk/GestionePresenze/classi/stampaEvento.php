@@ -15,7 +15,6 @@ class stampaEvento {
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         $ok = true;
         $evt = new Evento($_GET['id_evento']);
-
         ?>
         <div class="aggiungiTaskContainer" id="sel">
             <form name="taskCalendario" action="#" method="POST">
@@ -182,9 +181,10 @@ class stampaEvento {
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $editTxt  = '<a alt="ciao" href="index.php?pagina=home&data='.$_GET['data'].'&event=Y&id_evento='; $editTxt2 = '"><img border="0" src="./img/modifica.png" /></a>';
         $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
-        if(!$_GET['prio']) $prio = 0; else $prio = $_GET['prio'];
-        if(!$_GET['tipo']) $tipo = 0; else $tipo = $_GET['tipo'];
-        if(!$_GET['utn']) $utente = 0; else $utente = $_GET['utn'];
+        
+        $prio    = Utilita::getValoreFiltro($_GET['prio']);
+        $utente  = Utilita::getValoreFiltro($_GET['utn']);
+        $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
 
         $sql = "SELECT CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as ' ', CONCAT('".$editTxt."',e.id_evento,'".$editTxt2."') as Edit, c.nome as Nome,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) ORDER BY DATA_DA";
         $rs = Database::getInstance()->eseguiQuery($sql);
