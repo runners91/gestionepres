@@ -60,26 +60,70 @@ class Calendario {
                                     <input class="bottCalendario" type="submit" value=">" onmousedown="document.getElementById('m').value=1" />
                                 </td>
                                 <td class="cellaSpazio">
-                                    
+
+                                </td>
+                                <td colspan="5" style="font-weight:bold;">
+                                    Filtra per:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3">
+                                    <select class="selectCalendario" name="anno" onchange="submit()"><?php
+                                        for($i=1990;$i<2020;$i++){
+                                            if(date("Y",$data)==$i)
+                                                echo '<option value="'.$i.'" selected>'.$i.'</option>';
+                                            else
+                                                echo '<option value="'.$i.'">'.$i.'</option>';
+                                        }
+                                    ?></select>
+                                    <select class="selectCalendario" name="mese" onchange="submit()"><?php
+                                        foreach ($mesi as $key => $value) {
+                                            if(date("n",$data)==$key)
+                                                echo '<option value="'.$key.'" selected>'.$value.'</option>';
+                                            else
+                                                echo '<option value="'.$key.'">'.$value.'</option>';
+                                        }
+                                    ?></select>
+                                </td>
+                                <td class="cellaSpazio">
+
                                 </td>
                                 <td>
-                                    <select name="filtroPrio">
-                                        <option value="0">- Tutte</option>
-                                        <?php if($_POST['filtroPrio']==1) $txt = 'selected="selected"'; ?>
+                                    <?php if(!$_POST) $selected = $_GET['prio']; else $selected = $_POST['filtroPrio']; ?>
+                                    <select name="filtroPrio" onchange="submit()">
+                                        <option value="0">- Priorit&agrave;</option>
+                                        <?php if($selected==1) $txt = 'selected="selected"'; ?>
                                         <option value="1" <?php echo $txt; ?>>Priotit&agrave 1</option>
-                                        <?php $txt = ""; if($_POST['filtroPrio']==2) $txt = 'selected="selected"'; ?>
+                                        <?php $txt = ""; if($selected==2) $txt = 'selected="selected"'; ?>
                                         <option value="2" <?php echo $txt; ?>>Priotit&agrave 2</option>
-                                        <?php $txt = ""; if($_POST['filtroPrio']==3) $txt = 'selected="selected"'; ?>
+                                        <?php $txt = ""; if($selected==3) $txt = 'selected="selected"'; ?>
                                         <option value="3" <?php echo $txt; ?>>Priotit&agrave 3</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="filtroTipo">
-                                        <option value="0">- Vis. tutto</option>
+                                    <select name="filtroUtente" onchange="submit()">
+                                        <option value="0">- Utente</option>
                                         <?php
+                                            if(!$_POST) $selected = $_GET['utn']; else $selected = $_POST['filtroUtente'];
+                                            $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
+                                            while(!$rs->EOF){
+                                                if($rs->fields['r']==$selected)
+                                                    echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                                else
+                                                    echo '<option value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                                $rs->MoveNext();
+                                            }
+                                         ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="filtroTipo" onchange="submit()">
+                                        <option value="0">- Causale</option>
+                                        <?php
+                                            if(!$_POST) $selected = $_GET['tipo']; else $selected = $_POST['filtroTipo'];
                                             $rs = Database::getInstance()->eseguiQuery("SELECT c.nome as d, c.id_motivo as r FROM causali c");
                                             while(!$rs->EOF){
-                                                if($rs->fields['r']==$_POST['filtroTipo'])
+                                                if($rs->fields['r']==$selected)
                                                     echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
                                                 else
                                                     echo '<option value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
@@ -89,30 +133,7 @@ class Calendario {
                                     </select>          
                                 </td>
                                 <td>
-                                    <select class="selectCalendario" name="anno"><?php
-                                    for($i=1990;$i<2020;$i++){
-                                        if(date("Y",$data)==$i)
-                                            echo '<option value="'.$i.'" selected>'.$i.'</option>';
-                                        else
-                                            echo '<option value="'.$i.'">'.$i.'</option>';
-                                    }
-                                    ?></select>
-                                </td>
-                                <td>
-                                    <select class="selectCalendario" name="mese"><?php
-                                        foreach ($mesi as $key => $value) {
-                                            if(date("n",$data)==$key)
-                                                echo '<option value="'.$key.'" selected>'.$value.'</option>';
-                                            else
-                                                echo '<option value="'.$key.'">'.$value.'</option>';
-                                        }
-                                    ?></select>
-                                </td>
-                                <td>
-                                    <input class="bottCalendario" type="submit" value="Vai" />
-                                </td>
-                                <td>
-                                    <input class="bottCalendario" type="button" value="Oggi" onclick="location.href = '?pagina=home'" />
+                                    <input class="bottCalendario" type="button" value="reset" onclick="location.href = '?pagina=home'" />
                                 </td>
                             </tr>
                         </table>
@@ -150,7 +171,11 @@ class Calendario {
                                     else
                                         echo '<td class="cellaData">';
 
-                                    echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'&event=Y">'.date("d",$dataGiorno).'</a>';
+                                    $parString = "";
+                                    if($_POST['filtroPrio']>0) $parString .= "&prio=".$_POST['filtroPrio'];
+                                    if($_POST['filtroUtente']>0) $parString .= "&utn=".$_POST['filtroUtente'];
+                                    if($_POST['filtroTipo']>0) $parString .= "&tipo=".$_POST['filtroTipo'];
+                                    echo '<a class="linkGiorno" href="?pagina=home&data='.$dataGiorno.'&event=Y'.$parString.'">'.date("d",$dataGiorno).'</a>';
                                     Calendario::stampaEventiGiorno($dataGiorno);
                                     echo '</td>';
                                 }
@@ -176,14 +201,15 @@ class Calendario {
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         if(!$_POST['filtroPrio']) $prio = 0; else $prio = $_POST['filtroPrio'];
         if(!$_POST['filtroTipo']) $tipo = 0; else $tipo = $_POST['filtroTipo'];
+        if(!$_POST['filtroUtente']) $utente = 0; else $utente = $_POST['filtroUtente'];
         
-        $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) ORDER BY DATA_DA LIMIT 3";
+        $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) ORDER BY DATA_DA LIMIT 3";
         $rs = Database::getInstance()->eseguiQuery($sql);
         while(!$rs->EOF) {
             echo "<p class='prio".$rs->fields['priorita']."'>".$rs->fields['nome']."</p>";
             $rs->MoveNext();
         }
-        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and (fk_causale = ".$tipo." or ".$tipo." = 0 ) and (priorita = ".$prio." or ".$prio." = 0 )");
+        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and (fk_causale = ".$tipo." or ".$tipo." = 0 ) and (priorita = ".$prio." or ".$prio." = 0 ) and (fk_dipendente = ".$utente." or ".$utente." = 0 )");
         if($rs->fields["c"]>3){
             echo ($rs->fields["c"]-3)." altri...";
         }
