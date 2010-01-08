@@ -37,6 +37,25 @@ class Utilita {
         echo '</table>';
     }
 
+     /**
+     *  Ritorna la stringa dell'url completo attuale
+     */
+    static function getUrlCompleto(){
+        $url = "index.php?pagina=home";
+        if(isset($_GET['data'])) $url .= "&data=".$_GET['data'];
+        if(isset($_GET['event'])) $url .= "&event=".$_GET['event'];
+        if(isset($_GET['prio'])) $url .= "&prio=".$_GET['prio'];
+        if(isset($_GET['utn'])) $url .= "&utn=".$_GET['utn'];
+        if(isset($_GET['tipo'])) $url .= "&tipo=".$_GET['tipo'];
+        return $url;
+    }
+
+    function getValoreFiltro($val){
+        if(!$val)
+            return 0;
+        else
+            return $val;
+    }
 
     /**
      *  Controlla se l'utente ha accesso alla pagina, ritorna true se è si, altrimenti ritorna false
