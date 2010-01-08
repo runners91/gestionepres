@@ -15,6 +15,7 @@ class stampaEvento {
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         $ok = true;
         $evt = new Evento($_GET['id_evento']);
+        $data = Utilita::getDataHome();
         ?>
         <div class="aggiungiTaskContainer" id="sel">
             <form name="taskCalendario" action="#" method="POST">
@@ -31,7 +32,7 @@ class stampaEvento {
                         <td>
                             <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php
                             if(!$evt->getID())
-                                echo trim(date("d",$_GET['data']).'/'.date("m",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:00');
+                                echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:00');
                             else
                                 echo date("d/m/Y - H:i",$evt->getDataDa());
                             ?>" />
@@ -60,7 +61,7 @@ class stampaEvento {
                         <td>
                             <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php
                             if(!$evt->getID())
-                                echo trim(date("d",$_GET['data']).'/'.date("m",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:30');
+                                echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:30');
                             else
                                 echo date("d/m/Y - H:i",$evt->getDataA());
                             ?>" />
@@ -176,10 +177,10 @@ class stampaEvento {
      * Stampa un report contenente gli eventi del giorno selezionato
      */
     static function stampaReportEventi(){
-        $dataGiorno = $_GET['data'];
+        $dataGiorno = Utilita::getDataHome();
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
-        $editTxt  = '<a alt="ciao" href="index.php?pagina=home&data='.$_GET['data'].'&event=Y&id_evento='; $editTxt2 = '"><img border="0" src="./img/modifica.png" /></a>';
+        $editTxt  = '<a alt="ciao" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '"><img border="0" src="./img/modifica.png" /></a>';
         $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
         
         $prio    = Utilita::getValoreFiltro($_GET['prio']);
@@ -189,7 +190,7 @@ class stampaEvento {
         $sql = "SELECT CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as ' ', CONCAT('".$editTxt."',e.id_evento,'".$editTxt2."') as Edit, c.nome as Nome,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) ORDER BY DATA_DA";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields){
-            echo '<p class="cellaTitoloTask">Eventi del '.date("d.m.Y",$_GET['data']).'</p>';
+            echo '<p class="cellaTitoloTask">Eventi del '.date("d.m.Y",$dataGiorno).'</p>';
             Utilita::stampaTabella($rs);
         }
     }

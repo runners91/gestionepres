@@ -171,7 +171,7 @@ class Calendario {
                                         echo '<td class="cellaData">';
 
                                
-                                    echo '<a class="linkGiorno" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&event=Y">'.date("d",$dataGiorno).'</a>';
+                                    echo '<a class="linkGiorno" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
                                     Calendario::stampaEventiGiorno($dataGiorno);
                                     echo '</td>';
                                 }

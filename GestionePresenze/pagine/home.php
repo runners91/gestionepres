@@ -4,12 +4,12 @@
             <?php Calendario::stampaCalendario($_POST['m']); ?>
         </td>
         <td>
-            <?php if(isset($_GET['data']) && $_GET['event']=="Y") stampaEvento::stampaFormAggiungiEvento(); ?>
+            <?php stampaEvento::stampaFormAggiungiEvento(); ?>
         </td>
     </tr>
     <tr>
         <td class="eventiOggi">
-            <?php if(isset($_GET['data']) && $_GET['event']=="Y") stampaEvento::stampaReportEventi(); ?>
+            <?php stampaEvento::stampaReportEventi(); ?>
         </td>
     </tr>
 </table>
