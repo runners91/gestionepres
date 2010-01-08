@@ -22,7 +22,7 @@
             $errori["nuovaPwd"] = 1;
     }
     if($_GET["login"]==1)
-        echo "<b>cambia </b>"
+        echo "<b>Devi modificare la password </b>"
 ?>
 <form action="#" method="POST">
     <pre>
