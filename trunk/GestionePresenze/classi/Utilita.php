@@ -43,7 +43,6 @@ class Utilita {
     static function getHomeUrlCompleto(){
         $url = "index.php?pagina=home";
         if(isset($_GET['data'])) $url .= "&data=".$_GET['data'];
-        if(isset($_GET['event'])) $url .= "&event=".$_GET['event'];
         if(isset($_GET['prio'])) $url .= "&prio=".$_GET['prio'];
         if(isset($_GET['utn'])) $url .= "&utn=".$_GET['utn'];
         if(isset($_GET['tipo'])) $url .= "&tipo=".$_GET['tipo'];
@@ -61,12 +60,30 @@ class Utilita {
         return $url;
     }
 
+     /**
+     *  Ritorna il valore corretto per i filtri nelle query sql
+     */
     function getValoreFiltro($val){
         if(!$val)
             return 0;
         else
             return $val;
     }
+
+     /**
+     *  Ritorna la data in GET (pagina home.php) oppure quella di oggi se non è settato il GET
+     */
+     function getDataHome(){
+         if(isset($_GET['data'])){
+             return $_GET['data'];
+         }
+         else{
+            $anno   = date("Y",time());
+            $mese   = date("n",time());
+            $giorno = date("d",time());
+            return mktime(0,0,0,$mese,$giorno,$anno);
+         }
+     }
 
     /**
      *  Controlla se l'utente ha accesso alla pagina, ritorna true se è si, altrimenti ritorna false
