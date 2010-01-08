@@ -9,6 +9,7 @@
     include("classi/Dipendente.php");
     include("classi/Calendario.php");
     include("classi/Evento.php");
+    include("classi/stampaEvento.php");
     include("login.php");
     include("pagine/navigazione/menu.php");
 
