@@ -26,12 +26,12 @@ class Dipendente {
     }
     public function setNome($nome){
         if(strlen(trim($nome))==0)
-            $this->aggiungiErrore(1, "nome");
+            $this->aggiungiErrore(" - Nome non pu&ograve avere un valore nullo", "nome");
         $this->nome = $nome;
     }
     public function setCognome($cognome){
         if(strlen(trim($cognome))==0)
-            $this->aggiungiErrore(1, "cognome");
+            $this->aggiungiErrore(" - Cognome non pu&ograve avere un valore nullo", "cognome");
         $this->cognome = $cognome;
             
     }
@@ -40,9 +40,12 @@ class Dipendente {
         if(isset($this->id))
             $query = " AND id_dipendente != ".$this->id.";";
         $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as username from dipendenti where username = '".$_POST["username"]."'".$query);
-        if(strlen(trim($username))==0 || $rs->fields["username"]==1)
-            $this->aggiungiErrore(1, "username");
-
+        if(strlen(trim($username))==0 ){
+            $this->aggiungiErrore(" - Username non pu&ograve; avere un valore nullo", "username");
+        }
+            
+        else if($rs->fields["username"]==1)
+            $this->aggiungiErrore(" - Username gi&agrave; esistente", "username");
         $this->username = $username;
     }
     public function setFiliale($filiale){

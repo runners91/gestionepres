@@ -50,9 +50,9 @@
         <input type="hidden" name="azione" value="<?php echo $azione?>">
         <input type="hidden" name="utente" value="<?php echo $d->id; ?>">
         <pre>
-            Nome:       <input type="text" name="nome" value="<?php echo $d->nome; ?>" <?php echo $errori["nome"]==1?"class='errore'":""; ?>/><br />
-            Cognome:    <input type="text" name="cognome" value="<?php echo $d->cognome; ?>" <?php echo $errori["cognome"]==1?"class='errore'":""; ?>/><br />
-            Username:   <input type="text" name="username" value="<?php echo $d->username;?>" <?php echo $errori["username"]==1?"class='errore'":""; ?>/><br />
+            Nome:       <input type="text" name="nome" value="<?php echo $d->nome; ?>" <?php echo isset($errori["nome"])?"class='errore'":""; ?>/><span class="messaggioErrore"><?php echo $errori["nome"]; ?></span><br />
+            Cognome:    <input type="text" name="cognome" value="<?php echo $d->cognome; ?>" <?php echo isset($errori["cognome"])?"class='errore'":""; ?>/><span class="messaggioErrore"><?php echo $errori["cognome"]; ?></span><br />
+            Username:   <input type="text" name="username" value="<?php echo $d->username;?>" <?php echo isset($errori["username"])?"class='errore'":""; ?>/><span class="messaggioErrore"><?php echo $errori["username"]; ?></span><br />
             Filiale:    <select name="filiale">
                         <?php
                             $rs = Database::getInstance()->eseguiQuery("SELECT id_filiale,nome FROM filiali;");
