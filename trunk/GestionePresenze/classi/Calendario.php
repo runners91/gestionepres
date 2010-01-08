@@ -180,7 +180,7 @@ class Calendario {
             if($conMessaggi) return $return; else return $returnB;
         }
         if(!strpos($d,"-")){
-            $return = "- Il formato della data ".$name." non è corretto. ('-' tra data e ora non trovato)<br/>";
+            $return = "- Il formato della data ".$name." non è corretto.<br/>";
             $returnB = false;
             if($conMessaggi) return $return; else return $returnB;
         }
