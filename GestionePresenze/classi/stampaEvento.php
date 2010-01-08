@@ -31,10 +31,10 @@ class stampaEvento {
                         </td>
                         <td>
                             <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php
-                            if(!$_POST)
+                            if(!$evt->getID())
                                 echo trim(date("d",$_GET['data']).'/'.date("m",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:00');
                             else
-                                echo $evt->getDataDa();
+                                echo date("d/m/Y - H:i",$evt->getDataDa());
                             ?>" />
                         </td>
                         <td>
@@ -46,9 +46,9 @@ class stampaEvento {
                         <td colspan="2">
                             <div class="messaggioTaskErr">
                                 <?php
-                                    if(!Calendario::checkData($evt->getDataDa(),"",false) && $_POST){
+                                    if(!Calendario::checkData($_POST['dataDa'],"",false) && $_POST){
                                         $ok = false;
-                                        echo Calendario::checkData($evt->getDataDa(),"Da:",true);
+                                        echo Calendario::checkData($_POST['dataDa'],"Da:",true);
                                     }
                                 ?>
                             </div>
@@ -60,10 +60,10 @@ class stampaEvento {
                         </td>
                         <td>
                             <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php
-                            if(!$_POST)
+                            if(!$evt->getID())
                                 echo trim(date("d",$_GET['data']).'/'.date("m",$_GET['data']).'/'.date("Y",$_GET['data']).' - 08:30');
                             else
-                                echo $evt->getDataA();
+                                echo date("d/m/Y - H:i",$evt->getDataA());
                             ?>" />
                         </td>
                         <td>
@@ -75,9 +75,9 @@ class stampaEvento {
                         <td colspan="2">
                             <div class="messaggioTaskErr">
                                 <?php
-                                    if(!Calendario::checkData($evt->getDataA(),"",false) && $_POST){
+                                    if(!Calendario::checkData($_POST['dataA'],"",false) && $_POST){
                                         $ok = false;
-                                        echo Calendario::checkData($evt->getDataA(),"A:",true);
+                                        echo Calendario::checkData($_POST['dataA'],"A:",true);
                                     }
                                 ?>
                             </div>
@@ -102,7 +102,7 @@ class stampaEvento {
                              ?>
                             </select>
                             <div class="messaggioTaskErr">
-                                <?php if($_POST && $evt->getCausale()==0){ $ok = false; echo "- Tipo non inserito<br/>"; }?>
+                                <?php if($_POST && $_POST['tipo']==0){ $ok = false; echo "- Tipo non inserito<br/>"; }?>
                             </div>
                         </td>
                     </tr>
@@ -125,7 +125,7 @@ class stampaEvento {
                              ?>
                             </select>
                             <div class="messaggioTaskErr">
-                                <?php if($_POST && $evt->getDipendente()==0){ $ok = false; echo "- Utente non inserito<br/>"; }?>
+                                <?php if($_POST && $_POST['utente']==0){ $ok = false; echo "- Utente non inserito<br/>"; }?>
                             </div>
                         </td>
                     </tr>
@@ -163,7 +163,7 @@ class stampaEvento {
                             <input class="bottCalendario" type="button" onclick="location.href = '?pagina=home&data=' + <?php echo $_GET['data']; ?> + '&event=N'" value="Annulla" />
                         </td>
                         <td>
-                            <input class="bottCalendario" type="submit" value="<?php $evt->getNomeBottone() ?>" />
+                            <input class="bottCalendario" type="submit" value="<?php echo $evt->getNomeBottone() ?>" />
                         </td>
                     </tr>
                 </table>

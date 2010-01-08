@@ -28,6 +28,7 @@ class Evento {
                 $this->commento      = $rs->fields['commento'];
                 $this->fk_dipendente = $rs->fields['fk_dipendente'];
                 $this->fk_causale    = $rs->fields['fk_causale'];
+                $rs->MoveNext();
             }
         }
         else{
@@ -45,7 +46,15 @@ class Evento {
      */
     function inserisciDatiEvento(){
         if($this->id_evento){
+            $sql =  "update eventi set data_da = ".Calendario::getTimestamp($_POST['dataDa']).",data_a = ".Calendario::getTimestamp($_POST['dataA']).",fk_dipendente = ".$_POST['utente'].",fk_causale = ".$_POST['tipo'].",commento = '".$_POST['commento']."',priorita = ".$_POST['etichetta'];
+            $sql .= " where id_evento = ".$this->id_evento;
 
+            if (Database::getInstance()->getConnection()->execute($sql) === false) {
+                echo 'Errore nell`aggiornamento: '.$conn->ErrorMsg().'<BR>';
+            }
+            else{
+                echo "Evento salvato con successo !";
+            }
         }
         else{
             $sql =  "insert into eventi(data_da,data_a,fk_dipendente,fk_causale,commento,priorita) ";
