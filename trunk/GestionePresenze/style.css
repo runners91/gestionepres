@@ -17,7 +17,7 @@ body {
 #footer {
     border-top: 1px solid black;
     text-align: center;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     width: 97%;
     margin: 1%;
@@ -312,7 +312,6 @@ tr.reportRigaDati:hover {
     margin: 0;
 }
 /*******************************************************************************/
-
 
 /*********************** GESTIONE AUTORIZZAZIONI *******************************/
 .errore {
