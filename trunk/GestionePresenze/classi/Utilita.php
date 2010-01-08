@@ -38,12 +38,23 @@ class Utilita {
     }
 
      /**
-     *  Ritorna la stringa dell'url completo attuale
+     *  Ritorna la stringa dell'url completo attuale (pagina home.php)
      */
-    static function getUrlCompleto(){
+    static function getHomeUrlCompleto(){
         $url = "index.php?pagina=home";
         if(isset($_GET['data'])) $url .= "&data=".$_GET['data'];
         if(isset($_GET['event'])) $url .= "&event=".$_GET['event'];
+        if(isset($_GET['prio'])) $url .= "&prio=".$_GET['prio'];
+        if(isset($_GET['utn'])) $url .= "&utn=".$_GET['utn'];
+        if(isset($_GET['tipo'])) $url .= "&tipo=".$_GET['tipo'];
+        return $url;
+    }
+
+     /**
+     *  Ritorna la stringa dell'url attuale, solo filtri (pagina home.php)
+     */
+    static function getHomeUrlFiltri(){
+        $url = "index.php?pagina=home";
         if(isset($_GET['prio'])) $url .= "&prio=".$_GET['prio'];
         if(isset($_GET['utn'])) $url .= "&utn=".$_GET['utn'];
         if(isset($_GET['tipo'])) $url .= "&tipo=".$_GET['tipo'];
