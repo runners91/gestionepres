@@ -16,20 +16,30 @@ class Utilita {
      * Stampa un report contenente i dati del ResultSet passato come parametro
      * @param ResultSet $rs e' il ResultSet da cui estrapola i dati per stampare un report
      */
-    static function stampaTabella($rs){
+    static function stampaTabella($rs,$idSelezionato=0,$nascondiID=true){
         $max = $rs->FieldCount();
         echo '<table class="reportTabella">';
 
         echo '<tr class="reportRigaTitoli">';
         foreach ($rs->fields as $key => $value){
-            echo '<th class="reportCella"> '.$key.' </th>'; 
+            $style="";
+            if($key == "id")
+                $style="style='display:none;'";
+            echo '<th class="reportCella" '.$style.'> '.$key.' </th>';
         }
         echo '</tr>';
 
         while(!$rs->EOF){
-            echo '<tr class="reportRigaDati">';
+            $id = $rs->fields["id"];
+            $style = '';
+            if($id == $idSelezionato)
+                $style = 'style="background-color:#CEF6F5;"';
+            echo '<tr class="reportRigaDati"'.$style.'>';
                 foreach ($rs->fields as $key => $value){
-                    echo '<td class="reportCella"> '.$value.' </td>';
+                    $style="";
+                    if($key == "id")
+                        $style="style='display:none;'";
+                    echo '<td class="reportCella" '.$style.'> '.$value.' </td>';
                 }
                 $rs->MoveNext();
             echo '</tr>';
