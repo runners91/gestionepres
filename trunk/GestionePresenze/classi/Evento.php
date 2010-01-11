@@ -11,6 +11,8 @@ class Evento {
     private $data_a;
     private $priorita;
     private $commento;
+    private $stato;
+    private $commento_segn;
     private $fk_dipendente;
     private $fk_causale;
 
@@ -26,6 +28,8 @@ class Evento {
                 $this->data_a        = $rs->fields['data_a'];
                 $this->priorita      = $rs->fields['priorita'];
                 $this->commento      = $rs->fields['commento'];
+                $this->stato         = $rs->fields['stato'];
+                $this->commento_segn = $rs->fields['commento_segnalazione'];
                 $this->fk_dipendente = $rs->fields['fk_dipendente'];
                 $this->fk_causale    = $rs->fields['fk_causale'];
                 $rs->MoveNext();
@@ -39,6 +43,15 @@ class Evento {
             $this->fk_dipendente = $_POST['utente'];
             $this->fk_causale    = $_POST['tipo'];
         }
+    }
+
+    /**
+     * Aggiorna lo stato dell'evento
+     * @param int $stato stato che si vuole mettere
+     * @param String $commento commento della segnalazione nel caso lo stato è 3
+     */
+    function aggiornaStato($stato,$commento = ""){
+        return Database::getInstance()->eseguiQuery("UPDATE eventi set commento_segnalazione = '".$commento."', stato = ".$stato." WHERE id_evento = ".$this->id_evento.";");
     }
 
      /**
@@ -63,8 +76,8 @@ class Evento {
             <?php
         }
         else{
-            $sql =  "insert into eventi(data_da,data_a,fk_dipendente,fk_causale,commento,priorita) ";
-            $sql .= "values (".Calendario::getTimestamp($this->data_da).",".Calendario::getTimestamp($this->data_a).",".$this->fk_dipendente.",".$this->fk_causale.",'".$this->commento."',".$this->priorita.");";
+            $sql =  "insert into eventi(data_da,data_a,fk_dipendente,fk_causale,commento,priorita,stato) ";
+            $sql .= "values (".Calendario::getTimestamp($this->data_da).",".Calendario::getTimestamp($this->data_a).",".$this->fk_dipendente.",".$this->fk_causale.",'".$this->commento."',".$this->priorita.",2);";
 
             if (Database::getInstance()->getConnection()->execute($sql) === false) {
                 echo 'Errore nell`inserimento: '.$conn->ErrorMsg().'<BR>';
@@ -73,7 +86,7 @@ class Evento {
                 echo "Evento creato con successo !";
             }
             $href = "index.php?pagina=home&data=".$_GET['data'];
-            ?>
+            ?>,,k
             <script language="javascript" type="text/javascript">
                 window.setTimeout("redirect('<?php echo $href ?>')",1000);
             </script>
@@ -140,6 +153,18 @@ class Evento {
     }
     function setCausale($c){
         $this->fk_causale = $c;
+    }
+    function getStato(){
+        return $this->stato;
+    }
+    function setStato($s){
+        $this->stato = $s;
+    }
+    function getCommentoSegn(){
+        return $this->commento_segn;
+    }
+    function setCommentoSegn($c){
+        $this->commento_segn = $c;
     }
 }
 ?>

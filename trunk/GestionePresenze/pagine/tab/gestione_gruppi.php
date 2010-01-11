@@ -1,5 +1,6 @@
 <?php
     if($_POST["azione"] != "nuovo"){
+        $stampa = true;
         if($_POST["azione"] == "aggiungi"){
             Database::getInstance()->eseguiQuery("INSERT INTO gruppi_pagine values (".$_POST["gruppo"].",".$_POST["pagina"].");");
         }
@@ -7,7 +8,14 @@
             Database::getInstance()->eseguiQuery("DELETE FROM gruppi_pagine where fk_gruppo = ".$_POST["gruppo"]." AND fk_pagina = ".$_POST["pagina"].";");
         }
         else if($_POST["azione"] == "crea"){
-            Database::getInstance()->eseguiQuery("INSERT INTO gruppi (nome) values ('".$_POST["nome"]."');");
+            $nome = trim($_POST["nome"]);
+            if(strlen($nome)==0){
+                $errori["nome"] = "Il nome non pu&ograve; avere valore nullo";
+                stampaFormAggiungi($errori);
+                $stampa = false;
+            }
+            else
+                Database::getInstance()->eseguiQuery("INSERT INTO gruppi (nome) values ('".$nome."');");
         }
         else if($_POST["azione"] == "eliminaGruppo"){
             Database::getInstance()->eseguiQuery("DELETE FROM dipendenti_gruppi where fk_gruppo = ".$_POST["gruppo"].";");
@@ -15,21 +23,17 @@
             Database::getInstance()->eseguiQuery("DELETE FROM gruppi where id_gruppo = ".$_POST["gruppo"].";");
             unset($_POST["gruppo"]);
         }
-        $id = stampaGruppi();
+        if($stampa){
+            $id = stampaGruppi();
 
-        if(isset($_POST["gruppo"]))
-            $id = $_POST["gruppo"];
+            if(isset($_POST["gruppo"]))
+                $id = $_POST["gruppo"];
 
-        stampaPagine($id);
+            stampaPagine($id);
+        }
     }
     else {
-?>
-        <form action="#" method="POST">
-            <input type="hidden" name="azione" value="crea">
-            Nome Gruppo: <input type="text" name="nome"/>
-            <input type="submit" class="bottCalendario" value="Crea gruppo">
-        </form>
-<?php
+        stampaFormAggiungi();
     }
 ?>
 
@@ -95,4 +99,15 @@
         </form>
 <?php
 }
+    function stampaFormAggiungi($errori= null) {
+?>
+        <form action="#" method="POST">
+            <input type="hidden" name="azione" value="crea">
+            <div class="messaggioErrore"><?php echo $errori["nome"]; ?></div>
+            Nome Gruppo: <input type="text" name="nome" <?php echo isset($errori["nome"])?"class='errore'":""; ?>/>
+            <input type="submit" class="bottCalendario" value="Crea gruppo">
+            
+        </form>
+<?php
+    }
 ?>
