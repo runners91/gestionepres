@@ -4,10 +4,11 @@
             $commento = trim($_POST["commento"]);
             $idEvento = $_POST["id_evento"];
             $e = new Evento($_POST["id_evento"]);
-            if(strlen($commento)>0)
+            if(strlen($commento)>0) {
                 if($e->aggiornaStato(3,$commento)){
                     $messaggio = "<b>L'evento &egrave stato segnalato</b>";
                 }
+            }
             else {
                 $errori["commento"] = "Il commento non pu&ograve essere nullo";
                 $stampaform = true;
@@ -32,7 +33,8 @@
 
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->rowCount()>0)
-            Utilita::stampaTabella($rs,$e->getID());
+            Utilita::stampaTabella($rs,isset($e)?$e->getID():0);
+
 
          if($stampaform){
 ?>
