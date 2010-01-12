@@ -255,8 +255,8 @@ tr.reportRigaDati:hover {
 
 
 /*********************** STAMPA DEL FORM AGGIUNGI TASK *************************/
-.celleContainer {
-
+.aggiungiEventoContainer {
+    padding: 15px;
 }
 .cellaTitoloTask {
     color: #5D92FA; /* celeste */

@@ -3,16 +3,12 @@
 function creaMenuItem($paginaAttuale,$pagina){
     if(Utilita::verificaAccesso($pagina)){
         $class = "";
-        $preText = '<a class="menuLink" href="?pagina='.$pagina.'">';
-        $postText = '</a>';
-
+        
         if($paginaAttuale==$pagina){
             $class = " menuItemSelected";
-            $preText = "";
-            $postText = "";
         } ?>
         <td class="menuItem<?php echo $class ?>">
-            <?php echo $preText.ucfirst($pagina).$postText; ?>
+            <?php echo '<a class="menuLink" href="?pagina='.$pagina.'">'.ucfirst($pagina).'</a>'; ?>
         </td>
 <?php 
     }
