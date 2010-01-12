@@ -5,7 +5,7 @@
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td rowspan="2" class="cellaCalendario">
             <?php Calendario::stampaCalendario($_POST['m']); ?>
         </td>
         <td>
