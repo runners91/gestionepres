@@ -71,7 +71,7 @@ class Evento {
             $href = "index.php?pagina=home&data=".$_GET['data']."&event=Y&id_evento=".$_GET['id_evento'];
             ?>
             <script language="javascript" type="text/javascript">
-                window.setTimeout("redirect('<?php echo $href ?>')",400);
+                window.setTimeout("redirect('<?php echo $href ?>')",2000);
             </script>
             <?php
         }
@@ -86,9 +86,9 @@ class Evento {
                 echo "Evento creato con successo !";
             }
             $href = "index.php?pagina=home&data=".$_GET['data'];
-            ?>,,k
+            ?>
             <script language="javascript" type="text/javascript">
-                window.setTimeout("redirect('<?php echo $href ?>')",1000);
+                window.setTimeout("redirect('<?php echo $href ?>')",2000);
             </script>
             <?php
         }
