@@ -16,6 +16,16 @@ class stampaEvento {
         $ok = true;
         $evt = new Evento($_GET['id_evento']);
         $data = Utilita::getDataHome();
+
+        $sql = "SELECT * FROM eventi WHERE id_evento = ".$_GET['id_evento'];
+        $rs = Database::getInstance()->eseguiQuery($sql);
+        if($rs){
+            $rs->MoveNext();
+            $evt = new Evento($rs->fields['data_da'],$rs->fields['data_a'],$rs->fields['priorita'],$rs->fields['commento'],$rs->fields['stato'],$rs->fields['commento_segnalazione'],$rs->fields['fk_dipendente'],$rs->fields['fk_causale'],$_GET['id_evento']);
+        }
+        else{
+            $evt = new Evento($_POST['dataDa'],$_POST['dataA'],$_POST['etichetta'],$_POST['commento'],null,null,$_POST['utente'],$_POST['tipo']);
+        }    
         ?>
         <div class="aggiungiEventoContainer" id="sel">
             <form name="taskCalendario" action="#" method="POST">

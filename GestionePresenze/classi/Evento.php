@@ -18,31 +18,16 @@ class Evento {
 
 
 
-    function __construct($id_evento = null){
-        $this->id_evento = $id_evento;
-        if($this->id_evento){
-            $sql = "SELECT * FROM eventi WHERE id_evento = ".$this->id_evento;
-            $rs = Database::getInstance()->eseguiQuery($sql);
-            while(!$rs->EOF){
-                $this->data_da       = $rs->fields['data_da'];
-                $this->data_a        = $rs->fields['data_a'];
-                $this->priorita      = $rs->fields['priorita'];
-                $this->commento      = $rs->fields['commento'];
-                $this->stato         = $rs->fields['stato'];
-                $this->commento_segn = $rs->fields['commento_segnalazione'];
-                $this->fk_dipendente = $rs->fields['fk_dipendente'];
-                $this->fk_causale    = $rs->fields['fk_causale'];
-                $rs->MoveNext();
-            }
-        }
-        else{
-            $this->data_da       = $_POST['dataDa'];
-            $this->data_a        = $_POST['dataA'];
-            $this->priorita      = $_POST['etichetta'];
-            $this->commento      = $_POST['commento'];
-            $this->fk_dipendente = $_POST['utente'];
-            $this->fk_causale    = $_POST['tipo'];
-        }
+    function __construct($data_da,$data_a,$priorita,$commento,$stato,$commento_segn,$fk_dipendente,$fk_causale,$id_evento = null){
+        $this->id_evento     = $id_evento;
+        $this->data_da       = $data_da;
+        $this->data_a        = $data_a;
+        $this->priorita      = $priorita;
+        $this->commento      = $commento;
+        $this->stato         = $stato;
+        $this->commento_segn = $commento_segn;
+        $this->fk_dipendente = $fk_dipendente;
+        $this->fk_causale    = $fk_causale;
     }
 
     /**
@@ -57,9 +42,9 @@ class Evento {
      /**
      * Elimina l'evento
      */
-    static function eliminaEvento($id_evento){
+    function eliminaEvento(){
         if($id_evento)
-            return Database::getInstance()->eseguiQuery("DELETE FROM eventi where id_evento = ".$id_evento.";");
+            return Database::getInstance()->eseguiQuery("DELETE FROM eventi where id_evento = ".$this->id_evento.";");
         return false;
     }
 
