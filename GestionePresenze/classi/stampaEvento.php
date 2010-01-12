@@ -201,9 +201,9 @@ class stampaEvento {
     static function getTitoloReport($data){
         if(date("dmY",time())==date("dmY",$data))
             return "Eventi di Oggi - ".date("d.m.Y",$data);
-        else if(date("dmY",(time()+86400000))==date("dmY",$data))
+        else if(date("dmY",(time()+86400))==date("dmY",$data))
             return "Eventi di Domani - ".date("d.m.Y",$data);
-        else if(date("dmY",(time()-86400000))==date("dmY",$data))
+        else if(date("dmY",(time()-86400))==date("dmY",$data))
             return "Eventi di Ieri - ".date("d.m.Y",$data);
         else
             return "Eventi del ".date("d.m.Y",$data);

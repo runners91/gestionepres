@@ -11,7 +11,6 @@
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_utente", "GESTIONE UTENTI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_autorizzazioni", "GESTIONE AUTORIZZAZIONI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_gruppi", "GESTIONE GRUPPI");
-            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_costanti", "MODIFICA DATI");
         ?>
     </ul>
 
