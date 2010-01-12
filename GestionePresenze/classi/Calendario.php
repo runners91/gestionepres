@@ -199,7 +199,7 @@ class Calendario {
         $utente  = Utilita::getValoreFiltro($_GET['utn']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
         
-        $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) ORDER BY DATA_DA LIMIT 3";
+        $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
         $rs = Database::getInstance()->eseguiQuery($sql);
         while(!$rs->EOF) {
             echo "<p class='prio".$rs->fields['priorita']."'>".$rs->fields['nome']."</p>";
