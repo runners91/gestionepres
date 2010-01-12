@@ -17,7 +17,7 @@ class stampaEvento {
         $evt = new Evento($_GET['id_evento']);
         $data = Utilita::getDataHome();
         ?>
-        <div id="sel">
+        <div class="aggiungiEventoContainer" id="sel">
             <form name="taskCalendario" action="#" method="POST">
                 <table>
                     <tr>
