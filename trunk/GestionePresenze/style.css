@@ -191,7 +191,7 @@ tr.reportRigaDati:hover {
 
 /*********************** STAMPA DEL CALENDARIO *********************************/
 #calendario {
-    padding: 5px;
+    padding: 10px;
     float: left;
 }
 .cellaMese {
@@ -216,7 +216,7 @@ tr.reportRigaDati:hover {
     border: 1px solid black;
     font-size: 10pt;
     height: 94px;
-    width: 70px;
+    width: 80px;
     vertical-align: text-top;
     padding: 5px;
 }
@@ -255,10 +255,8 @@ tr.reportRigaDati:hover {
 
 
 /*********************** STAMPA DEL FORM AGGIUNGI TASK *************************/
-.aggiungiTaskContainer {
-    --float: right;
-    --border: 1px solid black;
-    padding: 20px;
+.celleContainer {
+
 }
 .cellaTitoloTask {
     color: #5D92FA; /* celeste */
