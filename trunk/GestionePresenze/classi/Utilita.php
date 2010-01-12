@@ -55,6 +55,7 @@ class Utilita {
         if(isset($_GET['data'])) $url .= "&data=".$_GET['data'];
         if(isset($_GET['prio'])) $url .= "&prio=".$_GET['prio'];
         if(isset($_GET['utn'])) $url .= "&utn=".$_GET['utn'];
+        if(isset($_GET['filiale'])) $url .= "&filiale=".$_GET['filiale'];
         if(isset($_GET['tipo'])) $url .= "&tipo=".$_GET['tipo'];
         return $url;
     }
@@ -66,6 +67,7 @@ class Utilita {
         $url = "index.php?pagina=home";
         if(isset($_GET['prio'])) $url .= "&prio=".$_GET['prio'];
         if(isset($_GET['utn'])) $url .= "&utn=".$_GET['utn'];
+        if(isset($_GET['filiale'])) $url .= "&filiale=".$_GET['filiale'];
         if(isset($_GET['tipo'])) $url .= "&tipo=".$_GET['tipo'];
         return $url;
     }

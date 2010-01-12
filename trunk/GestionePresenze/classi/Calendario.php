@@ -115,6 +115,22 @@ class Calendario {
                                     </select>
                                 </td>
                                 <td>
+                                    <select name="filtroFiliale" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&filiale='+this.value)">
+                                        <option value="0">- Filiale</option>
+                                        <?php
+                                            $selected = Utilita::getValoreFiltro($_GET['filiale']);
+                                            $rs = Database::getInstance()->eseguiQuery("SELECT f.nome as d, f.id_filiale as r FROM filiali f");
+                                            while(!$rs->EOF){
+                                                if($rs->fields['r']==$selected)
+                                                    echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                                else
+                                                    echo '<option value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                                $rs->MoveNext();
+                                            }
+                                         ?>
+                                    </select>
+                                </td>
+                                <td>
                                     <select name="filtroTipo" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&tipo='+this.value)">
                                         <option value="0">- Causale</option>
                                         <?php
@@ -197,17 +213,18 @@ class Calendario {
 
         $prio    = Utilita::getValoreFiltro($_GET['prio']);
         $utente  = Utilita::getValoreFiltro($_GET['utn']);
+        $filiale = Utilita::getValoreFiltro($_GET['filiale']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
         
-        $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
+        $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
         $rs = Database::getInstance()->eseguiQuery($sql);
         while(!$rs->EOF) {
             echo "<p class='prio".$rs->fields['priorita']."'>".$rs->fields['nome']."</p>";
             $rs->MoveNext();
         }
-        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and (fk_causale = ".$tipo." or ".$tipo." = 0 ) and (priorita = ".$prio." or ".$prio." = 0 ) and (fk_dipendente = ".$utente." or ".$utente." = 0 )");
+        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi e,dipendenti d WHERE e.DATA_DA <= ".$da." and e.DATA_A >= ".$a." and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 )");
         if($rs->fields["c"]>3){
-            echo ($rs->fields["c"]-3)." altri...";
+            echo "altri ".($rs->fields["c"]-3)."...";
         }
 
     }
