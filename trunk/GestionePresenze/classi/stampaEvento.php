@@ -46,7 +46,7 @@ class stampaEvento {
                         <td colspan="2">
                             <div class="messaggioTaskErr">
                                 <?php
-                                    if(!Calendario::checkData($_POST['dataDa'],"",false) && $_POST){
+                                    if(!Calendario::checkData($_POST['dataDa'],"",false) && Utilita::eseguiControlliFormEvento()){
                                         $ok = false;
                                         echo Calendario::checkData($_POST['dataDa'],"Da:",true);
                                     }
@@ -75,7 +75,7 @@ class stampaEvento {
                         <td colspan="2">
                             <div class="messaggioTaskErr">
                                 <?php
-                                    if(!Calendario::checkData($_POST['dataA'],"",false) && $_POST){
+                                    if(!Calendario::checkData($_POST['dataA'],"",false) && Utilita::eseguiControlliFormEvento()){
                                         $ok = false;
                                         echo Calendario::checkData($_POST['dataA'],"A:",true);
                                     }
@@ -102,7 +102,7 @@ class stampaEvento {
                              ?>
                             </select>
                             <div class="messaggioTaskErr">
-                                <?php if($_POST && $_POST['tipo']==0){ $ok = false; echo "- Tipo non inserito<br/>"; }?>
+                                <?php if($_POST['tipo']==0 && Utilita::eseguiControlliFormEvento()){ $ok = false; echo "- Tipo non inserito<br/>"; }?>
                             </div>
                         </td>
                     </tr>
@@ -125,7 +125,7 @@ class stampaEvento {
                              ?>
                             </select>
                             <div class="messaggioTaskErr">
-                                <?php if($_POST && $_POST['utente']==0){ $ok = false; echo "- Utente non inserito<br/>"; }?>
+                                <?php if($_POST['utente']==0 && Utilita::eseguiControlliFormEvento()){ $ok = false; echo "- Utente non inserito<br/>"; }?>
                             </div>
                         </td>
                     </tr>
@@ -152,7 +152,7 @@ class stampaEvento {
                     <tr>
                         <td colspan="3" class="messaggioTaskOk">
                             <?php
-                                if($ok && $_POST){
+                                if($ok && Utilita::eseguiControlliFormEvento()){
                                     $evt->inserisciDatiEvento();
                                 }
                             ?>

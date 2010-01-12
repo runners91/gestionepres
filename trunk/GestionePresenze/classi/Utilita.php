@@ -16,21 +16,21 @@ class Utilita {
      * Stampa un report contenente i dati del ResultSet passato come parametro
      * @param ResultSet $rs e' il ResultSet da cui estrapola i dati per stampare un report
      */
-    static function stampaTabella($rs,$idSelezionato=0,$nascondiID=true){
+    static function stampaTabella($rs,$idSelezionato=null,$nascondiID=true){
         $max = $rs->FieldCount();
         echo '<table class="reportTabella">';
 
         echo '<tr class="reportRigaTitoli">';
         foreach ($rs->fields as $key => $value){
             $style="";
-            if($key == "id")
+            if($key == "id" && $nascondiID)
                 $style="style='display:none;'";
             echo '<th class="reportCella" '.$style.'> '.$key.' </th>';
         }
         echo '</tr>';
 
         while(!$rs->EOF){
-            $id = $rs->fields["id"];
+            if($rs->fields["id"]) $id = $rs->fields["id"]; else $id = -1;
             $style = '';
             if($id == $idSelezionato)
                 $style = 'style="background-color:#CEF6F5;"';
@@ -73,17 +73,28 @@ class Utilita {
      /**
      *  Ritorna il valore corretto per i filtri nelle query sql
      */
-    function getValoreFiltro($val){
+    static function getValoreFiltro($val){
         if(!$val)
             return 0;
         else
             return $val;
     }
 
+    /**
+     *  Ritorna il true se i controlli sono da effettuare, false se invece no
+     */
+    static function eseguiControlliFormEvento(){
+        if($_POST && isset($_GET['data']))
+            return true;
+        else
+            return false;
+    }
+
+
      /**
      *  Ritorna la data in GET (pagina home.php) oppure quella di oggi se non è settato il GET
      */
-     function getDataHome(){
+     static function getDataHome(){
          if(isset($_GET['data'])){
              return $_GET['data'];
          }
@@ -97,7 +108,7 @@ class Utilita {
 
     /**
      *  Controlla se l'utente ha accesso alla pagina, ritorna true se è si, altrimenti ritorna false
-     * @param String $pagina Contiente la pagina da visualizzare
+     * @param String $pagina Contiente la pagina da contrlollare
      */
     static function verificaAccesso($pagina){
        if($pagina=="") $pagina = "home";
