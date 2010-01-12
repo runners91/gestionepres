@@ -55,6 +55,18 @@ class Evento {
     }
 
      /**
+     * Elimina l'evento
+     */
+    static function eliminaEvento($id_evento){
+        if($id_evento)
+            return Database::getInstance()->eseguiQuery("DELETE FROM eventi where id_evento = ".$id_evento.";");
+        return false;
+    }
+
+    function aggiornaEvento($dataDa,$dataA,$tipo,$commento,$prio,$stato){
+        return Database::getInstance()->eseguiQuery("UPDATE eventi SET data_da = ".Calendario::getTimestamp($dataDa).",data_a = ".Calendario::getTimestamp($dataA).",fk_causale = ".$tipo.",commento = '".$commento."',priorita = ".$prio.",stato = ".$stato." WHERE id_evento = ".$this->id_evento.";");
+    }
+     /**
      * Inserisce i dati dell'evento nel DataBase
      */
     function inserisciDatiEvento(){
