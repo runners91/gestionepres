@@ -265,12 +265,12 @@ class Calendario {
      */
     static function getTimestamp($d){
         $data   = explode("/",$d);
-        $giorno = $data[0];
-        $mese   = $data[1];
-        $anno   = substr($data[2],0,4);
+        $giorno = (int)$data[0];
+        $mese   = (int)$data[1];
+        $anno   = (int)(substr($data[2],0,4));
         $orario = explode(":",$d);
-        $ore    = substr($orario[0],-2);
-        $min    = $orario[1];
+        $ore    = (int)substr($orario[0],-2);
+        $min    = (int)$orario[1];
 
         return mktime($ore, $min, 0, $mese, $giorno, $anno);
     }
