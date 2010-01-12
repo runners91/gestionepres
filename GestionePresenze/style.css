@@ -191,7 +191,7 @@ tr.reportRigaDati:hover {
 
 /*********************** STAMPA DEL CALENDARIO *********************************/
 #calendario {
-    padding: 20px;
+    padding: 5px;
     float: left;
 }
 .cellaMese {
@@ -204,7 +204,7 @@ tr.reportRigaDati:hover {
 .cellaGiorno {
     padding: 10px;
     font-weight: bold;
-    width: 80px;
+    font-size: 10pt;
     text-align: center;
 }
 .cellaSettimana {
@@ -216,6 +216,7 @@ tr.reportRigaDati:hover {
     border: 1px solid black;
     font-size: 10pt;
     height: 94px;
+    width: 70px;
     vertical-align: text-top;
     padding: 5px;
 }
