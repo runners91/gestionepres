@@ -5,7 +5,7 @@
             $e = new Evento($_POST["id_evento"]);
             if(strlen($commento)>0) {
                 if($e->aggiornaStato(3,$commento)){
-                    $messaggio = "<b>L'evento &egrave stato segnalato</b>";
+                    $messaggioSucc = "<b>L'evento &egrave stato segnalato</b>";
                 }
             }
             else {
@@ -17,7 +17,7 @@
         if(isset($_GET["id_evento"])){
             $e = new Evento($_GET["id_evento"]);
             if($e->getStato() == 3){
-                $messaggio = "Non puoi segnalare questo evento";
+                $messaggioErr = "Non puoi segnalare questo evento";
                 $stampaform = false;
             }
             else
@@ -31,13 +31,27 @@
         $sql = "SELECT e.id_evento 'id', CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as '', c.nome as Nome,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento, CONCAT('".$segnTxt."',e.id_evento,'".$segnTxt2."') as Segnala FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale and d.id_dipendente = e.fk_dipendente and e.fk_dipendente = ".$utente." AND stato = 2 ORDER BY DATA_DA";
 
         $rs = Database::getInstance()->eseguiQuery($sql);
-        if($rs->rowCount()>0)
-            Utilita::stampaTabella($rs,isset($e)?$e->getID():0);
+        echo "<table><tr>";
+        if($rs->rowCount()>0) {
+            echo "<td valign='top'>";
+                Utilita::stampaTabella($rs,isset($e)?$e->getID():0);
+            echo "</td>";
+        }
 
+        if($stampaform){
+            echo "<td>";
+            echo "</td>";
+            echo "<td style='width:30px;'></td>";
+            echo "<td valign='top'>";
+                stampaFormCommento($e,$errori);
+            echo "</td>";
+        }
+        else 
+            echo '<td valign="top"><div class="messaggioErr">'.$messaggioErr.'</div><div class="messaggioTaskOk">'.$messaggioSucc.'</div></td>';
+        echo "</tr></table>";
 
-         if($stampaform){
+        function stampaFormCommento($e,$errori){
 ?>
-        <div style="position:absolute;top:160px;left:480px;">
             <div class="messaggioErrore"><?php echo $errori["commento"];?></div>
             Commento:
             <form action="index.php?pagina=utente&tab=segnalazione" method="POST">
@@ -46,9 +60,6 @@
                 <textarea cols="50" rows="8" name="commento" <?php echo isset($errori["commento"])?"class='errore'":""; ?>></textarea>
                 <input type="submit" value="Segnala evento" class="bottCalendario">
             </form>
-        </div>
     <?php
         }
-        else {
-            echo '<div style="position:absolute;top:160px;left:480px;" class="messaggioErrore">'.$messaggio.'</div>';
-        } ?>
+    ?>

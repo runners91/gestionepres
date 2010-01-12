@@ -1,62 +1,57 @@
 <?php
     $stampaform = false;
-    if($_POST["azione"] == "elimina"){
+    if($_POST["azione"] == "Elimina"){
         if(Evento::eliminaEvento($_POST["id_evento"]))
-            $messaggio = "l'evento &egrave; stato eliminato";
+            $messaggioSucc = "l'evento &egrave; stato eliminato";
     }
-    if($_POST["azione"] == "modifica"){
-        $e = new Evento($_POST["id_evento"]);
-        stampaFormModificaEvento($e);
-    }
-    if($_POST["azione"] == "salva"){
+    else if($_POST["azione"] == "Salva"){
         $e = new Evento($_POST["id_evento"]);
         if($e->aggiornaEvento($_POST["dataDa"], $_POST["dataA"], $_POST["tipo"], $_POST["commento"], $_POST["priorita"],2))
-            $messaggio = "Aggiornamento eseguito con successo";
+            $messaggioSucc = "Aggiornamento eseguito con successo";
         else
-            $messaggio = "non &egrave; stato possibile modificare l'evento";
+            $messaggioErr = "non &egrave; stato possibile modificare l'evento";
     }
 
-    if(isset($_GET["id_evento"])){
+    if(isset($_GET["id_evento"]) && $_GET["azione"] == "visualizza"){
         $e = new Evento($_GET["id_evento"]);
-        if($e->getStato() != 3){
-            $messaggio = "Questo evento non è stato segnalato";
-        }
-        else
+        if($e->getStato() == 3)
             $stampaform = true;
+        else
+            $messaggioErr = "Questo evento non è stato segnalato";
     }
     $visTxt = '<a href="index.php?pagina=amministrazione&tab=gestione_segnalazioni&&azione=visualizza&&id_evento='; $visTxt2 = ' ">visualizza</a>';
     $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
     $sql = "SELECT e.id_evento 'id', CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as '',d.username as Utente, c.nome as Nome,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento, CONCAT('".$visTxt."',e.id_evento,'".$visTxt2."') as Visualizza FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale AND d.id_dipendente = e.fk_dipendente AND stato = 3 ORDER BY DATA_DA";
 
     $rs = Database::getInstance()->eseguiQuery($sql);
-    if($rs->rowCount()>0)
-        Utilita::stampaTabella($rs,isset($e)?$e->getID():0);
+    echo "<table><tr>";
+    if($rs->rowCount()>0) {
+        echo "<td valign='top'>";
+            Utilita::stampaTabella($rs,isset($e)?$e->getID():0);
+        echo "</td>";
+    }
     else
-        $messaggio = "Non ci sono segnalazioni";
+        $messaggioErr = "Non ci sono segnalazioni";
 
-    if($stampaform){
-?>
-        <div style="position:absolute;top:160px;left:520px;">
-            Commento Segnalazione:
-            <?php echo $e->getCommentoSegn(); ?>
-            <form action="index.php?pagina=amministrazione&tab=gestione_segnalazioni" method="POST">
-                <input type="hidden" name="id_evento" value="<?php echo $e->getID(); ?>">
-                <input type="submit" name="azione" value="modifica" class="bottCalendario">
-                <input type="submit" name="azione" value="elimina" class="bottCalendario">
-            </form>
-        </div>
-<?php
+    if($stampaform) {
+        echo "<td>";
+            stampaFormModificaEvento($e);
+        echo "</td>";
+        echo "<td style='width:30px;'></td>";
+        echo "<td valign='top'>";
+            echo "<b>Commento Segnalazione:</b><br />";
+            echo $e->getCommentoSegn();
+        echo "</td>";
     }
-    else {
-        echo '<div style="position:absolute;top:160px;left:520px;" class="messaggioErrore">'.$messaggio.'</div>';
-    }
-    function stampaFormModificaEvento($e) {
-?>
-    <div style="position:absolute;top:160px;left:520px;">
+    else 
+        echo '<td style="width:30px;"></td><td valign="top" ><div class="messaggioErrore">'.$messaggioErr.'</div> <div class="messaggioTaskOk">'.$messaggioSucc.'</div></td>';
+    echo "</tr></table>";
     
+    function stampaFormModificaEvento($e) {
+    
+?>
     <form action="index.php?pagina=amministrazione&tab=gestione_segnalazioni" method="POST">
         <input type="hidden" name="id_evento" value="<?php echo $e->getID(); ?>">
-        <input type="hidden" name="azione" value="salva">
         <table>
             <tr>
                 <td class="cellaTitoloTask" colspan="2">
@@ -126,16 +121,14 @@
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="Salva" class="bottCalendario">
+                    <input type="submit" name="azione" value="Elimina" class="bottCalendario" /> &nbsp;<input type="button" value="Annulla" class="bottCalendario" onclick="location.href = '?pagina=amministrazione&tab=gestione_segnalazioni'">
                 </td>
                 <td>
-                    <input type="button" value="Annulla" class="bottCalendario" onclick="location.href = '?pagina=amministrazione&tab=gestione_segnalazioni'">
+                    <input type="submit" name="azione" value="Salva" class="bottCalendario" />
                 </td>
             </tr>
         </table>
-        <br><br><br>
     </form>
-    </div>
 <?php
     }
 ?>
