@@ -2,7 +2,6 @@
         $stampaform = false;
         if($_POST["azione"] == "segnala"){
             $commento = trim($_POST["commento"]);
-            $idEvento = $_POST["id_evento"];
             $e = new Evento($_POST["id_evento"]);
             if(strlen($commento)>0) {
                 if($e->aggiornaStato(3,$commento)){
