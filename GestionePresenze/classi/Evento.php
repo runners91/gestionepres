@@ -16,8 +16,6 @@ class Evento {
     private $fk_dipendente;
     private $fk_causale;
 
-
-
     function __construct($data_da,$data_a,$priorita,$commento,$stato,$commento_segn,$fk_dipendente,$fk_causale,$id_evento = null){
         $this->id_evento     = $id_evento;
         $this->data_da       = $data_da;
@@ -37,7 +35,7 @@ class Evento {
     static function getEvento($id_evento){
         $sql = "SELECT * FROM eventi WHERE id_evento = ".$id_evento;
         $rs = Database::getInstance()->eseguiQuery($sql);
-        return new Evento($rs->fields['data_da'],$rs->fields['data_a'],$rs->fields['priorita'],$rs->fields['commento'],$rs->fields['stato'],$rs->fields['commento_segnalazione'],$rs->fields['fk_dipendente'],$rs->fields['fk_causale'],$_GET['id_evento']);
+        return new Evento($rs->fields['data_da'],$rs->fields['data_a'],$rs->fields['priorita'],$rs->fields['commento'],$rs->fields['stato'],$rs->fields['commento_segnalazione'],$rs->fields['fk_dipendente'],$rs->fields['fk_causale'],$id_evento);
     }
 
     /**
