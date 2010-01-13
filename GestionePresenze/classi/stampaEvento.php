@@ -17,9 +17,7 @@ class stampaEvento {
         $data = Utilita::getDataHome();
 
         if(isset($_GET['id_evento']) && !isset($_POST['action'])){
-            $sql = "SELECT * FROM eventi WHERE id_evento = ".$_GET['id_evento'];
-            $rs = Database::getInstance()->eseguiQuery($sql);
-            $evt = new Evento($rs->fields['data_da'],$rs->fields['data_a'],$rs->fields['priorita'],$rs->fields['commento'],$rs->fields['stato'],$rs->fields['commento_segnalazione'],$rs->fields['fk_dipendente'],$rs->fields['fk_causale'],$_GET['id_evento']);
+            $evt = Evento::getEvento($_GET['id_evento']);
         }
         else{
             $evt = new Evento($_POST['dataDa'],$_POST['dataA'],$_POST['etichetta'],$_POST['commento'],2,null,$_POST['utente'],$_POST['tipo'],$_GET['id_evento']);
@@ -175,7 +173,7 @@ class stampaEvento {
                                     }
                                     ?>
                                         <script type="text/javascript">
-                                            window.setTimeout("redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>'",1000);
+                                            window.setTimeout("redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>')",1000);
                                         </script>
                                     <?php
                                 }
@@ -190,7 +188,7 @@ class stampaEvento {
                             <input class="bottCalendario" type="submit" value="Elimina" onclick="document.getElementById('action').value='elimina'" />
                         <?php } ?>
                         <?php if($evt->getID()){ ?>
-                            <input class="bottCalendario" type="submit" value="Salva" onclick="document.getElementById('action').value='aggiorna'" />
+                            <input class="bottCalendario" type="submit" value="Salva" onclick="document.getElementById('action').value='aggiorna';" />
                         <?php } ?>
                         <?php if(!$evt->getID()){ ?>
                             <input class="bottCalendario" type="submit" value="Crea" onclick="document.getElementById('action').value='inserisci'" />
