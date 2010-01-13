@@ -8,7 +8,7 @@
         <td rowspan="2" valign="top" class="cellaCalendario">
             <?php Calendario::stampaCalendario($_POST['m']); ?>
         </td>
-        <td>
+        <td valign="top">
             <?php stampaEvento::stampaFormAggiungiEvento(); ?>
         </td>
     </tr>
