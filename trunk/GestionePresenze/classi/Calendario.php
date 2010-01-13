@@ -286,6 +286,7 @@ class Calendario {
      /**
      *  Prende una data in formato dd/mm/yyyy hh:mm e la ritorna in timestamp
      * @param String $d Contiente la data da convertire
+     * @return int
      */
     static function getTimestamp($d){
         $data   = explode("/",$d);

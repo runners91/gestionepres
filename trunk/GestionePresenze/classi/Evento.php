@@ -168,7 +168,7 @@ class Evento {
     }
     function setDipendente($d){
         if($d==0)
-            $this->aggiungiErrore("Dipendente non inserito","fk_dipendente");
+            $this->aggiungiErrore("- Dipendente non inserito","fk_dipendente");
         $this->fk_dipendente = $d;
     }
     function getCausale(){
@@ -176,7 +176,7 @@ class Evento {
     }
     function setCausale($c){
         if($c==0)
-            $this->aggiungiErrore("Causale non inserita","fk_causale");
+            $this->aggiungiErrore("- Causale non inserita","fk_causale");
         $this->fk_causale = $c;
     }
     function getStato(){
