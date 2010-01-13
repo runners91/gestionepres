@@ -120,8 +120,8 @@ li#selectedTab a {
 /************************************** FORM DI LOGIN **************************/
 .messaggioErrore {
     color: red;
+    font-size: 9pt;
     font-weight: bold;
-    font-style: italic;
     padding: 3px 0 3px 0;
 }
 .linkAiuti {
