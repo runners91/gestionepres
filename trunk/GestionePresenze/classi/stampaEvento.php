@@ -14,17 +14,15 @@ class stampaEvento {
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         $ok = true;
-        $evt = new Evento($_GET['id_evento']);
         $data = Utilita::getDataHome();
 
-        $sql = "SELECT * FROM eventi WHERE id_evento = ".$_GET['id_evento'];
-        $rs = Database::getInstance()->eseguiQuery($sql);
-        if($rs){
-            $rs->MoveNext();
+        if(isset($_GET['id_evento']) && !isset($_POST['action'])){
+            $sql = "SELECT * FROM eventi WHERE id_evento = ".$_GET['id_evento'];
+            $rs = Database::getInstance()->eseguiQuery($sql);
             $evt = new Evento($rs->fields['data_da'],$rs->fields['data_a'],$rs->fields['priorita'],$rs->fields['commento'],$rs->fields['stato'],$rs->fields['commento_segnalazione'],$rs->fields['fk_dipendente'],$rs->fields['fk_causale'],$_GET['id_evento']);
         }
         else{
-            $evt = new Evento($_POST['dataDa'],$_POST['dataA'],$_POST['etichetta'],$_POST['commento'],null,null,$_POST['utente'],$_POST['tipo']);
+            $evt = new Evento($_POST['dataDa'],$_POST['dataA'],$_POST['etichetta'],$_POST['commento'],2,null,$_POST['utente'],$_POST['tipo'],$_GET['id_evento']);
         }    
         ?>
         <div class="aggiungiEventoContainer" id="sel">
@@ -162,18 +160,41 @@ class stampaEvento {
                     <tr>
                         <td colspan="3" class="messaggioTaskOk">
                             <?php
-                                if($ok && Utilita::eseguiControlliFormEvento()){
-                                    $evt->inserisciDatiEvento();
+                                if($ok && Utilita::eseguiControlliFormEvento(false)){
+                                    if($_POST['action']=="inserisci"){
+                                        if($evt->inserisciEvento())
+                                            echo "Evento inserito con successo";
+                                    }
+                                    else if($_POST['action']=="aggiorna"){
+                                        if($evt->aggiornaEvento())
+                                            echo "Evento aggiornato con successo";
+                                    }
+                                    else if($_POST['action']=="elimina"){
+                                        if($evt->eliminaEvento())
+                                            echo "Evento eliminato con successo";
+                                    }
+                                    ?>
+                                        <script type="text/javascript">
+                                            window.setTimeout("redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>'",1000);
+                                        </script>
+                                    <?php
                                 }
                             ?>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <input class="bottCalendario" type="button" onclick="location.href = '?pagina=home&data=' + <?php echo $_GET['data']; ?> + '&event=N'" value="Annulla" />
-                        </td>
-                        <td>
-                            <input class="bottCalendario" type="submit" value="<?php echo $evt->getNomeBottone() ?>" />
+                        <td colspan="3">
+                            <input id="action" type="hidden" name="action" />
+                            <input class="bottCalendario" type="button" onclick="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>')" value="Annulla" />
+                        <?php if($evt->getID()){ ?>
+                            <input class="bottCalendario" type="submit" value="Elimina" onclick="document.getElementById('action').value='elimina'" />
+                        <?php } ?>
+                        <?php if($evt->getID()){ ?>
+                            <input class="bottCalendario" type="submit" value="Salva" onclick="document.getElementById('action').value='aggiorna'" />
+                        <?php } ?>
+                        <?php if(!$evt->getID()){ ?>
+                            <input class="bottCalendario" type="submit" value="Crea" onclick="document.getElementById('action').value='inserisci'" />
+                        <?php } ?>
                         </td>
                     </tr>
                 </table>

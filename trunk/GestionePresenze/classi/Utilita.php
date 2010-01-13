@@ -82,14 +82,19 @@ class Utilita {
             return $val;
     }
 
+
     /**
-     *  Ritorna il true se i controlli sono da effettuare, false se invece no
+     * Ritorna il true se i controlli sono da effettuare, false se invece no
+     * @param boolean $conElimina indica se controllare anche action in post oppure no
+     * @return boolean
      */
-    static function eseguiControlliFormEvento(){
+    static function eseguiControlliFormEvento($conElimina=false){
         if($_POST && isset($_GET['data']))
-            return true;
-        else
-            return false;
+            if(!$conElimina || $_POST['action']!="elimina")
+                return true;
+            else
+                return false;
+        return false;
     }
 
 

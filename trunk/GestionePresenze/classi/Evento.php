@@ -40,57 +40,40 @@ class Evento {
     }
 
      /**
-     * Elimina l'evento
+     * Elimina l'evento dal Database
      */
     function eliminaEvento(){
-        if($id_evento)
+        if($this->id_evento)
             return Database::getInstance()->eseguiQuery("DELETE FROM eventi where id_evento = ".$this->id_evento.";");
         return false;
     }
 
-    function aggiornaEvento($dataDa,$dataA,$tipo,$commento,$prio,$stato){
-        return Database::getInstance()->eseguiQuery("UPDATE eventi SET data_da = ".Calendario::getTimestamp($dataDa).",data_a = ".Calendario::getTimestamp($dataA).",fk_causale = ".$tipo.",commento = '".$commento."',priorita = ".$prio.",stato = ".$stato." WHERE id_evento = ".$this->id_evento.";");
+    /**
+    * Esegue l'inserimento nel Database e ne ritorna la riuscita (true/false)
+    * @return boolean
+    */
+    function inserisciEvento(){
+        $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale) ";
+        $sql .= "values (".Calendario::getTimestamp($this->data_da).",".Calendario::getTimestamp($this->data_a).",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.");";
+        return Database::getInstance()->getConnection()->execute($sql);
     }
-     /**
-     * Inserisce i dati dell'evento nel DataBase
+
+    /**
+    * Esegue l'aggiornamento nel Database e ne ritorna la riuscita (true/false)
+    * @return boolean
+    */
+    function aggiornaEvento(){
+        $sql =  "update eventi set data_da = ".Calendario::getTimestamp($this->data_da).",data_a = ".Calendario::getTimestamp($this->data_a).",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."' ";
+        $sql .= "where id_evento = ".$this->id_evento.";";
+
+        return Database::getInstance()->getConnection()->execute($sql);
+   }
+
+
+    /**
+     * Ritorna il titolo del form in base ai dati contenuti nell'oggetto Evento
+     * @return String
      */
-    function inserisciDatiEvento(){
-        if($this->id_evento){
-            $sql =  "update eventi set data_da = ".Calendario::getTimestamp($_POST['dataDa']).",data_a = ".Calendario::getTimestamp($_POST['dataA']).",fk_dipendente = ".$_POST['utente'].",fk_causale = ".$_POST['tipo'].",commento = '".$_POST['commento']."',priorita = ".$_POST['etichetta'];
-            $sql .= " where id_evento = ".$this->id_evento;
-
-            if (Database::getInstance()->getConnection()->execute($sql) === false) {
-                echo 'Errore nell`aggiornamento: '.$conn->ErrorMsg().'<BR>';
-            }
-            else{
-                echo "Evento salvato con successo !";
-            }
-            $href = "index.php?pagina=home&data=".$_GET['data']."&event=Y&id_evento=".$_GET['id_evento'];
-            ?>
-            <script language="javascript" type="text/javascript">
-                window.setTimeout("redirect('<?php echo $href ?>')",2000);
-            </script>
-            <?php
-        }
-        else{
-            $sql =  "insert into eventi(data_da,data_a,fk_dipendente,fk_causale,commento,priorita,stato) ";
-            $sql .= "values (".Calendario::getTimestamp($this->data_da).",".Calendario::getTimestamp($this->data_a).",".$this->fk_dipendente.",".$this->fk_causale.",'".$this->commento."',".$this->priorita.",2);";
-
-            if (Database::getInstance()->getConnection()->execute($sql) === false) {
-                echo 'Errore nell`inserimento: '.$conn->ErrorMsg().'<BR>';
-            }
-            else{
-                echo "Evento creato con successo !";
-            }
-            $href = "index.php?pagina=home&data=".$_GET['data'];
-            ?>
-            <script language="javascript" type="text/javascript">
-                window.setTimeout("redirect('<?php echo $href ?>')",2000);
-            </script>
-            <?php
-        }
-    }
-
     function getTitoloForm(){
         if($this->id_evento){
             return "Evento Nr. ".$this->id_evento;
@@ -100,14 +83,6 @@ class Evento {
         }
     }
 
-    function getNomeBottone(){
-        if($this->id_evento){
-            return "Salva";
-        }
-        else{
-            return "Crea";
-        }
-    }
 
     function getID(){
         return $this->id_evento;
