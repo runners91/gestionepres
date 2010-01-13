@@ -124,7 +124,7 @@ class Evento {
      * @param String $d Indica dove e' successo l'errore
      */
     function aggiungiErrore($errore, $d){
-        if(Utilita::eseguiControlliFormEvento()) $this->errori[$d]  = $errore;
+        $this->errori[$d]  = $errore;
     }
 
     function getID(){
