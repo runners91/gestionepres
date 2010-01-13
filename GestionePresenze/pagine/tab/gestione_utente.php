@@ -4,7 +4,7 @@
             if($_POST["utente"] > 0){
                 $d = new Dipendente();
                 $d->trovaUtenteDaId($_POST["utente"]);
-                creaFormUtente($d,$d->errori,"modificaUtente","Modifica Utente");
+                creaFormUtente($d,$d->errori,"modificaUtente","Salva");
             }
             else
                 creaFormUtente();
@@ -35,7 +35,7 @@
             }
             else {
                 unset($_POST["azione"]);
-                creaFormUtente($d,$d->errori,"modificaUtente","Modifica Utente");
+                creaFormUtente($d,$d->errori,"modificaUtente","Salva");
             }
         }
     }
@@ -49,11 +49,27 @@
     <form action="#" method="POST">
         <input type="hidden" name="azione" value="<?php echo $azione?>">
         <input type="hidden" name="utente" value="<?php echo $d->id; ?>">
-        <pre>
-            Nome:       <input type="text" name="nome" value="<?php echo $d->nome; ?>" <?php echo isset($errori["nome"])?"class='errore'":""; ?>/><span class="messaggioErrore"><?php echo $errori["nome"]; ?></span><br />
-            Cognome:    <input type="text" name="cognome" value="<?php echo $d->cognome; ?>" <?php echo isset($errori["cognome"])?"class='errore'":""; ?>/><span class="messaggioErrore"><?php echo $errori["cognome"]; ?></span><br />
-            Username:   <input type="text" name="username" value="<?php echo $d->username;?>" <?php echo isset($errori["username"])?"class='errore'":""; ?>/><span class="messaggioErrore"><?php echo $errori["username"]; ?></span><br />
-            Filiale:    <select name="filiale">
+
+        <table>
+            <tr>
+                <td>Nome:</td>
+                <td><input type="text" name="nome" value="<?php echo $d->nome; ?>" <?php echo isset($errori["nome"])?"class='errore'":""; ?>/></td>
+                <td class="messaggioErrore"><?php echo $errori["nome"]; ?></td>
+            </tr>
+            <tr>
+                <td>Cognome:</td>
+                <td><input type="text" name="cognome" value="<?php echo $d->cognome; ?>" <?php echo isset($errori["cognome"])?"class='errore'":""; ?>/></td>
+                <td class="messaggioErrore"><?php echo $errori["cognome"]; ?></td>
+            </tr>
+            <tr>
+                <td>Username:</td>
+                <td><input type="text" name="username" value="<?php echo $d->username;?>" <?php echo isset($errori["username"])?"class='errore'":""; echo $d->username==$_SESSION["username"]?" disabled":"";?> /></td>
+                <td class="messaggioErrore"><?php echo $errori["username"]; ?></td>
+            </tr>
+            <tr>
+                <td>Filiale:</td>
+                <td>
+                    <select name="filiale">
                         <?php
                             $rs = Database::getInstance()->eseguiQuery("SELECT id_filiale,nome FROM filiali;");
                             $idFiliale = $d->filiale;
@@ -65,9 +81,12 @@
                                 $rs->MoveNext();
                             }
                           ?>
-                        </select>
-        </pre>
-        <input type="submit" value="<?php echo $bottone; ?>" class="bottCalendario">
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <input type="button" value="Annulla" onclick="location.href='index.php?pagina=amministrazione&tab=gestione_utente'" class="bottCalendario"> &nbsp;<input type="submit" value="<?php echo $bottone; ?>" class="bottCalendario">
     </form>
 <?php
     }

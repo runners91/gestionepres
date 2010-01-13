@@ -13,13 +13,15 @@
         $e->setPriorita($_POST["priorita"]);
         $e->setCommento($_POST["commento"]);
         $e->setStato(2);
-        $e->setCommentoSegn("");
         $e->setCausale($_POST["tipo"]);
-
-        if($e->aggiornaEvento())
-            $messaggioSucc = "Aggiornamento eseguito con successo";
+        if(sizeof($e->errori)==0){
+            if($e->aggiornaEvento())
+                $messaggioSucc = "Aggiornamento eseguito con successo";
+            else
+                $messaggioErr = "non &egrave; stato possibile modificare l'evento";
+        }
         else
-            $messaggioErr = "non &egrave; stato possibile modificare l'evento";
+            $stampaform = true;
     }
 
     if(isset($_GET["id_evento"]) && $_GET["azione"] == "visualizza"){
@@ -75,10 +77,16 @@
                 Da:
                 </td>
                 <td>
-                    <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php echo date("d/m/Y - H:i",$e->getDataDa()); ?>" />
+                    <input id="sel1" class="calTextfield<?php echo isset($e->errori["data_da"])?" errore":"";?>" type="textfield" name="dataDa" value="<?php echo date("d/m/Y - H:i",$e->getDataDa()); ?>" />
                 </td>
                 <td>
                     <input value="" type="reset" onclick="return showCalendar('sel1', '%d/%m/%Y - %H:%M');" class="imgCal" />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <span class="messaggioErrore"><?php echo $e->errori["data_da"]; ?></span>
                 </td>
             </tr>
             <tr>
@@ -86,10 +94,16 @@
                     A:
                 </td>
                 <td>
-                    <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php echo date("d/m/Y - H:i",$e->getDataA()); ?>" />
+                    <input id="sel2" class="calTextfield <?php echo isset($e->errori["data_a"])?" errore":"";?>" type="textfield" name="dataA" value="<?php echo date("d/m/Y - H:i",$e->getDataA()); ?>" />
                 </td>
                 <td>
                     <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y - %H:%M');" class="imgCal" />
+                </td>
+            </tr>
+                        <tr>
+                <td></td>
+                <td colspan="2">
+                    <span class="messaggioErrore"><?php echo $e->errori["data_a"]; ?></span>
                 </td>
             </tr>
             <tr>
@@ -132,11 +146,8 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    <input type="submit" name="azione" value="Elimina" class="bottCalendario" /> &nbsp;<input type="button" value="Annulla" class="bottCalendario" onclick="location.href = '?pagina=amministrazione&tab=gestione_segnalazioni'">
-                </td>
-                <td>
-                    <input type="submit" name="azione" value="Salva" class="bottCalendario" />
+                <td colspan="3">
+                    <input type="button" value="Annulla" class="bottCalendario" onclick="location.href = '?pagina=amministrazione&tab=gestione_segnalazioni'"> &nbsp;<input type="submit" name="azione" value="Elimina" class="bottCalendario" /> &nbsp;<input type="submit" name="azione" value="Salva" class="bottCalendario" />
                 </td>
             </tr>
         </table>
