@@ -91,15 +91,19 @@ class Dipendente {
         return $this;
     }
 
-    static function trovaUtenteDaUsername($username){
-        $d = new Dipendente();
+    /**
+     * Trova l'utente in base al nome utente passato e lo salva nell'oggetto
+     * @param int $username nome utente dell'utente da cercare
+     * @return Dipendente l'oggetto con i dati del dipendente cercato
+     */
+    function trovaUtenteDaUsername($username){
         $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale from dipendenti where username = '".$username."';");
-        $d->id = $rs->fields["id_dipendente"];
-        $d->nome = $rs->fields["nome"];
-        $d->cognome = $rs->fields["cognome"];
-        $d->username = $rs->fields["username"];
-        $d->filiale = $rs->fields["fk_filiale"];
-        return $d;
+        $this->id = $rs->fields["id_dipendente"];
+        $this->nome = $rs->fields["nome"];
+        $this->cognome = $rs->fields["cognome"];
+        $this->username = $username;
+        $this->filiale = $rs->fields["fk_filiale"];
+        return $this;
     }
 
      /**

@@ -1,27 +1,36 @@
 <?php
     $stampaform = false;
     if($_POST["azione"] == "Elimina"){
-        if(Evento::eliminaEvento($_POST["id_evento"]))
+        $e = Evento::getEvento($_POST["id_evento"]);
+        if($e->eliminaEvento($_POST["id_evento"]))
             $messaggioSucc = "l'evento &egrave; stato eliminato";
     }
     else if($_POST["azione"] == "Salva"){
-        $e = new Evento($_POST["id_evento"]);
-        if($e->aggiornaEvento($_POST["dataDa"], $_POST["dataA"], $_POST["tipo"], $_POST["commento"], $_POST["priorita"],2))
+        $e = Evento::getEvento($_POST["id_evento"]);
+        $e->setDataDa($_POST["dataDa"]);
+        $e->setDataA($_POST["dataA"]);
+        $e->setPriorita($_POST["priorita"]);
+        $e->setCommento($_POST["commento"]);
+        $e->setStato(2);
+        $e->setCommentoSegn("");
+        $e->setCausale($_POST["tipo"]);
+
+        if($e->aggiornaEvento())
             $messaggioSucc = "Aggiornamento eseguito con successo";
         else
             $messaggioErr = "non &egrave; stato possibile modificare l'evento";
     }
 
     if(isset($_GET["id_evento"]) && $_GET["azione"] == "visualizza"){
-        $e = new Evento($_GET["id_evento"]);
+        $e = Evento::getEvento($_GET["id_evento"]);
         if($e->getStato() == 3)
             $stampaform = true;
         else
             $messaggioErr = "Questo evento non è stato segnalato";
     }
-    $visTxt = '<a href="index.php?pagina=amministrazione&tab=gestione_segnalazioni&&azione=visualizza&&id_evento='; $visTxt2 = ' ">visualizza</a>';
+    $visTxt = '<a href="index.php?pagina=amministrazione&tab=gestione_segnalazioni&&azione=visualizza&&id_evento='; $visTxt2 = ' "><img border="0" src="img/modifica.png" /></a>';
     $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
-    $sql = "SELECT e.id_evento 'id', CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as '',d.username as Utente, c.nome as Nome,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento, CONCAT('".$visTxt."',e.id_evento,'".$visTxt2."') as Visualizza FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale AND d.id_dipendente = e.fk_dipendente AND stato = 3 ORDER BY DATA_DA";
+    $sql = "SELECT e.id_evento 'id', CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as '',d.username as Utente, c.nome as Nome,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento, CONCAT('".$visTxt."',e.id_evento,'".$visTxt2."') as Edit FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale AND d.id_dipendente = e.fk_dipendente AND stato = 3 ORDER BY DATA_DA";
 
     $rs = Database::getInstance()->eseguiQuery($sql);
     echo "<table><tr>";
@@ -52,6 +61,7 @@
 ?>
     <form action="index.php?pagina=amministrazione&tab=gestione_segnalazioni" method="POST">
         <input type="hidden" name="id_evento" value="<?php echo $e->getID(); ?>">
+        <input type="hidden" name="utente" value="<?php echo $e->get; ?>">
         <table>
             <tr>
                 <td class="cellaTitoloTask" colspan="2">
