@@ -1,12 +1,13 @@
 <?php
     $stampaform = false;
     if($_POST["azione"] == "Elimina"){
-        $e = Evento::getEvento($_POST["id_evento"]);
+        $e = new Evento($_POST["id_evento"]);
         if($e->eliminaEvento($_POST["id_evento"]))
             $messaggioSucc = "l'evento &egrave; stato eliminato";
     }
     else if($_POST["azione"] == "Salva"){
-        $e = Evento::getEvento($_POST["id_evento"]);
+        $e = new Evento();
+        $e->getValoriDB($_POST["id_evento"]);
         $e->setDataDa($_POST["dataDa"]);
         $e->setDataA($_POST["dataA"]);
         $e->setPriorita($_POST["priorita"]);
@@ -22,7 +23,8 @@
     }
 
     if(isset($_GET["id_evento"]) && $_GET["azione"] == "visualizza"){
-        $e = Evento::getEvento($_GET["id_evento"]);
+        $e = new Evento();
+        $e->getValoriDB($_GET["id_evento"]);
         if($e->getStato() == 3)
             $stampaform = true;
         else
