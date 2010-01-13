@@ -59,9 +59,6 @@ class Calendario {
                     <td>
                         <input class="bottCalendario" type="submit" value=">" onmousedown="document.getElementById('m').value=1" />
                     </td>
-                    <td class="cellaSpazio">
-                         
-                    </td>
                     <td>
                         <select class="selectCalendario" name="anno" onchange="submit()"><?php
                             for($i=1990;$i<2020;$i++){
@@ -81,6 +78,9 @@ class Calendario {
                                     echo '<option value="'.$key.'">'.$value.'</option>';
                             }
                         ?></select>
+                    </td>
+                    <td class="cellaSpazio">
+
                     </td>
                     <td>
                         <?php $selected = Utilita::getValoreFiltro($_GET['prio']); ?>

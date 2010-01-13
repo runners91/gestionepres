@@ -89,11 +89,9 @@ class Utilita {
      * @return boolean
      */
     static function eseguiControlliFormEvento($conElimina=false){
-        if($_POST && isset($_GET['data']))
-            if(!$conElimina || $_POST['action']!="elimina")
-                return true;
-            else
-                return false;
+        if(isset($_POST['action']) && ($_POST['action']!="elimina" || !$conElimina))
+            return true;
+          
         return false;
     }
 

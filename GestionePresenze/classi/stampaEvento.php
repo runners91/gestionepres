@@ -181,19 +181,21 @@ class stampaEvento {
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="3">
-                            <input id="action" type="hidden" name="action" />
-                            <input class="bottCalendario" type="button" onclick="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>')" value="Annulla" />
-                        <?php if($evt->getID()){ ?>
-                            <input class="bottCalendario" type="submit" value="Elimina" onclick="document.getElementById('action').value='elimina'" />
+                        <?php if(!isset($_POST['action']) || !$ok){ ?>
+                            <td colspan="3">
+                                <input id="action" type="hidden" name="action" />
+                                <input class="bottCalendario" type="button" onclick="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>')" value="Annulla" />
+                            <?php if($evt->getID()){ ?>
+                                <input class="bottCalendario" type="submit" value="Elimina" onclick="document.getElementById('action').value='elimina'" />
+                            <?php } ?>
+                            <?php if($evt->getID()){ ?>
+                                <input class="bottCalendario" type="submit" value="Salva" onclick="document.getElementById('action').value='aggiorna';" />
+                            <?php } ?>
+                            <?php if(!$evt->getID()){ ?>
+                                <input class="bottCalendario" type="submit" value="Crea" onclick="document.getElementById('action').value='inserisci'" />
+                            <?php } ?>
+                            </td>
                         <?php } ?>
-                        <?php if($evt->getID()){ ?>
-                            <input class="bottCalendario" type="submit" value="Salva" onclick="document.getElementById('action').value='aggiorna';" />
-                        <?php } ?>
-                        <?php if(!$evt->getID()){ ?>
-                            <input class="bottCalendario" type="submit" value="Crea" onclick="document.getElementById('action').value='inserisci'" />
-                        <?php } ?>
-                        </td>
                     </tr>
                 </table>
             </form>
