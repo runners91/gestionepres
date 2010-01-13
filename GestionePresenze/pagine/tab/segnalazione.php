@@ -2,7 +2,8 @@
         $stampaform = false;
         if($_POST["azione"] == "segnala"){
             $commento = trim($_POST["commento"]);
-            $e = Evento::getEvento($_POST["id_evento"]);
+            $e = new Evento();
+            $e->getValoriDB($_POST["id_evento"]);
             if(strlen($commento)>0) {
                 if($e->aggiornaStato(3,$commento)){
                     $messaggioSucc = "<b>L'evento &egrave stato segnalato</b>";
@@ -15,7 +16,8 @@
         }
 
         if(isset($_GET["id_evento"])){
-            $e = Evento::getEvento($_GET["id_evento"]);
+            $e = new Evento();
+            $e->getValoriDB($_GET["id_evento"]);
             if($e->getStato() == 3){
                 $messaggioErr = "Non puoi segnalare questo evento";
                 $stampaform = false;

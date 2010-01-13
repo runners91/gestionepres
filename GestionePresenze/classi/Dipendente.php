@@ -59,8 +59,7 @@ class Dipendente {
      */
     public function aggiungiDipendente(){
         if(sizeof($this->errori)==0){
-            Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values ('".$this->nome."','".$this->cognome."','".$this->username."',md5('inizio'),".$this->filiale.");");
-            return true;
+            return Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values ('".$this->nome."','".$this->cognome."','".$this->username."',md5('inizio'),".$this->filiale.");");
         }
         return false;
     }
@@ -70,8 +69,7 @@ class Dipendente {
      */
     public function aggiornaDipendente(){
         if(sizeof($this->errori)==0){
-            Database::getInstance()->eseguiQuery("UPDATE dipendenti set nome = '".$this->nome."',cognome='".$this->cognome."',username='".$this->username."',fk_filiale=".$this->filiale." where id_dipendente = ".$this->id.";");
-            return true;
+            return Database::getInstance()->eseguiQuery("UPDATE dipendenti set nome = '".$this->nome."',cognome='".$this->cognome."',username='".$this->username."',fk_filiale=".$this->filiale." where id_dipendente = ".$this->id.";");
         }
         return false;
     }
