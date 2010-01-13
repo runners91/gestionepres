@@ -85,14 +85,25 @@ class Utilita {
 
     /**
      * Ritorna il true se i controlli sono da effettuare, false se invece no
-     * @param boolean $conElimina indica se controllare anche action in post oppure no
+     * @param boolean $elimina indica se l'azione elimina è da considerare o no
      * @return boolean
      */
-    static function eseguiControlliFormEvento($conElimina=false){
-        if(isset($_POST['action']) && ($_POST['action']!="elimina" || !$conElimina))
+    static function eseguiControlliFormEvento($elimina=false){
+        if(isset($_POST['action']) && ($_POST['action']!="elimina" || $elimina))
             return true;
-          
         return false;
+    }
+
+
+
+    static function reload($url = null,$millisec = 1000){
+        if(!$url) $url = Utilita::getHomeUrlCompleto(); ?>
+            <script type="text/javascript">
+                window.setTimeout("redirect('<?php echo $url ?>')",<?php echo $millisec; ?>);
+            </script>
+        <?php
+
+
     }
 
 
