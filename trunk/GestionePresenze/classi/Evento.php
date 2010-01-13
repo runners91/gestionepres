@@ -31,6 +31,16 @@ class Evento {
     }
 
     /**
+     * Crea e ritorna l'istanza dell'evento preso dal Database con id = $id_evento
+     * @return Evento
+     */
+    static function getEvento($id_evento){
+        $sql = "SELECT * FROM eventi WHERE id_evento = ".$id_evento;
+        $rs = Database::getInstance()->eseguiQuery($sql);
+        return new Evento($rs->fields['data_da'],$rs->fields['data_a'],$rs->fields['priorita'],$rs->fields['commento'],$rs->fields['stato'],$rs->fields['commento_segnalazione'],$rs->fields['fk_dipendente'],$rs->fields['fk_causale'],$_GET['id_evento']);
+    }
+
+    /**
      * Aggiorna lo stato dell'evento
      * @param int $stato stato che si vuole mettere
      * @param String $commento commento della segnalazione nel caso lo stato è 3
