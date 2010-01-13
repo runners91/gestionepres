@@ -61,9 +61,16 @@ class Evento {
     * @return boolean
     */
     function inserisciEvento(){
-        $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale) ";
-        $sql .= "values (".Calendario::getTimestamp($this->data_da).",".Calendario::getTimestamp($this->data_a).",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.");";
-        return Database::getInstance()->getConnection()->execute($sql);
+        $sql = "select count(*) as c from eventi where fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale." and data_da=".Calendario::getTimestamp($this->data_da);
+        $rs = Database::getInstance()->eseguiQuery($sql);
+        if($rs->fields['c']==0){
+            $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale) ";
+            $sql .= "values (".Calendario::getTimestamp($this->data_da).",".Calendario::getTimestamp($this->data_a).",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.");";
+            return Database::getInstance()->getConnection()->execute($sql);
+        }
+        else{
+            return false;
+        }
     }
 
     /**
