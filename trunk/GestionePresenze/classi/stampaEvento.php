@@ -50,7 +50,7 @@ class stampaEvento {
                     <tr>
                         <td></td>
                         <td colspan="2">
-                            <span class="messaggioErrore"><?php echo $evt->errori["data_da"]; ?></span>
+                            <span class="messaggioErrore"><?php if(Utilita::eseguiControlliFormEvento()) echo $evt->errori["data_da"]; ?></span>
                         </td>
                     </tr>
                     <tr>
@@ -72,7 +72,7 @@ class stampaEvento {
                     <tr>
                         <td></td>
                         <td colspan="2">
-                            <span class="messaggioErrore"><?php echo $evt->errori["data_a"]; ?></span>
+                            <span class="messaggioErrore"><?php if(Utilita::eseguiControlliFormEvento()) echo $evt->errori["data_a"]; ?></span>
                         </td>
                     </tr>
                     <tr>
@@ -93,7 +93,7 @@ class stampaEvento {
                                 }
                              ?>
                             </select><br />
-                            <div class="messaggioErrore"><?php echo $evt->errori["fk_causale"]; ?></div>
+                            <div class="messaggioErrore"><?php if(Utilita::eseguiControlliFormEvento()) echo $evt->errori["fk_causale"]; ?></div>
                         </td>
                     </tr>
                     <tr>
@@ -114,7 +114,7 @@ class stampaEvento {
                                 }
                              ?>
                             </select><br />
-                            <div class="messaggioErrore"><?php echo $evt->errori["fk_dipendente"]; ?></div>
+                            <div class="messaggioErrore"><?php if(Utilita::eseguiControlliFormEvento()) echo $evt->errori["fk_dipendente"]; ?></div>
                         </td>
                     </tr>
                     <tr>
@@ -161,7 +161,7 @@ class stampaEvento {
                                     }
                                 }
                             ?>
-                            <span class="messaggioErrore"><?php echo $evt->errori["processi"]; ?></span>
+                            <span class="messaggioErrore"><?php if(Utilita::eseguiControlliFormEvento()) echo $evt->errori["processi"]; ?></span>
                         </td>
                     </tr>
                     <tr>
