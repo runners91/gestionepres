@@ -36,7 +36,7 @@ class stampaEvento {
                             Da:
                         </td>
                         <td>
-                            <input id="sel1" <?php echo isset($evt->errori["data_da"])?"class='errore'":""; ?> type="textfield" name="dataDa" value="<?php
+                            <input id="sel1" <?php echo isset($evt->errori["data_da"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="textfield" name="dataDa" value="<?php
                             if(!$evt->getID())
                                 echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:00');
                             else
@@ -58,7 +58,7 @@ class stampaEvento {
                             A:
                         </td>
                         <td>
-                            <input id="sel2" <?php echo isset($evt->errori["data_a"])?"class='errore'":""; ?> type="textfield" name="dataA" value="<?php
+                            <input id="sel2" <?php echo isset($evt->errori["data_a"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="textfield" name="dataA" value="<?php
                             if(!$evt->getID())
                                 echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:30');
                             else
