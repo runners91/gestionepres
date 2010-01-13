@@ -15,27 +15,45 @@ class Evento {
     private $commento_segn;
     private $fk_dipendente;
     private $fk_causale;
+    public $errori;
 
-    function __construct($data_da,$data_a,$priorita,$commento,$stato,$commento_segn,$fk_dipendente,$fk_causale,$id_evento = null){
-        $this->id_evento     = $id_evento;
-        $this->data_da       = $data_da;
-        $this->data_a        = $data_a;
-        $this->priorita      = $priorita;
-        $this->commento      = $commento;
-        $this->stato         = $stato;
-        $this->commento_segn = $commento_segn;
-        $this->fk_dipendente = $fk_dipendente;
-        $this->fk_causale    = $fk_causale;
+    function __construct(){
+
     }
 
     /**
-     * Crea e ritorna l'istanza dell'evento preso dal Database con id = $id_evento
+     * Setta i valori dell'evento a quelli presi dal Database con id = $id_evento
      * @return Evento
      */
-    static function getEvento($id_evento){
+    function getValoriDB($id_evento){
         $sql = "SELECT * FROM eventi WHERE id_evento = ".$id_evento;
         $rs = Database::getInstance()->eseguiQuery($sql);
-        return new Evento($rs->fields['data_da'],$rs->fields['data_a'],$rs->fields['priorita'],$rs->fields['commento'],$rs->fields['stato'],$rs->fields['commento_segnalazione'],$rs->fields['fk_dipendente'],$rs->fields['fk_causale'],$id_evento);
+
+        $this->id_evento      = $id_evento;
+        $this->data_da        = $rs->fields['data_da'];
+        $this->data_a         = $rs->fields['data_a'];
+        $this->priorita       = $rs->fields['priorita'];
+        $this->commento       = $rs->fields['commento'];
+        $this->stato          = $rs->fields['stato'];
+        $this->commento_segn  = $rs->fields['commento_segnalazione'];
+        $this->fk_dipendente  = $rs->fields['fk_dipendente'];
+        $this->fk_causale     = $rs->fields['fk_causale'];
+    }
+
+    /**
+     * Setta i valori dell'evento a quelli presi in $_POST
+     * @return Evento
+     */
+    function getValoriPost(){
+        $this->setID($_GET['id_evento']);
+        $this->setDataDa($_POST['dataDa']);
+        $this->setDataA($_POST['dataA']);
+        $this->setPriorita($_POST['etichetta']);
+        $this->setCommento($_POST['commento']);
+        $this->setStato(2);
+        $this->setCommentoSegn("");
+        $this->setDipendente($_POST['utente']);
+        $this->setCausale($_POST['tipo']);
     }
 
     /**
@@ -53,7 +71,6 @@ class Evento {
     function eliminaEvento(){
         if($this->id_evento)
             return Database::getInstance()->eseguiQuery("DELETE FROM eventi where id_evento = ".$this->id_evento.";");
-        return false;
     }
 
     /**
@@ -61,14 +78,16 @@ class Evento {
     * @return boolean
     */
     function inserisciEvento(){
-        $sql = "select count(*) as c from eventi where fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale." and data_da=".Calendario::getTimestamp($this->data_da);
+        if(sizeof($this->errori)>0) return false;
+        $sql = "select count(*) as c from eventi where fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale." and data_da=".$this->data_da;
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields['c']==0){
             $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale) ";
-            $sql .= "values (".Calendario::getTimestamp($this->data_da).",".Calendario::getTimestamp($this->data_a).",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.");";
+            $sql .= "values (".$this->data_da.",".$this->data_a.",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.");";
             return Database::getInstance()->getConnection()->execute($sql);
         }
         else{
+            $this->aggiungiErrore("Non si può inserire 2 volte lo stesso evento","processi");
             return false;
         }
     }
@@ -78,7 +97,8 @@ class Evento {
     * @return boolean
     */
     function aggiornaEvento(){
-        $sql =  "update eventi set data_da = ".Calendario::getTimestamp($this->data_da).",data_a = ".Calendario::getTimestamp($this->data_a).",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."' ";
+        if(sizeof($this->errori)>0) return false;
+        $sql =  "update eventi set data_da = ".$this->data_da.",data_a = ".$this->data_a.",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."' ";
         $sql .= "where id_evento = ".$this->id_evento.";";
 
         return Database::getInstance()->getConnection()->execute($sql);
@@ -98,6 +118,14 @@ class Evento {
         }
     }
 
+     /**
+     * Aggiunge un errore all'array nella posizione d, ovvero dove e' avvenuto l'errore
+     * @param String $errore Descrizione dell'errore
+     * @param String $d Indica dove e' successo l'errore
+     */
+    function aggiungiErrore($errore, $d){
+        if(Utilita::eseguiControlliFormEvento()) $this->errori[$d]  = $errore;
+    }
 
     function getID(){
         return $this->id_evento;
@@ -109,13 +137,19 @@ class Evento {
         return $this->data_da;
     }
     function setDataDa($data){
-        $this->data_da = $data;
+        if(!Calendario::checkData($_POST['dataDa'],"",false) && Utilita::eseguiControlliFormEvento())
+            $this->aggiungiErrore(Calendario::checkData($_POST['dataDa'],"Da:",true),"data_da");
+        else
+            $this->data_da = Calendario::getTimestamp($data);
     }
     function getDataA(){
         return $this->data_a;
     }
     function setDataA($data){
-        $this->data_a = $data;
+        if(!Calendario::checkData($_POST['dataA'],"",false) && Utilita::eseguiControlliFormEvento())
+            $this->aggiungiErrore(Calendario::checkData($_POST['dataA'],"A:",true),"data_a");
+        else
+            $this->data_a = Calendario::getTimestamp($data);
     }
     function getCommento(){
         return $this->commento;
@@ -133,12 +167,16 @@ class Evento {
         return $this->fk_dipendente;
     }
     function setDipendente($d){
+        if($d==0)
+            $this->aggiungiErrore("Dipendente non inserito","fk_dipendente");
         $this->fk_dipendente = $d;
     }
     function getCausale(){
         return $this->fk_causale;
     }
     function setCausale($c){
+        if($c==0)
+            $this->aggiungiErrore("Causale non inserita","fk_causale");
         $this->fk_causale = $c;
     }
     function getStato(){

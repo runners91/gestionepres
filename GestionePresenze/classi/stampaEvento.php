@@ -13,14 +13,14 @@ class stampaEvento {
     static function stampaFormAggiungiEvento(){
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
-        $ok = true;
         $data = Utilita::getDataHome();
+        $evt = new Evento();
 
         if(isset($_GET['id_evento']) && !isset($_POST['action'])){
-            $evt = Evento::getEvento($_GET['id_evento']);
+            $evt->getValoriDB($_GET['id_evento']);
         }
         else{
-            $evt = new Evento($_POST['dataDa'],$_POST['dataA'],$_POST['etichetta'],$_POST['commento'],2,null,$_POST['utente'],$_POST['tipo'],$_GET['id_evento']);
+            $evt->getValoriPost();
         }    
         ?>
         <div class="aggiungiEventoContainer" id="sel">
@@ -36,7 +36,7 @@ class stampaEvento {
                             Da:
                         </td>
                         <td>
-                            <input id="sel1" class="calTextfield" type="textfield" name="dataDa" value="<?php
+                            <input id="sel1" <?php echo isset($evt->errori["dataDa"])?"class='errore'":""; ?> type="textfield" name="dataDa" value="<?php
                             if(!$evt->getID())
                                 echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:00');
                             else
@@ -50,14 +50,7 @@ class stampaEvento {
                     <tr>
                         <td></td>
                         <td colspan="2">
-                            <div class="messaggioTaskErr">
-                                <?php
-                                    if(!Calendario::checkData($_POST['dataDa'],"",false) && Utilita::eseguiControlliFormEvento()){
-                                        $ok = false;
-                                        echo Calendario::checkData($_POST['dataDa'],"Da:",true);
-                                    }
-                                ?>
-                            </div>
+                            <span class="messaggioErrore"><?php echo $evt->errori["data_da"]; ?></span>
                         </td>
                     </tr>
                     <tr>
@@ -65,7 +58,7 @@ class stampaEvento {
                             A:
                         </td>
                         <td>
-                            <input id="sel2" class="calTextfield" type="textfield" name="dataA" value="<?php
+                            <input id="sel2" <?php echo isset($evt->errori["dataDa"])?"class='errore'":""; ?> type="textfield" name="dataA" value="<?php
                             if(!$evt->getID())
                                 echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:30');
                             else
@@ -79,14 +72,7 @@ class stampaEvento {
                     <tr>
                         <td></td>
                         <td colspan="2">
-                            <div class="messaggioTaskErr">
-                                <?php
-                                    if(!Calendario::checkData($_POST['dataA'],"",false) && Utilita::eseguiControlliFormEvento()){
-                                        $ok = false;
-                                        echo Calendario::checkData($_POST['dataA'],"A:",true);
-                                    }
-                                ?>
-                            </div>
+                            <span class="messaggioErrore"><?php echo $evt->errori["data_a"]; ?></span>
                         </td>
                     </tr>
                     <tr>
@@ -94,7 +80,7 @@ class stampaEvento {
                             Tipo:
                         </td>
                         <td>
-                            <select name="tipo" class="selectField">
+                            <select name="tipo" class="selectField<?php echo isset($evt->errori["fk_causale"])?" errore":""; ?>">
                                 <option value="0">-</option>
                              <?php
                                 $rs = Database::getInstance()->eseguiQuery("SELECT c.nome as d, c.id_motivo as r FROM causali c");
@@ -106,10 +92,8 @@ class stampaEvento {
                                     $rs->MoveNext();
                                 }
                              ?>
-                            </select>
-                            <div class="messaggioTaskErr">
-                                <?php if($_POST['tipo']==0 && Utilita::eseguiControlliFormEvento()){ $ok = false; echo "- Tipo non inserito<br/>"; }?>
-                            </div>
+                            </select><br />
+                            <div class="messaggioErrore"><?php echo $evt->errori["fk_causale"]; ?></div>
                         </td>
                     </tr>
                     <tr>
@@ -117,7 +101,7 @@ class stampaEvento {
                             Utente:
                         </td>
                         <td>
-                            <select name="utente" class="selectField">
+                            <select name="utente" class="selectField<?php echo isset($evt->errori["fk_dipendente"])?" errore":""; ?>">
                                 <option value="0">-</option>
                              <?php
                                 $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
@@ -129,10 +113,8 @@ class stampaEvento {
                                     $rs->MoveNext();
                                 }
                              ?>
-                            </select>
-                            <div class="messaggioTaskErr">
-                                <?php if($_POST['utente']==0 && Utilita::eseguiControlliFormEvento()){ $ok = false; echo "- Utente non inserito<br/>"; }?>
-                            </div>
+                            </select><br />
+                            <div class="messaggioErrore"><?php echo $evt->errori["fk_dipendente"]; ?></div>
                         </td>
                     </tr>
                     <tr>
@@ -158,30 +140,32 @@ class stampaEvento {
                     <tr>
                         <td colspan="3" class="messaggioTaskOk">
                             <?php
-                                if($ok && Utilita::eseguiControlliFormEvento(false)){
+                                if(Utilita::eseguiControlliFormEvento(true) && isset($_POST['action'])){
                                     if($_POST['action']=="inserisci"){
-                                        if($evt->inserisciEvento())
+                                        if($evt->inserisciEvento()){
                                             echo "Evento inserito con successo";
+                                            Utilita::reload();
+                                        }
                                     }
                                     else if($_POST['action']=="aggiorna"){
-                                        if($evt->aggiornaEvento())
+                                        if($evt->aggiornaEvento()){
                                             echo "Evento aggiornato con successo";
+                                            Utilita::reload();
+                                        }
                                     }
                                     else if($_POST['action']=="elimina"){
-                                        if($evt->eliminaEvento())
+                                        if($evt->eliminaEvento()){
                                             echo "Evento eliminato con successo";
+                                            Utilita::reload();
+                                        }
                                     }
-                                    ?>
-                                        <script type="text/javascript">
-                                            window.setTimeout("redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>')",1000);
-                                        </script>
-                                    <?php
                                 }
                             ?>
+                            <span class="messaggioErrore"><?php echo $evt->errori["processi"]; ?></span>
                         </td>
                     </tr>
                     <tr>
-                        <?php if(!isset($_POST['action']) || !$ok){ ?>
+                        <?php if(!isset($_POST['action']) || sizeof($evt->errori)>0){ ?>
                             <td colspan="3">
                                 <input id="action" type="hidden" name="action" />
                                 <input class="bottCalendario" type="button" onclick="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>')" value="Annulla" />
