@@ -137,8 +137,8 @@ class Evento {
         return $this->data_da;
     }
     function setDataDa($data){
-        if(!Calendario::checkData($_POST['dataDa'],"",false) && Utilita::eseguiControlliFormEvento())
-            $this->aggiungiErrore(Calendario::checkData($_POST['dataDa'],"Da:",true),"data_da");
+        if(!Calendario::checkData($data,"",false))
+            $this->aggiungiErrore(Calendario::checkData($data,"Da:",true),"data_da");
         else
             $this->data_da = Calendario::getTimestamp($data);
     }
@@ -146,8 +146,8 @@ class Evento {
         return $this->data_a;
     }
     function setDataA($data){
-        if(!Calendario::checkData($_POST['dataA'],"",false) && Utilita::eseguiControlliFormEvento())
-            $this->aggiungiErrore(Calendario::checkData($_POST['dataA'],"A:",true),"data_a");
+        if(!Calendario::checkData($data,"",false))
+            $this->aggiungiErrore(Calendario::checkData($data,"A:",true),"data_a");
         else
             $this->data_a = Calendario::getTimestamp($data);
     }
