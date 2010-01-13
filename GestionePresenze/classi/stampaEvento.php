@@ -80,7 +80,7 @@ class stampaEvento {
                             Tipo:
                         </td>
                         <td>
-                            <select name="tipo" class="selectField<?php echo isset($evt->errori["fk_causale"])?" errore":""; ?>">
+                            <select name="tipo" class="selectField<?php echo isset($evt->errori["fk_causale"])&& Utilita::eseguiControlliFormEvento()?" errore":""; ?>">
                                 <option value="0">-</option>
                              <?php
                                 $rs = Database::getInstance()->eseguiQuery("SELECT c.nome as d, c.id_motivo as r FROM causali c");
@@ -101,7 +101,7 @@ class stampaEvento {
                             Utente:
                         </td>
                         <td>
-                            <select name="utente" class="selectField<?php echo isset($evt->errori["fk_dipendente"])?" errore":""; ?>">
+                            <select name="utente" class="selectField<?php echo isset($evt->errori["fk_dipendente"])&& Utilita::eseguiControlliFormEvento()?" errore":""; ?>">
                                 <option value="0">-</option>
                              <?php
                                 $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
