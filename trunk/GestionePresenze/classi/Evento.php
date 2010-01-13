@@ -168,7 +168,7 @@ class Evento {
     }
     function setDipendente($d){
         if($d==0)
-            $this->aggiungiErrore("- Dipendente non inserito","fk_dipendente");
+            $this->aggiungiErrore("- Utente non inserito","fk_dipendente");
         $this->fk_dipendente = $d;
     }
     function getCausale(){
