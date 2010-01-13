@@ -77,14 +77,11 @@
             }
         echo '</fieldset>';
         ?>
+        <br>
         <form action="#" method="POST">
-            <input type="hidden" name="azione" value="nuovo">
-            <input class="bottCalendario" type="submit" value="Aggiungi Gruppo"/>
-        </form>
-        <form action="#" method="POST">
-            <input type="hidden" name="azione" value="eliminaGruppo">
+            <input type="hidden" id="azione" name="azione" value="eliminaGruppo">
             <input type="hidden" name="gruppo" value="<?php echo $gruppo; ?>">
-            <input class="bottCalendario" type="submit" value="Elimina Gruppo"/>
+            <input class="bottCalendario" type="submit" value="Aggiungi Gruppo" onclick="document.getElementById('azione').value='nuovo'"/> &nbsp;<input class="bottCalendario" type="submit" value="Elimina Gruppo"/>
         </form>
 <?php
     }

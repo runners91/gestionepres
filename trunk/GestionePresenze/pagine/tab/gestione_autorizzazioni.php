@@ -72,12 +72,12 @@ function stampaGruppi($utente){
 <?php
     }
 ?>
+<br>
 <form action="?pagina=amministrazione&tab=gestione_gruppi" method="POST">
     <input type="hidden" name="azione" value="nuovo">
-    <input class="bottCalendario" type="submit" value="Aggiungi Gruppo"/>
+    <input class="bottCalendario" type="submit" value="Aggiungi Gruppo"/> &nbsp;<input class="bottCalendario" type="button" value="Modifica Utente" onclick="modificaUtente.submit();"/>
 </form>
-<form action="?pagina=amministrazione&tab=gestione_utente" method="POST">
+<form action="?pagina=amministrazione&tab=gestione_utente" name="modificaUtente" method="POST">
     <input type="hidden" name="azione" value="formModificaUtente">
     <input type="hidden" name="utente" value="<?php echo $id;?>">
-    <input class="bottCalendario" type="submit" value="Modifica Utente"/>
 </form>

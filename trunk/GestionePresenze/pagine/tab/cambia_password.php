@@ -27,10 +27,22 @@
             echo "<b>Devi modificare la password </b>"
 ?>
 <form action="#" method="POST">
-    <pre>
-    Vecchia password:   <input type="password" name="vecchiaPwd" <?php echo isset($errori["vecchiaPwd"])?"class='errore'":""; ?> /><span class="messaggioErrore"><?php echo $errori["vecchiaPwd"]; ?></span><br />
-    Nuova password:     <input type="password" name="nuovaPwd" <?php echo isset($errori["nuovaPwd"]) || isset($errori["confermaPwd"])?"class='errore'":""; ?> /><span class="messaggioErrore"><?php echo $errori["nuovaPwd"]; ?></span><br />
-    Conferma Password:  <input type="password" name="confermaPwd" <?php echo isset($errori["confermaPwd"])?"class='errore'":""; ?> /><span class="messaggioErrore"><?php echo $errori["confermaPwd"]; ?></span><br />
-    <input type="submit" value="Modifica Password" class="bottCalendario"/>
-    </pre>
+    <table>
+        <tr>
+            <td>Vecchia password:</td>
+            <td><input type="password" name="vecchiaPwd" <?php echo isset($errori["vecchiaPwd"])?"class='errore'":""; ?> /></td>
+            <td class="messaggioErrore"><?php echo $errori["vecchiaPwd"]; ?></td>
+        </tr>
+        <tr>
+            <td>Nuova password:</td>
+            <td><input type="password" name="nuovaPwd" <?php echo isset($errori["nuovaPwd"]) || isset($errori["confermaPwd"])?"class='errore'":""; ?> /></td>
+            <td class="messaggioErrore"><?php echo $errori["nuovaPwd"]; ?></td>
+        </tr>
+        <tr>
+            <td>Conferma Password:</td>
+            <td><input type="password" name="confermaPwd" <?php echo isset($errori["confermaPwd"])?"class='errore'":""; ?> /></td>
+            <td class="messaggioErrore"><?php echo $errori["confermaPwd"]; ?></td>
+        </tr>
+    </table><br />
+    <input type="submit" value="Salva" class="bottCalendario"/>
 </form>
