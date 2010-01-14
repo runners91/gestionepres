@@ -40,6 +40,8 @@
                 Utilita::stampaTabella($rs,isset($e)?$e->getID():0);
             echo "</td>";
         }
+        else
+            $messaggioErr = "Non ci sono eventi da segnalare";
 
         if($stampaform){
             echo "<td>";
