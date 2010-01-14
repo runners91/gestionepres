@@ -14,8 +14,16 @@
                 stampaFormAggiungi($errori);
                 $stampa = false;
             }
-            else
-                Database::getInstance()->eseguiQuery("INSERT INTO gruppi (nome) values ('".$nome."');");
+            else{
+                $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as tot FROM gruppi WHERE nome = '".$nome."';");
+                if($rs->fields["tot"]>0){
+                    $errori["nome"] = "Il gruppo &egrave; gi&agrave; esistente";
+                    stampaFormAggiungi($errori,$nome);
+                    $stampa = false;
+                }
+                else
+                    Database::getInstance()->eseguiQuery("INSERT INTO gruppi (nome) values ('".$nome."');");
+            }
         }
         else if($_POST["azione"] == "eliminaGruppo"){
             Database::getInstance()->eseguiQuery("DELETE FROM dipendenti_gruppi where fk_gruppo = ".$_POST["gruppo"].";");
@@ -63,18 +71,28 @@
         echo '<fieldset style="width:150px;float:left;height:200px;margin-left:150px;">';
             echo '<legend>Altre Pagine:</legend>';
             $rs = Database::getInstance()->eseguiQuery("SELECT * from pagine p where p.id_pagina not in (SELECT p.id_pagina FROM gruppi_pagine gp,pagine p where p.id_pagina = gp.fk_pagina AND fk_gruppo = ".$gruppo.");");
-            while(!$rs->EOF){
-                stampaFormPagine("aggiungi",$gruppo,$rs->fields["id_pagina"],$rs->fields["url"]);
-                $rs->MoveNext();
-            }
+            $count = $rs->recordCount();
+            if($count>6)
+                echo '<div style="overflow-y:scroll;height:190px;">';
+                while(!$rs->EOF){
+                    stampaFormPagine("aggiungi",$gruppo,$rs->fields["id_pagina"],$rs->fields["url"]);
+                    $rs->MoveNext();
+                }
+            if($count>6)
+                echo "</div>";
         echo '</fieldset>';
         echo '<fieldset style="width:150px;height:200px;margin-left:150px;">';
             echo '<legend>Pagine del Gruppo:</legend>';
             $rs = Database::getInstance()->eseguiQuery("SELECT p.* FROM gruppi_pagine gp,pagine p where p.id_pagina = gp.fk_pagina AND fk_gruppo = ".$gruppo.";");
+            $count = $rs->recordCount();
+            if($count>6)
+                echo '<div style="overflow-y:scroll;height:190px;">';
             while(!$rs->EOF){
                 stampaFormPagine("elimina",$gruppo,$rs->fields["id_pagina"],$rs->fields["url"]);
                 $rs->MoveNext();
             }
+            if($count>6)
+                echo "</div>";
         echo '</fieldset>';
         ?>
         <br>
@@ -96,12 +114,12 @@
         </form>
 <?php
 }
-    function stampaFormAggiungi($errori= null) {
+    function stampaFormAggiungi($errori= null,$nome="") {
 ?>
         <form action="#" method="POST">
             <input type="hidden" name="azione" value="crea">
             <div class="messaggioErrore"><?php echo $errori["nome"]; ?></div>
-            Nome Gruppo: <input type="text" name="nome" <?php echo isset($errori["nome"])?"class='errore'":""; ?>/>
+            <font class="label">Nome Gruppo:</font> <input type="text" name="nome" value="<?php echo $nome; ?>" <?php echo isset($errori["nome"])?"class='errore'":""; ?>/>
             <input type="submit" class="bottCalendario" value="Crea gruppo">
             
         </form>

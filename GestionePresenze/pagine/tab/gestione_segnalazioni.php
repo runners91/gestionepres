@@ -39,7 +39,7 @@
     $rs = Database::getInstance()->eseguiQuery($sql);
     echo "<table><tr>";
     if($rs->rowCount()>0) {
-        echo "<td valign='top'>";
+        echo "<td style='float:left' valign='top'>";
             Utilita::stampaTabella($rs,isset($e)?$e->getID():0);
         echo "</td>";
     }
@@ -47,6 +47,7 @@
         $messaggioErr = "Non ci sono segnalazioni";
 
     if($stampaform) {
+        echo "<td style='width:30px;'></td>";
         echo "<td>";
             stampaFormModificaEvento($e);
         echo "</td>";
