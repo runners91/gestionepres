@@ -81,7 +81,7 @@ class Utilita {
                                     <?php if($minRiga-$visualizza>=0){ ?><input class="bottPaginazione" type="submit" value="<" onclick="document.getElementById('codPag').value='P'" /><?php } ?>
                                 </td>
                                 <td>
-                                    <span class="testoPaginazione"><?php echo ($minRiga+1).'-'.$maxRiga.' di '.$cont; ?></span>
+                                    <span class="testoPaginazione"><?php echo ($minRiga+1).' - '.$maxRiga.' di '.$cont; ?></span>
                                 </td>
                                 <td>
                                     <?php if($minRiga+$visualizza<$cont){ ?><input class="bottPaginazione" type="submit" value=">" onclick="document.getElementById('codPag').value='S'" /><?php } ?>
