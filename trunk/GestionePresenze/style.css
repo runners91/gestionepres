@@ -169,10 +169,23 @@ li#selectedTab a {
 tr.reportRigaDati:hover {
     background-color: #C6DEFF; /* Celeste chiaro */
 }
-
 .reportCella {
     padding: 3px 8px 3px 8px;
     border: 1px solid gray;
+}
+.paginazione {
+    background-color: #F2F0F0; /* grigio chiarissimo */
+    padding: 3px;
+}
+.testoPaginazione {
+    padding: 0 15px 0 15px;
+}
+.bottPaginazione {
+    background-color: #5D92FA; /* celeste */
+    border: 1px solid black;
+    -moz-border-radius: 8px;
+    font-weight: bold;
+    font-size: 7pt;
 }
 /*******************************************************************************/
 
