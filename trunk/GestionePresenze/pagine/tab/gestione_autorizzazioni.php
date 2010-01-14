@@ -74,8 +74,8 @@ function stampaGruppi($utente){
             <input type="hidden" name="utente" value="<?php echo $utente; ?>">
             <input type="hidden" name="gruppo" value="<?php echo $idGruppo; ?>">
             <?php echo $nomeGruppo; ?>
-            <img style="float:right;" onclick="formModifica_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/modifica.png" alt="modifica" />
-            <img style="float:right;" onclick="form_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/<?php echo $azione; ?>.png" alt="aggiungi" />
+            <img class="puntatore" style="float:right;" onclick="formModifica_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/modifica.png" alt="modifica" />
+            <img class="puntatore" style="float:right;" onclick="form_<?php echo $idGruppo; ?>.submit();" src="/GestionePresenze/img/<?php echo $azione; ?>.png" alt="aggiungi" />
         </form>
         <form action="?pagina=amministrazione&tab=gestione_gruppi" name="formModifica_<?php echo $idGruppo?>" method="POST">
             <input type="hidden" name="gruppo" value="<?php echo $idGruppo; ?>">

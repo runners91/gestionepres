@@ -110,7 +110,7 @@
             <input type="hidden" name="gruppo" value="<?php echo $gruppo; ?>">
             <input type="hidden" name="pagina" value="<?php echo $idPagina; ?>">
             <?php echo $nomePagina; ?>
-            <img style="float:right;" onclick="form_<?php echo $idPagina; ?>.submit();" src="/GestionePresenze/img/<?php echo $azione; ?>.png" alt="aggiungi" />
+            <img class="puntatore" style="float:right;" onclick="form_<?php echo $idPagina; ?>.submit();" src="/GestionePresenze/img/<?php echo $azione; ?>.png" alt="aggiungi" />
         </form>
 <?php
 }
