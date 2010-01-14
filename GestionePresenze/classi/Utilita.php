@@ -104,7 +104,7 @@ class Utilita {
             $minRiga = (int)$vecchioVal+$visualizza;
         }
         else if($_POST['codPag']=="SS"){ /////////// ultima pagina /////////
-            $minRiga = $cont-$cont%$visualizza;
+            if($cont%$visualizza!=0) $minRiga = $cont-$cont%$visualizza; else $minRiga = $cont-$visualizza;
         }
         else{ /////////// prima pagina /////////
             $minRiga = 0;

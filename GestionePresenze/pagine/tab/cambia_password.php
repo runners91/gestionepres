@@ -29,17 +29,17 @@
 <form action="#" method="POST">
     <table>
         <tr>
-            <td>Vecchia password:</td>
+            <td class="label">Vecchia password:</td>
             <td><input type="password" name="vecchiaPwd" <?php echo isset($errori["vecchiaPwd"])?"class='errore'":""; ?> /></td>
             <td class="messaggioErrore"><?php echo $errori["vecchiaPwd"]; ?></td>
         </tr>
         <tr>
-            <td>Nuova password:</td>
+            <td class="label">Nuova password:</td>
             <td><input type="password" name="nuovaPwd" <?php echo isset($errori["nuovaPwd"]) || isset($errori["confermaPwd"])?"class='errore'":""; ?> /></td>
             <td class="messaggioErrore"><?php echo $errori["nuovaPwd"]; ?></td>
         </tr>
         <tr>
-            <td>Conferma Password:</td>
+            <td class="label">Conferma Password:</td>
             <td><input type="password" name="confermaPwd" <?php echo isset($errori["confermaPwd"])?"class='errore'":""; ?> /></td>
             <td class="messaggioErrore"><?php echo $errori["confermaPwd"]; ?></td>
         </tr>
