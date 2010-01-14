@@ -22,19 +22,8 @@ class Utilita {
         $riga     = 0;
         $numField = $rs->FieldCount();
         $cont     = $rs->RecordCount();
+        $minRiga = Utilita::getNewMinRiga($_POST['codPag'],$_POST['minRiga'],$cont,$visualizza);
 
-        if($_POST['codPag']=="P"){ /////////// pagina precedente /////////
-            $minRiga = (int)$_POST['minRiga']-$visualizza;
-        }
-        else if($_POST['codPag']=="S"){ /////////// pagina successiva /////////
-            $minRiga = (int)$_POST['minRiga']+$visualizza;
-        }
-        else if($_POST['codPag']=="SS"){ /////////// ultima pagina /////////
-            $minRiga = $cont-$cont%$visualizza;
-        }
-        else{ /////////// prima pagina /////////
-            $minRiga = 0;
-        }
         if(($minRiga+$visualizza)<$cont) $maxRiga = $minRiga+$visualizza; else $maxRiga = $cont;
 
         //echo "minRiga = ".$minRiga." maxRiga = ".$maxRiga;
@@ -94,6 +83,33 @@ class Utilita {
             </form>
         <?php
            echo '</table>';
+    }
+
+    /**
+     * Ritorna il valore della nuova prima riga del report in base ai parametri
+     * @param String $action indica l azione compiuta (es. "S" seguente)
+     * @param int $vecchioVal indica il vecchio valore della prima riga
+     * @param int $cont indica il totale di record che il report mostra
+     * @param int $visualizza indica quanti record per pagina si visualizzano
+     * @return int
+     */
+    static function getNewMinRiga($action,$vecchioVal,$cont=8,$visualizza=8){
+        if(!$action && isset($_GET['minrg'])){
+            $minRiga = $_GET['minrg'];
+        }
+        else if($action=="P"){ /////////// pagina precedente /////////
+            $minRiga = (int)$vecchioVal-$visualizza;
+        }
+        else if($action=="S"){ /////////// pagina successiva /////////
+            $minRiga = (int)$vecchioVal+$visualizza;
+        }
+        else if($_POST['codPag']=="SS"){ /////////// ultima pagina /////////
+            $minRiga = $cont-$cont%$visualizza;
+        }
+        else{ /////////// prima pagina /////////
+            $minRiga = 0;
+        }
+        return $minRiga;
     }
 
      /**

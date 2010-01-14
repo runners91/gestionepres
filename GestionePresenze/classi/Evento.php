@@ -79,7 +79,10 @@ class Evento {
     */
     function inserisciEvento(){
         if(sizeof($this->errori)>0) return false;
-        $sql = "select count(*) as c from eventi where fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale." and data_da=".$this->data_da;
+        $sql = "select count(*) as c from eventi where fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale.
+               " and (data_da<=".$this->data_da." and data_a>=".$this->data_da.
+               " or data_da<=".$this->data_a." and data_a>=".$this->data_a.
+               " or data_da>=".$this->data_da." and data_a<=".$this->data_a.");";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields['c']==0){
             $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale) ";
@@ -139,8 +142,7 @@ class Evento {
     function setDataDa($data){
         if(!Calendario::checkData($data,"",false))
             $this->aggiungiErrore(Calendario::checkData($data,"Da:",true),"data_da");
-        else
-            $this->data_da = Calendario::getTimestamp($data);
+        $this->data_da = Calendario::getTimestamp($data);
     }
     function getDataA(){
         return $this->data_a;
@@ -148,8 +150,9 @@ class Evento {
     function setDataA($data){
         if(!Calendario::checkData($data,"",false))
             $this->aggiungiErrore(Calendario::checkData($data,"A:",true),"data_a");
-        else
-            $this->data_a = Calendario::getTimestamp($data);
+        else if($this->data_da>=Calendario::getTimestamp($data))
+            $this->aggiungiErrore("- Data Da: maggiore di A:","data_a");
+        $this->data_a = Calendario::getTimestamp($data);
     }
     function getCommento(){
         return $this->commento;
@@ -169,7 +172,8 @@ class Evento {
     function setDipendente($d){
         if($d==0)
             $this->aggiungiErrore("- Utente non inserito","fk_dipendente");
-        $this->fk_dipendente = $d;
+        else
+            $this->fk_dipendente = $d;
     }
     function getCausale(){
         return $this->fk_causale;
@@ -177,7 +181,8 @@ class Evento {
     function setCausale($c){
         if($c==0)
             $this->aggiungiErrore("- Causale non inserita","fk_causale");
-        $this->fk_causale = $c;
+        else
+            $this->fk_causale = $c;
     }
     function getStato(){
         return $this->stato;

@@ -37,8 +37,10 @@ class stampaEvento {
                         </td>
                         <td>
                             <input id="sel1" <?php echo isset($evt->errori["data_da"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="textfield" name="dataDa" value="<?php
-                            if(!$evt->getID())
+                            if(!isset($_POST['action']))
                                 echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:00');
+                            else if(isset($evt->errori["data_da"]))
+                                echo "";
                             else
                                 echo date("d/m/Y - H:i",$evt->getDataDa());
                             ?>" />
@@ -59,8 +61,10 @@ class stampaEvento {
                         </td>
                         <td>
                             <input id="sel2" <?php echo isset($evt->errori["data_a"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="textfield" name="dataA" value="<?php
-                            if(!$evt->getID())
+                            if(!isset($_POST['action']))
                                 echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:30');
+                            else if(isset($evt->errori["data_a"]))
+                                echo "";
                             else
                                 echo date("d/m/Y - H:i",$evt->getDataA());
                             ?>" />
@@ -193,9 +197,10 @@ class stampaEvento {
      */
     static function stampaReportEventi(){
         $dataGiorno = Utilita::getDataHome();
+        $minRiga = Utilita::getNewMinRiga($_POST['codPag'],$_POST['minRiga']);
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
-        $editTxt  = '<a alt="ciao" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '"><img border="0" src="./img/modifica.png" /></a>';
+        $editTxt  = '<a alt="ciao" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '&minrg='.$minRiga.'"><img border="0" src="./img/modifica.png" /></a>';
         $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
         
         $prio    = Utilita::getValoreFiltro($_GET['prio']);
