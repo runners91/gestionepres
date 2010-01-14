@@ -19,8 +19,9 @@ class Utilita {
     static function stampaTabella($rs,$idSelezionato=1,$visualizza=8,$nascondiID=true){
 
         // Preparo le variabili che mi servono per la paginazione del report
-        $riga = 0;
-        $cont = $rs->RecordCount();
+        $riga     = 0;
+        $numField = $rs->FieldCount();
+        $cont     = $rs->RecordCount();
 
         if($_POST['codPag']=="P"){ /////////// pagina precedente /////////
             $minRiga = (int)$_POST['minRiga']-$visualizza;
@@ -70,14 +71,24 @@ class Utilita {
         } ?>
             <form name="paginazione" action="#" method="POST">
                 <tr>
-                    <td colspan="200" align="right" class="paginazione">
-                        <input type="hidden" name="minRiga" value="<?php echo $minRiga; ?>" />
-                        <input type="hidden" name="codPag" id="codPag" />
-                        <?php if($minRiga-$visualizza>=0){ ?><input class="bottPaginazione" type="submit" value="<<" onclick="document.getElementById('codPag').value='PP'" /><?php } ?>
-                        <?php if($minRiga-$visualizza>=0){ ?><input class="bottPaginazione" type="submit" value="<" onclick="document.getElementById('codPag').value='P'" /><?php } ?>
-                        <span class="testoPaginazione"><?php echo ($minRiga+1).'-'.$maxRiga.' di '.$cont; ?></span>
-                        <?php if($minRiga+$visualizza<$cont){ ?><input class="bottPaginazione" type="submit" value=">" onclick="document.getElementById('codPag').value='S'" /><?php } ?>
-                        <?php if($minRiga+$visualizza<$cont){ ?><input class="bottPaginazione" type="submit" value=">>" onclick="document.getElementById('codPag').value='SS'" /><?php } ?>
+                    <td colspan="<?php echo $numField; ?>" align="center" class="paginazione">
+                        <table>
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="minRiga" value="<?php echo $minRiga; ?>" />
+                                    <input type="hidden" name="codPag" id="codPag" />
+                                    <?php if($minRiga-$visualizza*2>=0){ ?><input class="bottPaginazione" type="submit" value="<<" onclick="document.getElementById('codPag').value='PP'" /><?php } ?>
+                                    <?php if($minRiga-$visualizza>=0){ ?><input class="bottPaginazione" type="submit" value="<" onclick="document.getElementById('codPag').value='P'" /><?php } ?>
+                                </td>
+                                <td>
+                                    <span class="testoPaginazione"><?php echo ($minRiga+1).'-'.$maxRiga.' di '.$cont; ?></span>
+                                </td>
+                                <td>
+                                    <?php if($minRiga+$visualizza<$cont){ ?><input class="bottPaginazione" type="submit" value=">" onclick="document.getElementById('codPag').value='S'" /><?php } ?>
+                                    <?php if($minRiga+$visualizza*2<$cont){ ?><input class="bottPaginazione" type="submit" value=">>" onclick="document.getElementById('codPag').value='SS'" /><?php } ?>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </form>
