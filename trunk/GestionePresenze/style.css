@@ -332,4 +332,7 @@ tr.reportRigaDati:hover {
     border: 1px solid red;
     background-color: #fff3f3;
 }
+.puntatore:hover {
+     cursor:pointer;
+}
 /*******************************************************************************/
