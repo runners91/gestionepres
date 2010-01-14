@@ -39,21 +39,32 @@ function stampaUtenti(){
 }
 
 function stampaGruppi($utente){
-    echo '<fieldset style="width:150px;float:left;height:200px;margin-left:100px;">';
+    echo '<fieldset style="width:150px;height:200px;float:left;margin-left:100px;">';
         echo '<legend>Altri Gruppi:</legend>';
-        $rs = Database::getInstance()->eseguiQuery("Select * from gruppi where id_gruppo not in(SELECT g.id_gruppo FROM gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.");");
-        while(!$rs->EOF){
-            stampaFormGruppi("aggiungi",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"]);
-            $rs->MoveNext();
-        }
+        $rs = Database::getInstance()->eseguiQuery("SELECT * FROM gruppi WHERE id_gruppo not in(SELECT g.id_gruppo FROM gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.");");
+        $count = $rs->recordCount();
+        if($count>6)
+            echo '<div style="overflow-y:scroll;height:190px;">';
+        
+                while(!$rs->EOF){
+                    stampaFormGruppi("aggiungi",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"]);
+                    $rs->MoveNext();
+                }
+        if($count>6)
+            echo "</div>";
     echo '</fieldset>';
     echo '<fieldset style="width:150px;height:200px;margin-left:100px;">';
         echo '<legend>Gruppi dell\'utente:</legend>';
         $rs = Database::getInstance()->eseguiQuery("SELECT g.* from gruppi g, dipendenti_gruppi dg, dipendenti d where g.id_gruppo = dg.fk_gruppo AND d.id_dipendente = dg.fk_dipendente AND d.id_dipendente = ".$utente.";");
-        while(!$rs->EOF){
-            stampaFormGruppi("elimina",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"]);
-            $rs->MoveNext();
-        }
+        $count = $rs->recordCount();
+        if($count>6)
+            echo '<div style="overflow-y:scroll;height:190px;">';
+                while(!$rs->EOF){
+                    stampaFormGruppi("elimina",$utente,$rs->fields["id_gruppo"],$rs->fields["nome"]);
+                    $rs->MoveNext();
+                }
+        if($count>6)
+            echo "</div>";
     echo '</fieldset>';
 }
     function stampaFormGruppi($azione,$utente,$idGruppo,$nomeGruppo){

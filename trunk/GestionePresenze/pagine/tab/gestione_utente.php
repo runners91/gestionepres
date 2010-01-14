@@ -52,22 +52,26 @@
 
         <table>
             <tr>
-                <td>Nome:</td>
+                <td class="label">Nome:</td>
                 <td><input type="text" name="nome" value="<?php echo $d->nome; ?>" <?php echo isset($errori["nome"])?"class='errore'":""; ?>/></td>
                 <td class="messaggioErrore"><?php echo $errori["nome"]; ?></td>
             </tr>
             <tr>
-                <td>Cognome:</td>
+                <td class="label">Cognome:</td>
                 <td><input type="text" name="cognome" value="<?php echo $d->cognome; ?>" <?php echo isset($errori["cognome"])?"class='errore'":""; ?>/></td>
                 <td class="messaggioErrore"><?php echo $errori["cognome"]; ?></td>
             </tr>
             <tr>
-                <td>Username:</td>
-                <td><input type="text" name="username" value="<?php echo $d->username;?>" <?php echo isset($errori["username"])?"class='errore'":""; echo $d->username==$_SESSION["username"]?" disabled":"";?> /></td>
-                <td class="messaggioErrore"><?php echo $errori["username"]; ?></td>
+                <?php if($d->username == $_SESSION["username"] && !isset($errori["username"])) { ?>
+                    <input type="hidden" name="username" value="<?php echo $d->username; ?>">
+                <?php } else {?>
+                    <td class="label">Username:</td>
+                    <td><input type="text" name="username" value="<?php echo $d->username;?>" <?php echo isset($errori["username"])?"class='errore'":""; ?> /></td>
+                    <td class="messaggioErrore"><?php echo $errori["username"]; ?></td>
+                <?php }?>
             </tr>
             <tr>
-                <td>Filiale:</td>
+                <td class="label">Filiale:</td>
                 <td>
                     <select name="filiale">
                         <?php
