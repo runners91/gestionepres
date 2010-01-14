@@ -1,19 +1,18 @@
 <?php
     $stampaform = false;
+    $e = new Evento();
+    if(isset($_GET['id_evento']) && !isset($_POST['azione'])){
+        $e->getValoriDB($_GET['id_evento']);
+    }
+    else{
+        $e->getValoriPost();
+    }
+
     if($_POST["azione"] == "Elimina"){
-        $e = new Evento($_POST["id_evento"]);
-        if($e->eliminaEvento($_POST["id_evento"]))
+        if($e->eliminaEvento())
             $messaggioSucc = "l'evento &egrave; stato eliminato";
     }
     else if($_POST["azione"] == "Salva"){
-        $e = new Evento();
-        $e->getValoriDB($_POST["id_evento"]);
-        $e->setDataDa($_POST["dataDa"]);
-        $e->setDataA($_POST["dataA"]);
-        $e->setPriorita($_POST["priorita"]);
-        $e->setCommento($_POST["commento"]);
-        $e->setStato(2);
-        $e->setCausale($_POST["tipo"]);
         if(sizeof($e->errori)==0){
             if($e->aggiornaEvento())
                 $messaggioSucc = "Aggiornamento eseguito con successo";
@@ -25,8 +24,6 @@
     }
 
     if(isset($_GET["id_evento"]) && $_GET["azione"] == "visualizza"){
-        $e = new Evento();
-        $e->getValoriDB($_GET["id_evento"]);
         if($e->getStato() == 3)
             $stampaform = true;
         else
@@ -64,7 +61,7 @@
     function stampaFormModificaEvento($e) {
     
 ?>
-    <form action="index.php?pagina=amministrazione&tab=gestione_segnalazioni" method="POST">
+    <form action="#" method="POST">
         <input type="hidden" name="id_evento" value="<?php echo $e->getID(); ?>">
         <input type="hidden" name="utente" value="<?php echo $e->get; ?>">
         <table>
@@ -78,10 +75,10 @@
                 Da:
                 </td>
                 <td>
-                    <input id="sel1" class="calTextfield<?php echo isset($e->errori["data_da"])?" errore":"";?>" type="textfield" name="dataDa" value="<?php echo date("d/m/Y - H:i",$e->getDataDa()); ?>" />
+                    <input id="sel1" class="calTextfield<?php echo isset($e->errori["data_da"])?" errore":"";?>" type="textfield" name="dataDa" value="<?php echo date("d.m.Y",$e->getDataDa()); ?>" />
                 </td>
                 <td>
-                    <input value="" type="reset" onclick="return showCalendar('sel1', '%d/%m/%Y - %H:%M');" class="imgCal" />
+                    <input value="" type="reset" onclick="return showCalendar('sel1', '%d.%m.%Y');" class="imgCal" />
                 </td>
             </tr>
             <tr>
@@ -95,10 +92,10 @@
                     A:
                 </td>
                 <td>
-                    <input id="sel2" class="calTextfield <?php echo isset($e->errori["data_a"])?" errore":"";?>" type="textfield" name="dataA" value="<?php echo date("d/m/Y - H:i",$e->getDataA()); ?>" />
+                    <input id="sel2" class="calTextfield <?php echo isset($e->errori["data_a"])?" errore":"";?>" type="textfield" name="dataA" value="<?php echo date("d.m.Y",$e->getDataA()); ?>" />
                 </td>
                 <td>
-                    <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y - %H:%M');" class="imgCal" />
+                    <input value="" type="reset" onclick="return showCalendar('sel2', '%d.%m.%Y');" class="imgCal" />
                 </td>
             </tr>
                         <tr>
