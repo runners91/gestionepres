@@ -16,12 +16,33 @@ class Utilita {
      * Stampa un report contenente i dati del ResultSet passato come parametro
      * @param ResultSet $rs e' il ResultSet da cui estrapola i dati per stampare un report
      */
-    static function stampaTabella($rs,$idSelezionato=1,$nascondiID=true){
-        $max = $rs->FieldCount();
+    static function stampaTabella($rs,$idSelezionato=1,$visualizza=8,$nascondiID=true){
+
+        // Preparo le variabili che mi servono per la paginazione del report
+        $riga = 0;
+        $cont = $rs->RecordCount();
+
+        if($_POST['codPag']=="P"){ /////////// pagina precedente /////////
+            $minRiga = (int)$_POST['minRiga']-$visualizza;
+        }
+        else if($_POST['codPag']=="S"){ /////////// pagina successiva /////////
+            $minRiga = (int)$_POST['minRiga']+$visualizza;
+        }
+        else if($_POST['codPag']=="SS"){ /////////// ultima pagina /////////
+            $minRiga = $cont-$cont%$visualizza;
+        }
+        else{ /////////// prima pagina /////////
+            $minRiga = 0;
+        }
+        if(($minRiga+$visualizza)<$cont) $maxRiga = $minRiga+$visualizza; else $maxRiga = $cont;
+
+        //echo "minRiga = ".$minRiga." maxRiga = ".$maxRiga;
+
+        // Stampo la tabella contenente i dati
         echo '<table class="reportTabella">';
 
         echo '<tr class="reportRigaTitoli">';
-        foreach ($rs->fields as $key => $value){
+        foreach($rs->fields as $key => $value){
             $style = "";
             if($key == "id" && $nascondiID)
                 $style="style='display:none;'";
@@ -30,21 +51,38 @@ class Utilita {
         echo '</tr>';
 
         while(!$rs->EOF){
-            $id = $rs->fields["id"];
-            $style = "";
-            if($id == $idSelezionato)
-                $style = 'style="background-color:#CEF6F5;"';
-            echo '<tr class="reportRigaDati"'.$style.'>';
-                foreach ($rs->fields as $key => $value){
-                    $style="";
-                    if($key == "id")
-                        $style="style='display:none;'";
-                    echo '<td class="reportCella" '.$style.'> '.$value.' </td>';
-                }
-                $rs->MoveNext();
-            echo '</tr>';
-        }
-        echo '</table>';
+            if($riga>=$minRiga && $riga<$maxRiga){
+                $id = $rs->fields["id"];
+                $style = "";
+                if($id == $idSelezionato)
+                    $style = 'style="background-color:#CEF6F5;"';
+                echo '<tr class="reportRigaDati"'.$style.'>';
+                    foreach($rs->fields as $key => $value){
+                        $style="";
+                        if($key == "id")
+                            $style="style='display:none;'";
+                        echo '<td class="reportCella" '.$style.'> '.$value.' </td>';
+                    }
+                echo '</tr>';
+            }
+            $riga++;
+            $rs->MoveNext();
+        } ?>
+            <form name="paginazione" action="#" method="POST">
+                <tr>
+                    <td colspan="200" align="right" class="paginazione">
+                        <input type="hidden" name="minRiga" value="<?php echo $minRiga; ?>" />
+                        <input type="hidden" name="codPag" id="codPag" />
+                        <?php if($minRiga-$visualizza>=0){ ?><input class="bottPaginazione" type="submit" value="<<" onclick="document.getElementById('codPag').value='PP'" /><?php } ?>
+                        <?php if($minRiga-$visualizza>=0){ ?><input class="bottPaginazione" type="submit" value="<" onclick="document.getElementById('codPag').value='P'" /><?php } ?>
+                        <span class="testoPaginazione"><?php echo ($minRiga+1).'-'.$maxRiga.' di '.$cont; ?></span>
+                        <?php if($minRiga+$visualizza<$cont){ ?><input class="bottPaginazione" type="submit" value=">" onclick="document.getElementById('codPag').value='S'" /><?php } ?>
+                        <?php if($minRiga+$visualizza<$cont){ ?><input class="bottPaginazione" type="submit" value=">>" onclick="document.getElementById('codPag').value='SS'" /><?php } ?>
+                    </td>
+                </tr>
+            </form>
+        <?php
+           echo '</table>';
     }
 
      /**

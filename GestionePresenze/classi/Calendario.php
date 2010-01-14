@@ -46,7 +46,7 @@ class Calendario {
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         ?>
-        <form name="calendarioNav" action="?pagina=home" method="POST">
+        <form name="calendarioNav" action="#" method="POST">
             <table>
                 <tr>
                     <td>
