@@ -15,6 +15,7 @@ class Evento {
     private $commento_segn;
     private $fk_dipendente;
     private $fk_causale;
+    private $durata;
     public $errori;
 
     function __construct(){
@@ -38,6 +39,7 @@ class Evento {
         $this->commento_segn  = $rs->fields['commento_segnalazione'];
         $this->fk_dipendente  = $rs->fields['fk_dipendente'];
         $this->fk_causale     = $rs->fields['fk_causale'];
+        $this->durata         = $rs->fields['durata'];
     }
 
     /**
@@ -54,6 +56,7 @@ class Evento {
         $this->setCommentoSegn("");
         $this->setDipendente($_POST['utente']);
         $this->setCausale($_POST['tipo']);
+        $this->setDurata($_POST['durata']);
     }
 
     /**
@@ -85,8 +88,8 @@ class Evento {
                " or data_da>=".$this->data_da." and data_a<=".$this->data_a.");";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields['c']==0){
-            $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale) ";
-            $sql .= "values (".$this->data_da.",".$this->data_a.",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.");";
+            $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale,durata) ";
+            $sql .= "values (".$this->data_da.",".$this->data_a.",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.",'".$this->durata."');";
             return Database::getInstance()->getConnection()->execute($sql);
         }
         else{
@@ -101,7 +104,7 @@ class Evento {
     */
     function aggiornaEvento(){
         if(sizeof($this->errori)>0) return false;
-        $sql =  "update eventi set data_da = ".$this->data_da.",data_a = ".$this->data_a.",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."' ";
+        $sql =  "update eventi set data_da = ".$this->data_da.",data_a = ".$this->data_a.",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."',durata = '".$this->durata."' ";
         $sql .= "where id_evento = ".$this->id_evento.";";
 
         return Database::getInstance()->getConnection()->execute($sql);
@@ -150,7 +153,7 @@ class Evento {
     function setDataA($data){
         if(!Calendario::checkData($data,"",false))
             $this->aggiungiErrore(Calendario::checkData($data,"A:",true),"data_a");
-        else if($this->data_da>=Calendario::getTimestamp($data))
+        else if($this->data_da>Calendario::getTimestamp($data))
             $this->aggiungiErrore("- Data Da: maggiore di A:","data_a");
         $this->data_a = Calendario::getTimestamp($data);
     }
@@ -195,6 +198,12 @@ class Evento {
     }
     function setCommentoSegn($c){
         $this->commento_segn = $c;
+    }
+    function getDurata(){
+        return $this->durata;
+    }
+    function setDurata($d){
+        $this->durata = $d;
     }
 }
 ?>

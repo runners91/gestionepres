@@ -37,16 +37,16 @@ class stampaEvento {
                         </td>
                         <td>
                             <input id="sel1" <?php echo isset($evt->errori["data_da"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="textfield" name="dataDa" value="<?php
-                            if(!isset($_POST['action']))
-                                echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:00');
+                            if(!isset($_POST['action']) && !$evt->getID())
+                                echo trim(date("d",$data).'.'.date("m",$data).'.'.date("Y",$data));
                             else if(isset($evt->errori["data_da"]))
                                 echo "";
                             else
-                                echo date("d/m/Y - H:i",$evt->getDataDa());
+                                echo date("d.m.Y",$evt->getDataDa());
                             ?>" />
                         </td>
                         <td>
-                            <input value="" type="reset" onclick="return showCalendar('sel1', '%d/%m/%Y - %H:%M');" class="imgCal" />
+                            <input value="" type="reset" onclick="return showCalendar('sel1', '%d.%m.%Y');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>
@@ -61,16 +61,16 @@ class stampaEvento {
                         </td>
                         <td>
                             <input id="sel2" <?php echo isset($evt->errori["data_a"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="textfield" name="dataA" value="<?php
-                            if(!isset($_POST['action']))
-                                echo trim(date("d",$data).'/'.date("m",$data).'/'.date("Y",$data).' - 08:30');
+                            if(!isset($_POST['action']) && !$evt->getID())
+                                echo trim(date("d",$data).'.'.date("m",$data).'.'.date("Y",$data));
                             else if(isset($evt->errori["data_a"]))
                                 echo "";
                             else
-                                echo date("d/m/Y - H:i",$evt->getDataA());
+                                echo date("d.m.Y",$evt->getDataA());
                             ?>" />
                         </td>
                         <td>
-                            <input value="" type="reset" onclick="return showCalendar('sel2', '%d/%m/%Y - %H:%M');" class="imgCal" />
+                            <input value="" type="reset" onclick="return showCalendar('sel2', '%d.%m.%Y');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>
@@ -98,6 +98,15 @@ class stampaEvento {
                              ?>
                             </select><br />
                             <div class="messaggioErrore"><?php if(Utilita::eseguiControlliFormEvento()) echo $evt->errori["fk_causale"]; ?></div>
+                        </td>
+                        <td valign="top">
+                            <select name="durata">
+                                <option value="G" selected="selected">Giornata</option>
+                                <?php $txt = ""; if($evt->getDurata()=="M") $txt = "selected='selected'"; ?>
+                                <option value="M" <?php echo $txt; ?>>Mattina</option>
+                                <?php $txt = ""; if($evt->getDurata()=="P") $txt = "selected='selected'"; ?>
+                                <option value="P" <?php echo $txt; ?>>Pomeriggio</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>
@@ -200,7 +209,8 @@ class stampaEvento {
         $minRiga = Utilita::getNewMinRiga($_POST['codPag'],$_POST['minRiga']);
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
-        $editTxt  = '<a alt="ciao" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '&minrg='.$minRiga.'"><img border="0" src="./img/modifica.png" /></a>';
+        $editTxt  = '<a alt="edit" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '&minrg='.$minRiga.'"><img border="0" src="./img/modifica.png" /></a>';
+        $cnfTxt   = '<a alt="conferma" href="?pagina=amministrazione&tab=gestione_segnalazioni">Conferma</a>';
         $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
         
         $prio    = Utilita::getValoreFiltro($_GET['prio']);
@@ -208,11 +218,11 @@ class stampaEvento {
         $filiale = Utilita::getValoreFiltro($_GET['filiale']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
 
-        $sql = "SELECT e.id_evento as id, CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as ' ', CONCAT('".$editTxt."',e.id_evento,'".$editTxt2."') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,f.nome as Filiale,e.commento as Commento FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
+        $sql = "SELECT e.id_evento as id, CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as ' ', CONCAT('".$editTxt."',e.id_evento,'".$editTxt2."') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE '".$cnfTxt."' END as Stato,e.commento as Commento FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields){
             echo '<p class="cellaTitoloTask">'.stampaEvento::getTitoloReport($dataGiorno).'</p>';
-            Utilita::stampaTabella($rs, $_GET["id_evento"]);
+            Utilita::stampaTabella($rs, $_GET["id_evento"],6);
         }
     }
 

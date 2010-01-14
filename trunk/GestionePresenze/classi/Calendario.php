@@ -223,10 +223,10 @@ class Calendario {
         $filiale = Utilita::getValoreFiltro($_GET['filiale']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
         
-        $sql = "SELECT c.nome,e.priorita FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
+        $sql = "SELECT e.id_evento,c.nome,e.priorita FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
         $rs = Database::getInstance()->eseguiQuery($sql);
         while(!$rs->EOF) {
-            echo "<p class='prio".$rs->fields['priorita']."'>".$rs->fields['nome']."</p>";
+            echo '<br /><a alt="'.$rs->fields['nome'].'" href="'.Utilita::getHomeUrlFiltri().'&data='.$rs->fields['data_da'].'&id_evento='.$rs->fields['id_evento'].'" class="prio'.$rs->fields['priorita'].'">'.$rs->fields['nome'].'</a>';
             $rs->MoveNext();
         }
         $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi e,dipendenti d WHERE e.DATA_DA <= ".$da." and e.DATA_A >= ".$a." and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 )");
@@ -239,7 +239,7 @@ class Calendario {
 
     /**
      *
-     * Controlla se una data e' valida (dd/mm/yyyy - hh:mm)
+     * Controlla se una data e' valida (dd.mm.yyyy)
      * ritorna i messaggi di errore se $conMessaggi = true altrimenti ritorna true/false (data ok/non ok)
      * @param String $d Contiene la data da controllare
      * @param String $name Contiene il nome della data che viene controllata
@@ -253,30 +253,13 @@ class Calendario {
             $return = "- Data ".$name." non inserita<br/>";
             if($conMessaggi) return $return; else return $returnB;
         }
-        if(!strpos($d,"-")){
-            $return = "- Il formato della data ".$name." non è corretto.<br/>";
-            $returnB = false;
-            if($conMessaggi) return $return; else return $returnB;
-        }
 
-        $data   = explode("/",$d);
+        $data   = explode(".",$d);
         $giorno = $data[0];
         $mese   = $data[1];
-        $anno   = substr($data[2],0,4);
+        $anno   = $data[2];
         if(!checkdate($mese, $giorno, $anno)){
-            $return .= "- La data ".$name." immessa non esiste<br/>";
-            $returnB = false;
-        }
-
-        $orario = explode(":",$d);
-        $ore    = substr($orario[0],-2);
-        $min    = $orario[1];
-        if($ore>23 || $ore<0){
-            $return .= "- L'ora ".$name." indicata non è valida<br/>";
-            $returnB = false;
-        }
-        if($min>60 || $min<0){
-            $return .= "- I minuti ".$name." indicati non sono validi<br/>";
+            $return .= "- La data ".$name." immessa non &egrave; valida<br/>";
             $returnB = false;
         }
 
@@ -284,20 +267,17 @@ class Calendario {
     }
 
      /**
-     *  Prende una data in formato dd/mm/yyyy hh:mm e la ritorna in timestamp
+     *  Prende una data in formato dd.mm.yyyy e la ritorna in timestamp
      * @param String $d Contiente la data da convertire
      * @return int
      */
     static function getTimestamp($d){
-        $data   = explode("/",$d);
+        $data   = explode(".",$d);
         $giorno = (int)$data[0];
         $mese   = (int)$data[1];
-        $anno   = (int)(substr($data[2],0,4));
-        $orario = explode(":",$d);
-        $ore    = (int)substr($orario[0],-2);
-        $min    = (int)$orario[1];
-
-        return mktime($ore, $min, 0, $mese, $giorno, $anno);
+        $anno   = (int)$data[2];
+        
+        return mktime(0, 0, 0, $mese, $giorno, $anno);
     }
 }
 ?>
