@@ -16,8 +16,12 @@
         if(sizeof($e->errori)==0){
             if($e->aggiornaEvento())
                 $messaggioSucc = "Aggiornamento eseguito con successo";
-            else
-                $messaggioErr = "non &egrave; stato possibile modificare l'evento";
+            else {
+                if(isset($e->errori["processi"]))
+                    $messaggioErr = $e->errori["processi"];
+                else
+                    $messaggioErr = "non &egrave; stato possibile modificare l'evento";
+            }
         }
         else
             $stampaform = true;
@@ -29,7 +33,7 @@
         else
             $messaggioErr = "Questo evento non è stato segnalato";
     }
-    $visTxt = '<a href="index.php?pagina=amministrazione&tab=gestione_segnalazioni&&azione=visualizza&&id_evento='; $visTxt2 = ' "><img border="0" src="img/modifica.png" /></a>';
+    $visTxt = '<a href="index.php?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&id_evento='; $visTxt2 = ' "><img border="0" src="img/modifica.png" /></a>';
     $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
     $sql = "SELECT e.id_evento 'id', CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as '',d.username as Utente, c.nome as Nome,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento, CONCAT('".$visTxt."',e.id_evento,'".$visTxt2."') as Edit FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale AND d.id_dipendente = e.fk_dipendente AND stato = 3 ORDER BY DATA_DA";
 
@@ -41,7 +45,7 @@
         echo "</td>";
     }
     else
-        $messaggioErr = "Non ci sono segnalazioni";
+        echo "Non ci sono segnalazioni";
 
     if($stampaform) {
         echo "<td style='width:30px;'></td>";
@@ -61,9 +65,10 @@
     function stampaFormModificaEvento($e) {
     
 ?>
-    <form action="#" method="POST">
+    <form action="index.php?pagina=amministrazione&tab=gestione_segnalazioni" method="POST">
         <input type="hidden" name="id_evento" value="<?php echo $e->getID(); ?>">
-        <input type="hidden" name="utente" value="<?php echo $e->get; ?>">
+        <input type="hidden" name="utente" value="<?php echo $e->getDipendente(); ?>">
+        <input type="hidden" name="commento_segn" value="<?php echo $e->getCommentoSegn(); ?>">
         <table>
             <tr>
                 <td class="cellaTitoloTask" colspan="2">
@@ -120,6 +125,15 @@
                             $rs->MoveNext();
                         }
                     ?>
+                    </select>
+                </td>
+                <td valign="top">
+                    <select name="durata">
+                        <option value="G" selected="selected">Giornata</option>
+                        <?php $txt = ""; if($e->getDurata()=="M") $txt = "selected='selected'"; ?>
+                        <option value="M" <?php echo $txt; ?>>Mattina</option>
+                        <?php $txt = ""; if($e->getDurata()=="P") $txt = "selected='selected'"; ?>
+                        <option value="P" <?php echo $txt; ?>>Pomeriggio</option>
                     </select>
                 </td>
             </tr>

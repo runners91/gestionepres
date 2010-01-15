@@ -47,13 +47,16 @@ class Evento {
      * @return Evento
      */
     function getValoriPost(){
-        $this->setID($_GET['id_evento']);
+        if(isset($_GET['id_evento']))
+            $this->setID($_GET['id_evento']);
+        else if(isset($_POST['id_evento']))
+            $this->setID($_POST['id_evento']);
         $this->setDataDa($_POST['dataDa']);
         $this->setDataA($_POST['dataA']);
-        $this->setPriorita($_POST['etichetta']);
+        $this->setPriorita($_POST['priorita']);
         $this->setCommento($_POST['commento']);
         $this->setStato(2);
-        $this->setCommentoSegn("");
+        $this->setCommentoSegn($_POST['commento_segn']);
         $this->setDipendente($_POST['utente']);
         $this->setCausale($_POST['tipo']);
         $this->setDurata($_POST['durata']);
@@ -82,12 +85,12 @@ class Evento {
     */
     function inserisciEvento(){
         if(sizeof($this->errori)>0) return false;
-        $sql = "select count(*) as c from eventi where fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale.
+        $sql = "select count(*) as totEventi from eventi where fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale.
                " and (data_da<=".$this->data_da." and data_a>=".$this->data_da.
                " or data_da<=".$this->data_a." and data_a>=".$this->data_a.
                " or data_da>=".$this->data_da." and data_a<=".$this->data_a.");";
         $rs = Database::getInstance()->eseguiQuery($sql);
-        if($rs->fields['c']==0){
+        if($rs->fields['totEventi']==0){
             $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale,durata) ";
             $sql .= "values (".$this->data_da.",".$this->data_a.",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.",'".$this->durata."');";
             return Database::getInstance()->getConnection()->execute($sql);
@@ -104,10 +107,20 @@ class Evento {
     */
     function aggiornaEvento(){
         if(sizeof($this->errori)>0) return false;
-        $sql =  "update eventi set data_da = ".$this->data_da.",data_a = ".$this->data_a.",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."',durata = '".$this->durata."' ";
-        $sql .= "where id_evento = ".$this->id_evento.";";
-
-        return Database::getInstance()->getConnection()->execute($sql);
+         $sql = "select count(*) as totEventi from eventi where id_evento != ".$this->id_evento." AND fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale.
+               " and (data_da<=".$this->data_da." and data_a>=".$this->data_da.
+               " or data_da<=".$this->data_a." and data_a>=".$this->data_a.
+               " or data_da>=".$this->data_da." and data_a<=".$this->data_a.");";
+        $rs = Database::getInstance()->eseguiQuery($sql);
+        if($rs->fields['totEventi']==0){
+            $sql =  "update eventi set data_da = ".$this->data_da.",data_a = ".$this->data_a.",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."',durata = '".$this->durata."' ";
+            $sql .= "where id_evento = ".$this->id_evento.";";
+            return Database::getInstance()->getConnection()->execute($sql);
+        }
+        else{
+            $this->aggiungiErrore("Non si può inserire 2 volte lo stesso evento","processi");
+            return false;
+        }
    }
 
 
