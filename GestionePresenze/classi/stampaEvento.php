@@ -143,11 +143,11 @@ class stampaEvento {
                             Priorit&agrave:
                         </td>
                         <td>
-                            <span class="prio1"><input type="radio" name="etichetta" value="1" checked="checked" />1</span>
+                            <span class="prio1"><input type="radio" name="priorita" value="1" checked="checked" />1</span>
                             <?php $txt = ""; if($evt->getPriorita()==2) $txt = "checked='checked'"; ?>
-                            <span class="prio2"><input type="radio" name="etichetta" value="2" <?php echo $txt; ?> />2</span>
+                            <span class="prio2"><input type="radio" name="priorita" value="2" <?php echo $txt; ?> />2</span>
                             <?php $txt = ""; if($evt->getPriorita()==3) $txt = "checked='checked'"; ?>
-                            <span class="prio3"><input type="radio" name="etichetta" value="3" <?php echo $txt; ?> />3</span>
+                            <span class="prio3"><input type="radio" name="priorita" value="3" <?php echo $txt; ?> />3</span>
                         </td>
                     </tr>
                     <tr>
@@ -210,7 +210,7 @@ class stampaEvento {
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $editTxt  = '<a alt="edit" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '&minrg='.$minRiga.'"><img border="0" src="./img/modifica.png" /></a>';
-        $cnfTxt   = '<a alt="conferma" href="?pagina=amministrazione&tab=gestione_segnalazioni">Conferma</a>';
+        $cnfTxt   = '<a alt="conferma" href="?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&id_evento='; $cnfTxt2 = '">Conferma</a>';
         $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
         
         $prio    = Utilita::getValoreFiltro($_GET['prio']);
@@ -218,7 +218,7 @@ class stampaEvento {
         $filiale = Utilita::getValoreFiltro($_GET['filiale']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
 
-        $sql = "SELECT e.id_evento as id, CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as ' ', CONCAT('".$editTxt."',e.id_evento,'".$editTxt2."') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE '".$cnfTxt."' END as Stato,e.commento as Commento FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
+        $sql = "SELECT e.id_evento as id, CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as ' ', CONCAT('".$editTxt."',e.id_evento,'".$editTxt2."') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT('".$cnfTxt."',e.id_evento,'".$cnfTxt2."') END as Stato,e.commento as Commento FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields){
             echo '<p class="cellaTitoloTask">'.stampaEvento::getTitoloReport($dataGiorno).'</p>';
