@@ -85,10 +85,12 @@ class Evento {
     */
     function inserisciEvento(){
         if(sizeof($this->errori)>0) return false;
-        $sql = "select count(*) as totEventi from eventi where fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale.
-               " and (data_da<=".$this->data_da." and data_a>=".$this->data_da.
-               " or data_da<=".$this->data_a." and data_a>=".$this->data_a.
-               " or data_da>=".$this->data_da." and data_a<=".$this->data_a.");";
+        if($this->durata != "G")
+            $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
+        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." fk_dipendente=".$this->fk_dipendente.
+                " AND (data_da<=".$this->data_da." AND data_a>=".$this->data_da.
+                " OR data_da<=".$this->data_a." AND data_a>=".$this->data_a.
+                " OR data_da>=".$this->data_da." AND data_a<=".$this->data_a.");";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields['totEventi']==0){
             $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale,durata) ";
@@ -96,7 +98,9 @@ class Evento {
             return Database::getInstance()->getConnection()->execute($sql);
         }
         else{
-            $this->aggiungiErrore("Non si può inserire 2 volte lo stesso evento","processi");
+            $d = new Dipendente();
+            $d->trovaUtenteDaId($this->fk_dipendente);
+            $this->aggiungiErrore("l'utente \"".$d->username."\" ha gi&agrave; un evento in questa data","processi");
             return false;
         }
     }
@@ -107,10 +111,12 @@ class Evento {
     */
     function aggiornaEvento(){
         if(sizeof($this->errori)>0) return false;
-         $sql = "select count(*) as totEventi from eventi where id_evento != ".$this->id_evento." AND fk_dipendente=".$this->fk_dipendente." and fk_causale=".$this->fk_causale.
-               " and (data_da<=".$this->data_da." and data_a>=".$this->data_da.
-               " or data_da<=".$this->data_a." and data_a>=".$this->data_a.
-               " or data_da>=".$this->data_da." and data_a<=".$this->data_a.");";
+        if($this->durata != "G")
+            $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
+        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." id_evento != ".$this->id_evento." AND fk_dipendente=".$this->fk_dipendente.
+                " AND (data_da<=".$this->data_da." AND data_a>=".$this->data_da.
+                " OR data_da<=".$this->data_a." AND data_a>=".$this->data_a.
+                " OR data_da>=".$this->data_da." AND data_a<=".$this->data_a.");";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields['totEventi']==0){
             $sql =  "update eventi set data_da = ".$this->data_da.",data_a = ".$this->data_a.",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."',durata = '".$this->durata."' ";
@@ -118,7 +124,9 @@ class Evento {
             return Database::getInstance()->getConnection()->execute($sql);
         }
         else{
-            $this->aggiungiErrore("Non si può inserire 2 volte lo stesso evento","processi");
+            $d = new Dipendente();
+            $d->trovaUtenteDaId($this->fk_dipendente);
+            $this->aggiungiErrore("l'utente \"".$d->username."\" ha gi&agrave; un evento in questa data","processi");
             return false;
         }
    }

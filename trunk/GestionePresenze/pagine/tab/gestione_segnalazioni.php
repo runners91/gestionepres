@@ -21,6 +21,7 @@
                     $messaggioErr = $e->errori["processi"];
                 else
                     $messaggioErr = "non &egrave; stato possibile modificare l'evento";
+                $stampaform = true;
             }
         }
         else
@@ -33,10 +34,15 @@
         else
             $messaggioErr = "Questo evento non è stato segnalato";
     }
-    $visTxt = '<a href="index.php?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&id_evento='; $visTxt2 = ' "><img border="0" src="img/modifica.png" /></a>';
-    $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
-    $sql = "SELECT e.id_evento 'id', CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as '',d.username as Utente, c.nome as Nome,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento, CONCAT('".$visTxt."',e.id_evento,'".$visTxt2."') as Edit FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale AND d.id_dipendente = e.fk_dipendente AND stato = 3 ORDER BY DATA_DA";
+    
+    $sql = "SELECT count(*) as totEventi FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale AND d.id_dipendente = e.fk_dipendente AND stato = 3 ORDER BY DATA_DA";
+    $rs = Database::getInstance()->eseguiQuery($sql);
 
+    $minRiga = Utilita::getNewMinRiga($_POST['codPag'],$_POST['minRiga']);
+    $visTxt = '<a href="index.php?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&minrg='.$minRiga.'&id_evento='; $visTxt2 = ' "><img border="0" src="img/modifica.png" /></a>';
+    $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
+
+    $sql = "SELECT e.id_evento 'id', CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as '',d.username as Utente, c.nome as Nome,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento, CONCAT('".$visTxt."',e.id_evento,'".$visTxt2."') as Edit FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale AND d.id_dipendente = e.fk_dipendente AND stato = 3 ORDER BY DATA_DA";
     $rs = Database::getInstance()->eseguiQuery($sql);
     echo "<table><tr>";
     if($rs->rowCount()>0) {
@@ -51,6 +57,7 @@
         echo "<td style='width:30px;'></td>";
         echo "<td>";
             stampaFormModificaEvento($e);
+        echo '<div class="messaggioErrore">'.$messaggioErr.'</div>';
         echo "</td>";
         echo "<td style='width:30px;'></td>";
         echo "<td valign='top'>";
@@ -58,8 +65,9 @@
             echo $e->getCommentoSegn();
         echo "</td>";
     }
-    else 
+    else
         echo '<td style="width:30px;"></td><td valign="top" ><div class="messaggioErrore">'.$messaggioErr.'</div> <div class="messaggioTaskOk">'.$messaggioSucc.'</div></td>';
+        
     echo "</tr></table>";
     
     function stampaFormModificaEvento($e) {
