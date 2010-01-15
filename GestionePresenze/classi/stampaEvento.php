@@ -206,23 +206,25 @@ class stampaEvento {
      */
     static function stampaReportEventi(){
         $dataGiorno = Utilita::getDataHome();
-        $minRiga = Utilita::getNewMinRiga($_POST['codPag'],$_POST['minRiga']);
-        $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
-        $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
-        $editTxt  = '<a alt="edit" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '&minrg='.$minRiga.'"><img border="0" src="./img/modifica.png" /></a>';
-        $cnfTxt   = '<a alt="conferma" href="?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&id_evento='; $cnfTxt2 = '">Conferma</a>';
-        $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
-        
+        $visualizza = 6;
         $prio    = Utilita::getValoreFiltro($_GET['prio']);
         $utente  = Utilita::getValoreFiltro($_GET['utn']);
         $filiale = Utilita::getValoreFiltro($_GET['filiale']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
+        $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
+        $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
+        $sql = "SELECT count(*) as totEventi FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 )";
+        $rs = Database::getInstance()->eseguiQuery($sql);
+        $minRiga = Utilita::getNewMinRiga($_POST['codPag'],$_POST['minRiga'],$rs->fields["totEventi"],$visualizza);
 
+        $editTxt  = '<a alt="edit" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '&minrg='.$minRiga.'"><img border="0" src="./img/modifica.png" /></a>';
+        $cnfTxt   = '<a alt="conferma" href="?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&id_evento='; $cnfTxt2 = '">Conferma</a>';
+        $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
         $sql = "SELECT e.id_evento as id, CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as ' ', CONCAT('".$editTxt."',e.id_evento,'".$editTxt2."') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT('".$cnfTxt."',e.id_evento,'".$cnfTxt2."') END as Stato,e.commento as Commento FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ".$da." and DATA_A >= ".$a." and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
         $rs = Database::getInstance()->eseguiQuery($sql);
         if($rs->fields){
             echo '<p class="cellaTitoloTask">'.stampaEvento::getTitoloReport($dataGiorno).'</p>';
-            Utilita::stampaTabella($rs, $_GET["id_evento"],6);
+            Utilita::stampaTabella($rs, $_GET["id_evento"],$visualizza);
         }
     }
 

@@ -15,6 +15,9 @@ class Utilita {
     /**
      * Stampa un report contenente i dati del ResultSet passato come parametro
      * @param ResultSet $rs e' il ResultSet da cui estrapola i dati per stampare un report
+     * @param int $idSelezionato id della riga da selezionare
+     * @param int $visualizza numero di record da visualizzare
+     * @param boolean $nascondiID true se si vuole nascondere la colonna ID, false se la si vuole vedere
      */
     static function stampaTabella($rs,$idSelezionato=1,$visualizza=8,$nascondiID=true){
 
@@ -103,7 +106,7 @@ class Utilita {
         else if($action=="S"){ /////////// pagina successiva /////////
             $minRiga = (int)$vecchioVal+$visualizza;
         }
-        else if($_POST['codPag']=="SS"){ /////////// ultima pagina /////////
+        else if($action=="SS"){ /////////// ultima pagina /////////
             if($cont%$visualizza!=0) $minRiga = $cont-$cont%$visualizza; else $minRiga = $cont-$visualizza;
         }
         else{ /////////// prima pagina /////////

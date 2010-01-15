@@ -59,7 +59,10 @@ class Dipendente {
      */
     public function aggiungiDipendente(){
         if(sizeof($this->errori)==0){
-            return Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values ('".$this->nome."','".$this->cognome."','".$this->username."',md5('inizio'),".$this->filiale.");");
+            $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values ('".$this->nome."','".$this->cognome."','".$this->username."',md5('inizio'),".$this->filiale.");");
+            $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = '".$this->username."';");
+            Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi (fk_dipendente,fk_gruppo) values (".$rs->fields["id"].",2);");
+            return $ris;
         }
         return false;
     }

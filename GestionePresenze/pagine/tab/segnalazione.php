@@ -29,7 +29,8 @@
 
         $d = new Dipendente();
         $utente = $d->trovaUtenteDaUsername($_SESSION["username"])->id;
-        $segnTxt = '<a href="index.php?pagina=utente&tab=segnalazione&azione=commento&id_evento='; $segnTxt2 = ' ">segnala</a>';
+        $minRiga = Utilita::getNewMinRiga($_POST['codPag'],$_POST['minRiga']);
+        $segnTxt = '<a href="index.php?pagina=utente&tab=segnalazione&azione=commento&minrg='.$minRiga.'&id_evento='; $segnTxt2 = ' ">segnala</a>';
         $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
         $sql = "SELECT e.id_evento 'id', CONCAT('".$prioTxt."',e.priorita,'".$prioTxt2."') as '', c.nome as Nome,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y-%H:%i') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y-%H:%i') as Al,e.commento as Commento, CONCAT('".$segnTxt."',e.id_evento,'".$segnTxt2."') as Segnala FROM eventi e,causali c,dipendenti d WHERE c.id_motivo = e.fk_causale and d.id_dipendente = e.fk_dipendente and e.fk_dipendente = ".$utente." AND stato = 2 ORDER BY DATA_DA";
 
