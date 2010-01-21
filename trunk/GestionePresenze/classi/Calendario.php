@@ -231,7 +231,7 @@ class Calendario {
         }
         $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi e,dipendenti d WHERE e.DATA_DA <= ".$da." and e.DATA_A >= ".$a." and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ".$tipo." or ".$tipo." = 0 ) and (e.priorita = ".$prio." or ".$prio." = 0 ) and (e.fk_dipendente = ".$utente." or ".$utente." = 0 ) and (d.fk_filiale = ".$filiale." or ".$filiale." = 0 )");
         if($rs->fields["c"]>3){
-            echo "altri ".($rs->fields["c"]-3)."...";
+            echo " altri ".($rs->fields["c"]-3)."...";
         }
 
     }
