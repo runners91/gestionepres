@@ -4,11 +4,11 @@
         session_destroy();
         header('Location:index.php');
     }
-    include("classi/Assenze.php");
     include("classi/Database.php");
     include("classi/Dipendente.php");
     include("classi/Calendario.php");
     include("classi/Evento.php");
+    include("classi/Utilita.php");
     include("classi/stampaEvento.php");
     include("login.php");
     include("pagine/navigazione/menu.php");
