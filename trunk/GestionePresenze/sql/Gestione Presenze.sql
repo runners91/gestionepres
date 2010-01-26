@@ -104,7 +104,8 @@ INSERT INTO `dipendenti_gruppi` (`fk_dipendente`,`fk_gruppo`) VALUES
  (3,2),
  (4,1),
  (5,1),
- (5,2);
+ (5,2),
+ (6,3);
 /*!40000 ALTER TABLE `dipendenti_gruppi` ENABLE KEYS */;
 
 
@@ -129,7 +130,7 @@ CREATE TABLE `eventi` (
   KEY `FK_event_2` (`fk_causale`),
   CONSTRAINT `FK_event_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`),
   CONSTRAINT `FK_event_2` FOREIGN KEY (`fk_causale`) REFERENCES `causali` (`id_motivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `eventi`
@@ -139,7 +140,11 @@ CREATE TABLE `eventi` (
 INSERT INTO `eventi` (`id_evento`,`data_da`,`data_a`,`priorita`,`commento`,`fk_dipendente`,`fk_causale`,`stato`,`commento_segnalazione`,`durata`) VALUES 
  (114,'1263423600','1263423600',3,'',4,1,'2','','G'),
  (115,'1263337200','1263510000',2,'asd',7,1,'2','','M'),
- (116,'1262905200','1262905200',1,'',7,3,'2','','G');
+ (116,'1262905200','1262905200',1,'',7,3,'2','','G'),
+ (117,'1263769200','1264114800',3,'',4,4,'2','','G'),
+ (118,'1264374000','1264633200',1,'',7,1,'2','','G'),
+ (119,'1262559600','1262732400',2,'',3,2,'2','','G'),
+ (120,'1263164400','1263682800',3,'3',5,6,'2','','G');
 /*!40000 ALTER TABLE `eventi` ENABLE KEYS */;
 
 
@@ -151,8 +156,8 @@ DROP TABLE IF EXISTS `festivi`;
 CREATE TABLE `festivi` (
   `id_festivo` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `nome` varchar(45) NOT NULL,
-  `data` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'data di cadenza del festivo',
-  `quantita` float NOT NULL COMMENT '0.5 = mezza giornata 1 = un giorno',
+  `data` varchar(45) DEFAULT NULL COMMENT 'data di cadenza del festivo',
+  `quantita` float NOT NULL DEFAULT '1' COMMENT '0.5 = mezza giornata 1 = un giorno',
   PRIMARY KEY (`id_festivo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i giorni festivi che l''azienda riconosce';
 
@@ -274,7 +279,8 @@ INSERT INTO `gruppi_pagine` (`fk_gruppo`,`fk_pagina`) VALUES
  (1,4),
  (2,1),
  (2,3),
- (2,4);
+ (2,4),
+ (5,3);
 /*!40000 ALTER TABLE `gruppi_pagine` ENABLE KEYS */;
 
 
@@ -364,11 +370,11 @@ INSERT INTO `pagine` (`id_pagina`,`url`) VALUES
 DROP TABLE IF EXISTS `saldi`;
 CREATE TABLE `saldi` (
   `fk_dipendente` int(10) unsigned NOT NULL COMMENT 'id del dipendente',
-  `saldo` float NOT NULL COMMENT 'saldo ore',
-  `saldo_strd` float NOT NULL COMMENT 'saldo ore straordinarie',
-  `vac_spt` float NOT NULL COMMENT 'vacanze spettanti',
-  `var_rst` float NOT NULL COMMENT 'vacanze restanti',
-  `vac_matr` float NOT NULL COMMENT 'vacanze maturate',
+  `saldo` float NOT NULL DEFAULT '0' COMMENT 'saldo ore',
+  `saldo_strd` float NOT NULL DEFAULT '0' COMMENT 'saldo ore straordinarie',
+  `vac_spt` float NOT NULL DEFAULT '25' COMMENT 'vacanze spettanti',
+  `vac_rst` float NOT NULL DEFAULT '25' COMMENT 'vacanze restanti',
+  `vac_matr` float NOT NULL DEFAULT '0' COMMENT 'vacanze maturate',
   PRIMARY KEY (`fk_dipendente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Relazionata 1:1 con dipendenti contiene i saldi orari di ogn';
 
@@ -377,7 +383,7 @@ CREATE TABLE `saldi` (
 --
 
 /*!40000 ALTER TABLE `saldi` DISABLE KEYS */;
-INSERT INTO `saldi` (`fk_dipendente`,`saldo`,`saldo_strd`,`vac_spt`,`var_rst`,`vac_matr`) VALUES 
+INSERT INTO `saldi` (`fk_dipendente`,`saldo`,`saldo_strd`,`vac_spt`,`vac_rst`,`vac_matr`) VALUES 
  (3,3.05,4,25,15,0),
  (4,1.2,0,25,10,1);
 /*!40000 ALTER TABLE `saldi` ENABLE KEYS */;
@@ -390,7 +396,7 @@ INSERT INTO `saldi` (`fk_dipendente`,`saldo`,`saldo_strd`,`vac_spt`,`var_rst`,`v
 DROP TABLE IF EXISTS `timbrature`;
 CREATE TABLE `timbrature` (
   `id_timbratura` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `data` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `data` varchar(45) DEFAULT NULL,
   `stato` varchar(1) NOT NULL DEFAULT 'E' COMMENT 'E = entrata, U = uscita',
   `fk_dipendente` int(10) unsigned NOT NULL COMMENT 'id del dipendente che ha timbrato',
   PRIMARY KEY (`id_timbratura`),
@@ -404,10 +410,10 @@ CREATE TABLE `timbrature` (
 
 /*!40000 ALTER TABLE `timbrature` DISABLE KEYS */;
 INSERT INTO `timbrature` (`id_timbratura`,`data`,`stato`,`fk_dipendente`) VALUES 
- (1,'0000-00-00 00:00:00','E',3),
- (2,'0000-00-00 00:00:00','U',3),
- (3,'0000-00-00 00:00:00','E',5),
- (4,'0000-00-00 00:00:00','U',5);
+ (1,'1263453780','E',3),
+ (2,'1263486840','U',3),
+ (3,'1263453780','E',5),
+ (4,'1263486840','U',5);
 /*!40000 ALTER TABLE `timbrature` ENABLE KEYS */;
 
 
