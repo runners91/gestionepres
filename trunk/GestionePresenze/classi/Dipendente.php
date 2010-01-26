@@ -39,10 +39,7 @@ class Dipendente {
     }
     public function setUsername($u){
         $username = trim($u);
-        $query = ";";
-        if(isset($this->id))
-            $query = " AND id_dipendente != ".$this->id.";";
-        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as username from dipendenti where username = '".$username."'".$query);
+        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as username from dipendenti where username = '?'",array($username));
         if(strlen($username)==0 ){
             $this->aggiungiErrore(" - Username non pu&ograve; avere un valore nullo", "username");
         }
@@ -59,9 +56,9 @@ class Dipendente {
      */
     public function aggiungiDipendente(){
         if(sizeof($this->errori)==0){
-            $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values ('".$this->nome."','".$this->cognome."','".$this->username."',md5('inizio'),".$this->filiale.");");
-            $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = '".$this->username."';");
-            Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi (fk_dipendente,fk_gruppo) values (".$rs->fields["id"].",2);");
+            $ris = Database::getInstance()->execute("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values ('?','?','?',md5('inizio'),?)",array($this->nome,$this->cognome,$this->username,$this->filiale));
+            $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = '?'",array($this->username));
+            Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi (fk_dipendente,fk_gruppo) values (?,2);",array($rs->fields['id']));
             return $ris;
         }
         return false;

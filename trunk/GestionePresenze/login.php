@@ -14,10 +14,11 @@ function login($stampa = true){
             $msg = "Username o password non inseriti !";
         }
         else{
-            $rs = Database::getInstance()->eseguiQuery("select username as c from dipendenti where (BINARY username = '".$username."') and password = md5('".$password."')");
+            $rs = Database::getInstance()->eseguiQuery("select id_dipendente,username as c from dipendenti where (BINARY username = '?') and password = md5('?')",array($username,$password));
             if($rs->RecordCount() == 1){
                 $_SESSION['username'] = $username;
-                $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as inizio FROM dipendenti WHERE username = '".$username."' and password = md5('inizio');");
+                $_SESSION['id_utente'] = $rs->fields['id_dipendente'];
+                $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as inizio FROM dipendenti WHERE username = '?' and password = md5('inizio');",array($username));
                 if($rs->fields["inizio"] == 1)
                     header("Location:index.php?pagina=utente&tab=cambia_password&login=1");
 

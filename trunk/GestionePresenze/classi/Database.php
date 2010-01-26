@@ -41,11 +41,11 @@ class Database{
     * Esegue una query e ne ritorna il resultset
     * @param String $query Contiene la query di cui deve ritornare il ResultSet
     */
-    function eseguiQuery($query,$ass = ADODB_FETCH_ASSOC){
+    function eseguiQuery($query,$val = null,$ass = ADODB_FETCH_ASSOC){
         $rs = null;
         $this->conn->SetFetchMode($ass);
         try{
-            $rs = $this->conn->Execute($query);
+            $rs = $this->conn->Execute($query,$val);
         }
         catch(Exception $e){
             print_r($e);
