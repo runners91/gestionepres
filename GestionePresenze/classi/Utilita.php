@@ -29,8 +29,6 @@ class Utilita {
 
         if(($minRiga+$visualizza)<$cont) $maxRiga = $minRiga+$visualizza; else $maxRiga = $cont;
 
-        //echo "minRiga = ".$minRiga." maxRiga = ".$maxRiga;
-
         // Stampo la tabella contenente i dati
         echo '<table class="reportTabella">';
 
