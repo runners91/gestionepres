@@ -39,7 +39,14 @@ class Dipendente {
     }
     public function setUsername($u){
         $username = trim($u);
-        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as username from dipendenti where username = ? and id_dipendente != ?",array($username,$this->id));
+        $param = array($username);
+        $sql = "SELECT count(*) as username FROM dipendenti where username = ?";
+        if($this->id) {
+            $sql .= "AND id_dipendente != ?;";
+            $param[1] = $this->id;
+        }
+
+        $rs = Database::getInstance()->eseguiQuery($sql,$param);
         if(strlen($username)==0 ){
             $this->aggiungiErrore(" - Username non pu&ograve; avere un valore nullo", "username");
         }
