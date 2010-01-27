@@ -27,8 +27,8 @@ class Evento {
      * @return Evento
      */
     function getValoriDB($id_evento){
-        $sql = "SELECT * FROM eventi WHERE id_evento = ".$id_evento;
-        $rs = Database::getInstance()->eseguiQuery($sql);
+        $sql = "SELECT * FROM eventi WHERE id_evento = ?";
+        $rs = Database::getInstance()->eseguiQuery($sql,array($id_evento));
 
         $this->id_evento      = $id_evento;
         $this->data_da        = $rs->fields['data_da'];
@@ -68,7 +68,7 @@ class Evento {
      * @param String $commento commento della segnalazione nel caso lo stato è 3
      */
     function aggiornaStato($stato,$commento = ""){
-        return Database::getInstance()->eseguiQuery("UPDATE eventi set commento_segnalazione = '".$commento."', stato = ".$stato." WHERE id_evento = ".$this->id_evento.";");
+        return Database::getInstance()->eseguiQuery("UPDATE eventi set commento_segnalazione = ?, stato = ? WHERE id_evento = ?",array($commento,$stato,$this->id_evento));
     }
 
      /**
@@ -76,7 +76,7 @@ class Evento {
      */
     function eliminaEvento(){
         if($this->id_evento)
-            return Database::getInstance()->eseguiQuery("DELETE FROM eventi where id_evento = ".$this->id_evento.";");
+            return Database::getInstance()->eseguiQuery("DELETE FROM eventi where id_evento = ?",array($this->id_evento));
     }
 
     /**
@@ -87,15 +87,15 @@ class Evento {
         if(sizeof($this->errori)>0) return false;
         if($this->durata != "G")
             $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
-        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." fk_dipendente=".$this->fk_dipendente.
-                " AND (data_da<=".$this->data_da." AND data_a>=".$this->data_da.
-                " OR data_da<=".$this->data_a." AND data_a>=".$this->data_a.
-                " OR data_da>=".$this->data_da." AND data_a<=".$this->data_a.");";
-        $rs = Database::getInstance()->eseguiQuery($sql);
+        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." fk_dipendente= ?
+                 AND (data_da <= ? AND data_a >= ?
+                 OR data_da <= ? AND data_a >= ?
+                 OR data_da >= ? AND data_a <= ?)";
+        $rs = Database::getInstance()->eseguiQuery($sql,array($this->fk_dipendente,$this->data_da,$this->data_da,$this->data_a,$this->data_a,$this->data_da,$this->data_a));
         if($rs->fields['totEventi']==0){
             $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale,durata) ";
-            $sql .= "values (".$this->data_da.",".$this->data_a.",".$this->priorita.",'".$this->commento."',".$this->stato.",'".$this->commento_segn."',".$this->fk_dipendente.",".$this->fk_causale.",'".$this->durata."');";
-            return Database::getInstance()->getConnection()->execute($sql);
+            $sql .= "values (?,?,?,?,?,?,?,?,?);";
+            return Database::getInstance()->eseguiQuery($sql,array($this->data_da,$this->data_a,$this->priorita,$this->commento,$this->stato,$this->commento_segn,$this->fk_dipendente,$this->fk_causale,$this->durata));
         }
         else{
             $d = new Dipendente();
@@ -113,15 +113,15 @@ class Evento {
         if(sizeof($this->errori)>0) return false;
         if($this->durata != "G")
             $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
-        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." id_evento != ".$this->id_evento." AND fk_dipendente=".$this->fk_dipendente.
-                " AND (data_da<=".$this->data_da." AND data_a>=".$this->data_da.
-                " OR data_da<=".$this->data_a." AND data_a>=".$this->data_a.
-                " OR data_da>=".$this->data_da." AND data_a<=".$this->data_a.");";
-        $rs = Database::getInstance()->eseguiQuery($sql);
+        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." id_evento <> ? AND fk_dipendente = ?
+                 AND (data_da <= ? AND data_a >= ?
+                 OR data_da <= ? AND data_a >= ?
+                 OR data_da >= ? AND data_a <= ?)";
+        $rs = Database::getInstance()->eseguiQuery($sql,array($this->id_evento,$this->fk_dipendente,$this->data_da,$this->data_da,$this->data_a,$this->data_a,$this->data_da,$this->data_a));
         if($rs->fields['totEventi']==0){
-            $sql =  "update eventi set data_da = ".$this->data_da.",data_a = ".$this->data_a.",fk_dipendente = ".$this->fk_dipendente.",fk_causale = ".$this->fk_causale.",commento = '".$this->commento."',priorita = ".$this->priorita.",stato = ".$this->stato.", commento_segnalazione = '".$this->commento_segn."',durata = '".$this->durata."' ";
-            $sql .= "where id_evento = ".$this->id_evento.";";
-            return Database::getInstance()->getConnection()->execute($sql);
+            $sql =  "update eventi set data_da = ?,data_a = ?,fk_dipendente = ?,fk_causale = ?,commento = ?,priorita = ?,stato = ?, commento_segnalazione = ?,durata = ? ";
+            $sql .= "where id_evento = ?";
+            return Database::getInstance()->getConnection()->execute($sql,array($this->data_da,$this->data_a,$this->fk_dipendente,$this->fk_causale,$this->commento,$this->priorita,$this->stato,$this->commento_segn,$this->durata,$this->id_evento));
         }
         else{
             $d = new Dipendente();

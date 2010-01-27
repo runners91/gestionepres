@@ -65,7 +65,7 @@ class Dipendente {
         if(sizeof($this->errori)==0){
             $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values (?,?,?,md5('inizio'),?)",array($this->nome,$this->cognome,$this->username,$this->filiale));
             $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = ?",array($this->username));
-            Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi (fk_dipendente,fk_gruppo) values (?,2);",array($rs->fields['id']));
+            //Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi (fk_dipendente,fk_gruppo) values (?,2);",array($rs->fields['id']));
             return $ris;
         }
         return false;

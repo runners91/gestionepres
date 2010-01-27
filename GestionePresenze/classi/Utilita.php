@@ -115,19 +115,22 @@ class Utilita {
 
      /**
      *  Ritorna la stringa dell'url completo attuale (pagina home.php)
+     *  @param $selezionato indica quale filtro non aggiungere nell'url in caso che è l'attuale selezionato
+     *  @return String
      */
-    static function getHomeUrlCompleto(){
+    static function getHomeUrlCompleto($selezionato = null){
         $url = "index.php?pagina=home";
-        if(isset($_GET['data'])) $url .= "&data=".$_GET['data'];
-        if(isset($_GET['prio'])) $url .= "&prio=".$_GET['prio'];
-        if(isset($_GET['utn'])) $url .= "&utn=".$_GET['utn'];
-        if(isset($_GET['filiale'])) $url .= "&filiale=".$_GET['filiale'];
-        if(isset($_GET['tipo'])) $url .= "&tipo=".$_GET['tipo'];
+        if(isset($_GET['data']) && $selezionato!="data") $url .= "&data=".$_GET['data'];
+        if(isset($_GET['prio']) && $selezionato!="prio") $url .= "&prio=".$_GET['prio'];
+        if(isset($_GET['utn']) && $selezionato!="utn") $url .= "&utn=".$_GET['utn'];
+        if(isset($_GET['filiale']) && $selezionato!="filiale") $url .= "&filiale=".$_GET['filiale'];
+        if(isset($_GET['tipo']) && $selezionato!="tipo") $url .= "&tipo=".$_GET['tipo'];
         return $url;
     }
 
      /**
      *  Ritorna la stringa dell'url attuale, solo filtri (pagina home.php)
+     *  @return String
      */
     static function getHomeUrlFiltri(){
         $url = "index.php?pagina=home";
@@ -153,7 +156,7 @@ class Utilita {
      * Ritorna il true se i controlli sono da effettuare, false se invece no
      * @return boolean
      */
-    static function eseguiControlliFormEvento($elimina=false){
+    static function eseguiControlliFormEvento(){
         if(isset($_POST['action']) && $_POST['action']!="elimina")
             return true;
         return false;
@@ -184,16 +187,6 @@ class Utilita {
             return mktime(0,0,0,$mese,$giorno,$anno);
          }
      }
-
-    /**
-     *  Controlla se l'utente ha accesso alla pagina, ritorna true se è si, altrimenti ritorna false
-     * @param String $pagina Contiente la pagina da contrlollare
-     */
-    static function verificaAccesso($pagina){
-       if($pagina=="") $pagina = "home";
-       $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as accesso FROM dipendenti d,gruppi g, dipendenti_gruppi dg, gruppi_pagine gp, pagine p WHERE d.id_dipendente = dg.fk_dipendente AND dg.fk_gruppo = g.id_gruppo AND g.id_gruppo = gp.fk_gruppo AND gp.fk_pagina = p.id_pagina AND d.username='".$_SESSION['username']."' AND p.url = '".$pagina."';");
-       return $rs->fields['accesso'] >= 1;
-    }
 
 }
 

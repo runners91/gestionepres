@@ -1,7 +1,7 @@
 <?php
 
 function creaMenuItem($paginaAttuale,$pagina){
-    if(Utilita::verificaAccesso($pagina)){
+    if(Autorizzazione::verificaAccesso($pagina)){
         $class = "";
         
         if($paginaAttuale==$pagina){
