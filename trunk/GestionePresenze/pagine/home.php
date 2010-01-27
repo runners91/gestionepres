@@ -9,7 +9,10 @@
             <?php Calendario::stampaCalendario($_POST['m']); ?>
         </td>
         <td valign="top">
-            <?php stampaEvento::stampaFormAggiungiEvento(); ?>
+            <?php
+                stampaEvento::stampaFormEvento();
+
+            ?>
         </td>
     </tr>
     <tr>
