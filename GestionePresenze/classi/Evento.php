@@ -55,9 +55,12 @@ class Evento {
         $this->setDataA($_POST['dataA']);
         $this->setPriorita($_POST['priorita']);
         $this->setCommento($_POST['commento']);
-        $this->setStato(2);
+        $this->setStato($_POST['stato']);
         $this->setCommentoSegn($_POST['commento_segn']);
-        $this->setDipendente($_POST['utente']);
+        if($_POST['utente'])
+            $this->setDipendente($_POST['utente']);
+        else
+            $this->setDipendente($_SESSION['id_utente']);
         $this->setCausale($_POST['tipo']);
         $this->setDurata($_POST['durata']);
     }

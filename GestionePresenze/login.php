@@ -5,15 +5,17 @@ if($_POST){
 }
 
 function login($stampa = true){
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
     $msg = "";
-
+    $errori = array();
     if($_POST){
-        if($username=="" || $password==""){
-            $msg = "Username o password non inseriti !";
-        }
-        else{
+        if($username=="")
+            $errori["username"] = " - Username non inserito !<br>";
+        if($password=="")
+            $errori["password"] = " - Password non inserita !";
+            
+        if(sizeof($errori)==0){
             $rs = Database::getInstance()->eseguiQuery("select id_dipendente,username from dipendenti where (BINARY username = ?) and password = md5(?)",array($username,$password));
             if($rs->RecordCount() == 1){
                 $_SESSION['username'] = $username;
@@ -28,10 +30,10 @@ function login($stampa = true){
             }
         }
     }
-    if($stampa) stampaForm($msg);
+    if($stampa) stampaForm($msg,$errori);
 }
 
-function stampaForm($messaggio = ""){ ?>
+function stampaForm($messaggio = "",$errori = array()){ ?>
 <body onLoad="document.loginForm.username.focus();">
 <table width="100%">
     <tr>
@@ -49,10 +51,10 @@ function stampaForm($messaggio = ""){ ?>
                     </tr>
                     <tr>
                         <td>
-                            <input type="textfield" name="username" id="username" class="standartTextfield" value="<?php echo $_POST['username'] ?>" />
+                            <input type="textfield" name="username" id="username" class="standartTextfield<?php echo isset($errori["username"])?" errore":"";?>" value="<?php echo $_POST['username'] ?>" />
                         </td>
                         <td>
-                            <input type="password" name="password" id="password" class="standartTextfield" />
+                            <input type="password" name="password" id="password" class="standartTextfield<?php echo isset($errori["password"])?" errore":"";?>" />
                         </td>
                         <td>
                             <input type="submit" value="Login" class="standartButton" />
@@ -60,13 +62,11 @@ function stampaForm($messaggio = ""){ ?>
                     </tr>
                     <tr>
                         <td colspan="3">
-                            <p class="messaggioErrore"> <?php echo $messaggio ?></p>
+                            <p class="messaggioErrore"> <?php echo $errori["username"].$errori["password"] ?></p>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <a class="linkAiuti" href="">Registrati</a>
-                        </td>
+                        <td></td>
                         <td colspan="2">
                             <a class="linkAiuti" href="">Hai dimenticato la password ?</a>
                         </td>

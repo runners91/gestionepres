@@ -25,6 +25,7 @@ class stampaEvento {
         ?>
         <div class="aggiungiEventoContainer" id="sel">
             <form name="taskCalendario" action="#" method="POST">
+                <input type="hidden" name="stato" value="<?php echo Autorizzazione::gruppoAmministrazione($_SESSION["username"])?"2":"1";?>"/>
                 <table>
                     <tr>
                         <td class="cellaTitoloTask" colspan="2">
@@ -109,30 +110,32 @@ class stampaEvento {
                             </select>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="label">
-                            Utente:
-                        </td>
-                        <td>
-                            <select name="utente" class="selectField<?php echo isset($evt->errori["fk_dipendente"])&& Utilita::eseguiControlliFormEvento()?" errore":""; ?>">
-                                <option value="0">-</option>
-                             <?php
-                                if(Autorizzazione::gruppoAmministrazione($_SESSION['username']))
-                                    $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
-                                else
-                                    $rs = Database::getInstance()->eseguiQuery("select d.id_dipendente r,d.username d from dipendenti d,dipendenti_gruppi dg where d.id_dipendente = dg.fk_dipendente and dg.fk_gruppo in ( select dg2.fk_gruppo from dipendenti_gruppi dg2, dipendenti d2 where d2.id_dipendente = dg2.fk_dipendente and d2.username = ? )",array($_SESSION['username']));
-                                while(!$rs->EOF){
-                                    if($rs->fields['r']==$evt->getDipendente())
-                                        echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                    <?php if(Autorizzazione::gruppoAmministrazione($_SESSION["username"])) {?>
+                        <tr>
+                            <td class="label">
+                                Utente:
+                            </td>
+                            <td>
+                                <select name="utente" class="selectField<?php echo isset($evt->errori["fk_dipendente"])&& Utilita::eseguiControlliFormEvento()?" errore":""; ?>">
+                                    <option value="0">-</option>
+                                 <?php
+                                    if(Autorizzazione::gruppoAmministrazione($_SESSION['username']))
+                                        $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
                                     else
-                                        echo '<option value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
-                                    $rs->MoveNext();
-                                }
-                             ?>
-                            </select><br />
-                            <div class="messaggioErrore"><?php if(Utilita::eseguiControlliFormEvento()) echo $evt->errori["fk_dipendente"]; ?></div>
-                        </td>
-                    </tr>
+                                        $rs = Database::getInstance()->eseguiQuery("select d.id_dipendente r,d.username d from dipendenti d,dipendenti_gruppi dg where d.id_dipendente = dg.fk_dipendente and dg.fk_gruppo in ( select dg2.fk_gruppo from dipendenti_gruppi dg2, dipendenti d2 where d2.id_dipendente = dg2.fk_dipendente and d2.username = ? )",array($_SESSION['username']));
+                                    while(!$rs->EOF){
+                                        if($rs->fields['r']==$evt->getDipendente())
+                                            echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                        else
+                                            echo '<option value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
+                                        $rs->MoveNext();
+                                    }
+                                 ?>
+                                </select><br />
+                                <div class="messaggioErrore"><?php if(Utilita::eseguiControlliFormEvento()) echo $evt->errori["fk_dipendente"]; ?></div>
+                            </td>
+                        </tr>
+                    <?php }?>
                     <tr>
                         <td class="label">
                             Commento:
