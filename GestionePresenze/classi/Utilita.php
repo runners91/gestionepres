@@ -88,7 +88,7 @@ class Utilita {
 
     /**
      * Ritorna il valore della nuova prima riga del report in base ai parametri
-     * @param String $action indica l azione compiuta (es. "S" seguente)
+     * @param String $action indica l azione compiuta ("PP" prima pagina, "P" precedente, "S" seguente, "SS" ultima pagina)
      * @param int $vecchioVal indica il vecchio valore della prima riga
      * @param int $cont indica il totale di record che il report mostra
      * @param int $visualizza indica quanti record per pagina si visualizzano
@@ -151,11 +151,10 @@ class Utilita {
 
     /**
      * Ritorna il true se i controlli sono da effettuare, false se invece no
-     * @param boolean $elimina indica se l'azione elimina è da considerare o no
      * @return boolean
      */
     static function eseguiControlliFormEvento($elimina=false){
-        if(isset($_POST['action']) && ($_POST['action']!="elimina" || $elimina))
+        if(isset($_POST['action']) && $_POST['action']!="elimina")
             return true;
         return false;
     }
@@ -168,8 +167,6 @@ class Utilita {
                 window.setTimeout("redirect('<?php echo $url ?>')",<?php echo $millisec; ?>);
             </script>
         <?php
-
-
     }
 
 

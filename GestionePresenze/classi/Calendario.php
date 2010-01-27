@@ -226,7 +226,7 @@ class Calendario {
         $sql = "SELECT e.id_evento,c.nome,e.priorita,e.data_da FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ? and DATA_A >= ? and c.id_motivo = e.fk_causale and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
         $rs = Database::getInstance()->eseguiQuery($sql,array($da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
         while(!$rs->EOF) {
-            echo '<br /><a alt="'.$rs->fields['nome'].'" href="'.Utilita::getHomeUrlFiltri().'&data='.$rs->fields['data_da'].'&id_evento='.$rs->fields['id_evento'].'" class="prio'.$rs->fields['priorita'].'">'.$rs->fields['nome'].'</a>';
+            echo '<br /><a alt="'.$rs->fields['nome'].'" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='.$rs->fields['id_evento'].'" class="prio'.$rs->fields['priorita'].'">'.$rs->fields['nome'].'</a>';
             $rs->MoveNext();
         }
         $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi e,dipendenti d WHERE e.DATA_DA <= ? and e.DATA_A >= ? and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 )",array($da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
