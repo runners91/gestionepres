@@ -9,9 +9,9 @@
 class Autorizzazione {
 
      /**
-     *  Controlla se l'utente ha accesso alla pagina, ritorna true se è si, altrimenti ritorna false
+     *  Controlla se l'utente ha accesso alla pagina
      * @param String $pagina Contiente la pagina da contrlollare
-     * @return boolean
+     * @return boolean true se ha accesso, altrimenti ritorna false
      */
     static function verificaAccesso($pagina){
        if($pagina=="") $pagina = "home";
@@ -22,7 +22,7 @@ class Autorizzazione {
      /**
      *  Controlla se l'utente fa parte di un gruppo amministrativo
      * @param String $username username dell'utente di cui si controlla l'autorizzazione
-     * @return boolean
+     * @return boolean ritorna true se è amministratore, altrimenti ritorna false
      */
     static function gruppoAmministrazione($username){
         $sql = "select count(*) as count from gruppi g, dipendenti_gruppi dg, dipendenti d where dg.fk_gruppo = g.id_gruppo and dg.fk_dipendente = d.id_dipendente and g.amministra = 'Y' and d.username = ?";
