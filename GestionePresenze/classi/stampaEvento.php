@@ -15,7 +15,7 @@ class stampaEvento {
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         $data = Utilita::getDataHome();
         $evt = new Evento();
-
+        
         if(isset($_GET['id_evento']) && !isset($_POST['action'])){
             $evt->getValoriDB($_GET['id_evento']);
         }
@@ -26,14 +26,14 @@ class stampaEvento {
         <div class="aggiungiEventoContainer" id="sel">
             <?php
                 if(Autorizzazione::gruppoAmministrazione($_SESSION["username"]) || $_SESSION["id_utente"] == $evt->getDipendente())
-                    stampaEvento::stampaFormAggiungiEvento($evt);
+                    stampaEvento::stampaFormAggiungiEvento($mesi, $giorni, $data, $evt);
                 else
-                    stampaEvento::stampaVisualizzaEvento($evt);
+                    stampaEvento::stampaVisualizzaEvento($mesi, $giorni, $data, $evt);
             ?>
         </div>
     <?php
     }
-    static function stampaFormAggiungiEvento($evt){ ?>
+    static function stampaFormAggiungiEvento($mesi, $giorni, $data,$evt){ ?>
         <form name="taskCalendario" action="#" method="POST">
                 <input type="hidden" name="stato" value="<?php echo Autorizzazione::gruppoAmministrazione($_SESSION["username"])?"2":"1";?>"/>
                 <table>
@@ -214,7 +214,7 @@ class stampaEvento {
             </form>
     <?php }
 
-    static function stampaVisualizzaEvento($evt){
+    static function stampaVisualizzaEvento($mesi, $giorni, $data, $evt){
         ?>
         <div class="aggiungiEventoContainer" id="sel">
             <table>
