@@ -114,6 +114,7 @@ class Calendario {
                         </select>
                     </td>
                     <td>
+                        <?php if(Autorizzazione::gruppoAmministrazione($_SESSION['username'])){ ?>
                         <select name="filtroFiliale" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto("filiale"); ?>&filiale='+this.value)">
                             <option value="0">- Filiale</option>
                                 <?php
@@ -128,6 +129,7 @@ class Calendario {
                                     }
                                 ?>
                         </select>
+                        <?php } ?>
                     </td>
                     <td>
                         <select name="filtroTipo" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto("tipo"); ?>&tipo='+this.value)">
