@@ -10,7 +10,7 @@ class stampaEvento {
      /**
      * Stampa il form per aggiungere assenze/vacanze/ecc...
      */
-    static function stampaFormAggiungiEvento(){
+    static function stampaFormEvento(){
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         $data = Utilita::getDataHome();
@@ -24,7 +24,17 @@ class stampaEvento {
         }    
         ?>
         <div class="aggiungiEventoContainer" id="sel">
-            <form name="taskCalendario" action="#" method="POST">
+            <?php
+                if(Autorizzazione::gruppoAmministrazione($_SESSION["username"]) || $_SESSION["id_utente"] == $evt->getDipendente())
+                    stampaEvento::stampaFormAggiungiEvento($evt);
+                else
+                    stampaEvento::stampaVisualizzaEvento($evt);
+            ?>
+        </div>
+    <?php
+    }
+    static function stampaFormAggiungiEvento($evt){ ?>
+        <form name="taskCalendario" action="#" method="POST">
                 <input type="hidden" name="stato" value="<?php echo Autorizzazione::gruppoAmministrazione($_SESSION["username"])?"2":"1";?>"/>
                 <table>
                     <tr>
@@ -202,6 +212,91 @@ class stampaEvento {
                     </tr>
                 </table>
             </form>
+    <?php }
+
+    static function stampaVisualizzaEvento($evt){
+        ?>
+        <div class="aggiungiEventoContainer" id="sel">
+            <table>
+                <tr>
+                    <td class="cellaTitoloTask" colspan="2">
+                        <?php echo $evt->getTitoloForm(); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        Da:
+                    </td>
+                    <td>
+                        <?php
+                        if(!isset($_POST['action']) && !$evt->getID())
+                            echo trim(date("d",$data).'.'.date("m",$data).'.'.date("Y",$data));
+                        else if(isset($evt->errori["data_da"]))
+                            echo "";
+                        else
+                            echo date("d.m.Y",$evt->getDataDa());
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        A:
+                    </td>
+                    <td>
+                        <?php
+                            echo date("d.m.Y",$evt->getDataA());
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        Tipo:
+                    </td>
+                    <td>
+                        <?php
+                            $rs = Database::getInstance()->eseguiQuery("SELECT nome FROM causali WHERE id_motivo = ?",array($evt->getCausale()));
+                            echo $rs->fields["nome"];
+                         ?>
+                    </td>
+                    <td valign="top">
+                        <?php
+                            if($evt->getDurata() == "M")
+                                echo "Mattina";
+                            else if($evt->getDurata() == "P")
+                                echo "Pomeriggio";
+                            else
+                                echo "Giorno";
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        Utente:
+                    </td>
+                    <td>
+                         <?php
+                            $rs = Database::getInstance()->eseguiQuery("SELECT username FROM dipendenti WHERE id_dipendente = ?",array($evt->getDipendente()));
+                            echo $rs->fields["username"];
+                         ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        Commento:
+                    </td>
+                    <td>
+                        <?php echo $evt->getCommento(); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        Priorit&agrave:
+                    </td>
+                    <td>
+                        <?php echo $evt->getPriorita(); ?>
+                    </td>
+                </tr>
+            </table>
         </div>
     <?php
     }
