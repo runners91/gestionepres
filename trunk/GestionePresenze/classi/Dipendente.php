@@ -39,7 +39,7 @@ class Dipendente {
     }
     public function setUsername($u){
         $username = trim($u);
-        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as username from dipendenti where username = '?'",array($username));
+        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as username from dipendenti where username = ? and id_dipendente != ?",array($username,$this->id));
         if(strlen($username)==0 ){
             $this->aggiungiErrore(" - Username non pu&ograve; avere un valore nullo", "username");
         }
@@ -56,8 +56,8 @@ class Dipendente {
      */
     public function aggiungiDipendente(){
         if(sizeof($this->errori)==0){
-            $ris = Database::getInstance()->execute("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values ('?','?','?',md5('inizio'),?)",array($this->nome,$this->cognome,$this->username,$this->filiale));
-            $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = '?'",array($this->username));
+            $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values (?,?,?,md5('inizio'),?)",array($this->nome,$this->cognome,$this->username,$this->filiale));
+            $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = ?",array($this->username));
             Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi (fk_dipendente,fk_gruppo) values (?,2);",array($rs->fields['id']));
             return $ris;
         }
@@ -69,7 +69,7 @@ class Dipendente {
      */
     public function aggiornaDipendente(){
         if(sizeof($this->errori)==0){
-            return Database::getInstance()->eseguiQuery("UPDATE dipendenti set nome = '".$this->nome."',cognome='".$this->cognome."',username='".$this->username."',fk_filiale=".$this->filiale." where id_dipendente = ".$this->id.";");
+            return Database::getInstance()->eseguiQuery("UPDATE dipendenti set nome = ?,cognome = ?,username = ?,fk_filiale = ? where id_dipendente = ?",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->id));
         }
         return false;
     }
@@ -80,7 +80,7 @@ class Dipendente {
      * @return Dipendente l'oggetto con i dati del dipendente cercato
      */
     function trovaUtenteDaId($id){
-        $rs = Database::getInstance()->eseguiQuery("SELECT nome,cognome,username,fk_filiale from dipendenti where id_dipendente = ".$id.";");
+        $rs = Database::getInstance()->eseguiQuery("SELECT nome,cognome,username,fk_filiale from dipendenti where id_dipendente = ?",array($id));
         $this->id = $id;
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
@@ -95,7 +95,7 @@ class Dipendente {
      * @return Dipendente l'oggetto con i dati del dipendente cercato
      */
     function trovaUtenteDaUsername($username){
-        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale from dipendenti where username = '".$username."';");
+        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale from dipendenti where username = ?",array($username));
         $this->id = $rs->fields["id_dipendente"];
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
