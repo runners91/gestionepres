@@ -9,12 +9,13 @@
     include("classi/Calendario.php");
     include("classi/Evento.php");
     include("classi/Utilita.php");
+    include("classi/Autorizzazione.php");
     include("classi/stampaEvento.php");
     include("login.php");
     include("pagine/navigazione/menu.php");
 
     if(isset($_SESSION['username']) && isset($_GET['pagina']))
-        if(!Utilita::verificaAccesso($_GET['pagina']))
+        if(!Autorizzazione::verificaAccesso($_GET['pagina']))
             header('Location:index.php');
 
 ?>

@@ -64,7 +64,7 @@ CREATE TABLE `dipendenti` (
   UNIQUE KEY `unique_username` (`username`),
   KEY `FK_dipendenti_1` (`fk_filiale`),
   CONSTRAINT `FK_dipendenti_1` FOREIGN KEY (`fk_filiale`) REFERENCES `filiali` (`id_filiale`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i dati che riguardano i dipendenti';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i dati che riguardano i dipendenti';
 
 --
 -- Dumping data for table `dipendenti`
@@ -72,11 +72,14 @@ CREATE TABLE `dipendenti` (
 
 /*!40000 ALTER TABLE `dipendenti` DISABLE KEYS */;
 INSERT INTO `dipendenti` (`id_dipendente`,`nome`,`cognome`,`username`,`password`,`fk_filiale`) VALUES 
- (3,'Pinco','Pallinooo','pinco','e10adc3949ba59abbe56e057f20f883e',1),
- (4,'Bryan','Daepp','daepp','e10adc3949ba59abbe56e057f20f883e',2),
- (5,'Ethan','Winiger','ethan','e10adc3949ba59abbe56e057f20f883e',3),
- (6,'serve','ahah','tizio','7df656af4efecd9b1f69f708e6903b78',1),
- (7,'serve','anche','caio','7df656af4efecd9b1f69f708e6903b78',1);
+ (10,'admin','admin','admin','e10adc3949ba59abbe56e057f20f883e',2),
+ (11,'user1','g1','u1g1','e10adc3949ba59abbe56e057f20f883e',1),
+ (12,'user2','g1','u2g1','7df656af4efecd9b1f69f708e6903b78',1),
+ (14,'user3','g1','u3g1','7df656af4efecd9b1f69f708e6903b78',1),
+ (15,'user1','g2','u1g2','7df656af4efecd9b1f69f708e6903b78',1),
+ (16,'user2','g2','u2g2','7df656af4efecd9b1f69f708e6903b78',1),
+ (17,'user3','g2','u3g2','7df656af4efecd9b1f69f708e6903b78',1),
+ (18,'utente','libero','utente','7df656af4efecd9b1f69f708e6903b78',1);
 /*!40000 ALTER TABLE `dipendenti` ENABLE KEYS */;
 
 
@@ -101,11 +104,14 @@ CREATE TABLE `dipendenti_gruppi` (
 
 /*!40000 ALTER TABLE `dipendenti_gruppi` DISABLE KEYS */;
 INSERT INTO `dipendenti_gruppi` (`fk_dipendente`,`fk_gruppo`) VALUES 
- (3,2),
- (4,1),
- (5,1),
- (5,2),
- (6,3);
+ (10,1),
+ (11,15),
+ (12,15),
+ (14,15),
+ (15,16),
+ (16,16),
+ (17,16),
+ (18,18);
 /*!40000 ALTER TABLE `dipendenti_gruppi` ENABLE KEYS */;
 
 
@@ -130,7 +136,7 @@ CREATE TABLE `eventi` (
   KEY `FK_event_2` (`fk_causale`),
   CONSTRAINT `FK_event_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`),
   CONSTRAINT `FK_event_2` FOREIGN KEY (`fk_causale`) REFERENCES `causali` (`id_motivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `eventi`
@@ -138,13 +144,10 @@ CREATE TABLE `eventi` (
 
 /*!40000 ALTER TABLE `eventi` DISABLE KEYS */;
 INSERT INTO `eventi` (`id_evento`,`data_da`,`data_a`,`priorita`,`commento`,`fk_dipendente`,`fk_causale`,`stato`,`commento_segnalazione`,`durata`) VALUES 
- (114,'1263423600','1263423600',3,'',4,1,'2','','G'),
- (115,'1263337200','1263510000',2,'asd',7,1,'2','','M'),
- (116,'1262905200','1262905200',1,'',7,3,'2','','G'),
- (117,'1263769200','1264114800',3,'',4,4,'2','','G'),
- (118,'1264374000','1264633200',1,'',7,1,'2','','G'),
- (119,'1262559600','1262732400',2,'',3,2,'2','','G'),
- (120,'1263164400','1263682800',3,'3',5,6,'2','','G');
+ (122,'1263337200','1263337200',1,'',11,2,'2',NULL,'G'),
+ (124,'1263337200','1263337200',1,'',12,1,'2',NULL,'G'),
+ (125,'1263337200','1263337200',2,'',14,2,'2',NULL,'G'),
+ (126,'1263337200','1263337200',1,'',15,1,'2',NULL,'G');
 /*!40000 ALTER TABLE `eventi` ENABLE KEYS */;
 
 
@@ -231,24 +234,20 @@ DROP TABLE IF EXISTS `gruppi`;
 CREATE TABLE `gruppi` (
   `id_gruppo` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(45) NOT NULL,
+  `amministra` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'Indica se il gruppo è di amministrazione e quindi puo vedere tutto nel sistema di gestione presenze',
   PRIMARY KEY (`id_gruppo`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `gruppi`
 --
 
 /*!40000 ALTER TABLE `gruppi` DISABLE KEYS */;
-INSERT INTO `gruppi` (`id_gruppo`,`nome`) VALUES 
- (1,'admin'),
- (2,'utente'),
- (3,'asd'),
- (5,'asd3'),
- (7,'asdasda'),
- (8,'asdada'),
- (11,'ddddas'),
- (12,'asds'),
- (13,'wqeq');
+INSERT INTO `gruppi` (`id_gruppo`,`nome`,`amministra`) VALUES 
+ (1,'admin','Y'),
+ (15,'gruppo 1','N'),
+ (16,'gruppo 2','N'),
+ (18,'default','N');
 /*!40000 ALTER TABLE `gruppi` ENABLE KEYS */;
 
 
@@ -277,10 +276,11 @@ INSERT INTO `gruppi_pagine` (`fk_gruppo`,`fk_pagina`) VALUES
  (1,2),
  (1,3),
  (1,4),
- (2,1),
- (2,3),
- (2,4),
- (5,3);
+ (15,1),
+ (15,3),
+ (15,4),
+ (16,1),
+ (16,4);
 /*!40000 ALTER TABLE `gruppi_pagine` ENABLE KEYS */;
 
 
@@ -385,7 +385,7 @@ CREATE TABLE `saldi` (
 /*!40000 ALTER TABLE `saldi` DISABLE KEYS */;
 INSERT INTO `saldi` (`fk_dipendente`,`saldo`,`saldo_strd`,`vac_spt`,`vac_rst`,`vac_matr`) VALUES 
  (3,3.05,4,25,15,0),
- (4,1.2,0,25,10,1);
+ (10,1.2,0,25,10,1);
 /*!40000 ALTER TABLE `saldi` ENABLE KEYS */;
 
 
@@ -409,11 +409,6 @@ CREATE TABLE `timbrature` (
 --
 
 /*!40000 ALTER TABLE `timbrature` DISABLE KEYS */;
-INSERT INTO `timbrature` (`id_timbratura`,`data`,`stato`,`fk_dipendente`) VALUES 
- (1,'1263453780','E',3),
- (2,'1263486840','U',3),
- (3,'1263453780','E',5),
- (4,'1263486840','U',5);
 /*!40000 ALTER TABLE `timbrature` ENABLE KEYS */;
 
 

@@ -84,7 +84,7 @@ class Calendario {
                     </td>
                     <td>
                         <?php $selected = Utilita::getValoreFiltro($_GET['prio']); ?>
-                        <select name="filtroPrio" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&prio='+this.value)">
+                        <select name="filtroPrio" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto("prio"); ?>&prio='+this.value)">
                             <option value="0">- Priorit&agrave;</option>
                         <?php if($selected==1) $txt = 'selected="selected"'; ?>
                             <option value="1" <?php echo $txt; ?>>Priotit&agrave 1</option>
@@ -95,11 +95,14 @@ class Calendario {
                         </select>
                     </td>
                     <td>
-                        <select name="filtroUtente" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&utn='+this.value)">
+                        <select name="filtroUtente" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto("utn"); ?>&utn='+this.value)">
                             <option value="0">- Utente</option>
                                 <?php
                                     $selected = Utilita::getValoreFiltro($_GET['utn']);
-                                    $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
+                                    if(Autorizzazione::gruppoAmministrazione($_SESSION['username']))
+                                        $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
+                                    else
+                                        $rs = Database::getInstance()->eseguiQuery("select d.id_dipendente r,d.username d from dipendenti d,dipendenti_gruppi dg where d.id_dipendente = dg.fk_dipendente and dg.fk_gruppo in ( select dg2.fk_gruppo from dipendenti_gruppi dg2, dipendenti d2 where d2.id_dipendente = dg2.fk_dipendente and d2.username = ? )",array($_SESSION['username']));
                                     while(!$rs->EOF){
                                         if($rs->fields['r']==$selected)
                                             echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
@@ -111,7 +114,7 @@ class Calendario {
                         </select>
                     </td>
                     <td>
-                        <select name="filtroFiliale" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&filiale='+this.value)">
+                        <select name="filtroFiliale" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto("filiale"); ?>&filiale='+this.value)">
                             <option value="0">- Filiale</option>
                                 <?php
                                     $selected = Utilita::getValoreFiltro($_GET['filiale']);
@@ -127,7 +130,7 @@ class Calendario {
                         </select>
                     </td>
                     <td>
-                        <select name="filtroTipo" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto(); ?>&tipo='+this.value)">
+                        <select name="filtroTipo" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto("tipo"); ?>&tipo='+this.value)">
                             <option value="0">- Causale</option>
                                 <?php
                                     $selected = Utilita::getValoreFiltro($_GET['tipo']);
