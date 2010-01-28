@@ -15,13 +15,13 @@ class stampaEvento {
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         $data = Utilita::getDataHome();
         $evt = new Evento();
-        
+
         if(isset($_GET['id_evento']) && !isset($_POST['action'])){
             $evt->getValoriDB($_GET['id_evento']);
         }
         else{
             $evt->getValoriPost();
-        }    
+        }
         ?>
         <div class="aggiungiEventoContainer" id="sel">
             <?php
@@ -318,11 +318,13 @@ class stampaEvento {
         $rs = Database::getInstance()->eseguiQuery($sql,array($da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
         $minRiga = Utilita::getNewMinRiga($_POST['codPag'],$_POST['minRiga'],$rs->fields["totEventi"],$visualizza);
 
-        $editTxt  = '<a alt="edit" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='; $editTxt2 = '&minrg='.$minRiga.'"><img border="0" src="./img/modifica.png" /></a>';
+        $editTxt  = '<a alt="edit" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento=';
+        $editTxt2 = '&minrg='.$minRiga.'"><img border="0" src="./img/';
+        $editTxt3 = '.png" /></a>';
         $cnfTxt   = '<a alt="conferma" href="?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&id_evento='; $cnfTxt2 = '">Conferma</a>';
         $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
-        $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CONCAT(?,e.id_evento,?) as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT(?,e.id_evento,?) END as Stato,e.commento as Commento FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ? and DATA_A >= ? and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
-        $rs = Database::getInstance()->eseguiQuery($sql,array($prioTxt,$prioTxt2,$editTxt,$editTxt2,$cnfTxt,$cnfTxt2,$da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
+        $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CASE WHEN e.fk_dipendente = ".$_SESSION["id_utente"]." THEN CONCAT(?,e.id_evento,?,'modifica',?) else CONCAT(?,e.id_evento,?,'dett',?) END as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT(?,e.id_evento,?) END as Stato,e.commento as Commento FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ? and DATA_A >= ? and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
+        $rs = Database::getInstance()->eseguiQuery($sql,array($prioTxt,$prioTxt2,$editTxt,$editTxt2,$editTxt3,$editTxt,$editTxt2,$editTxt3,$cnfTxt,$cnfTxt2,$da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
         if($rs->fields){
             echo '<p class="cellaTitoloTask">'.stampaEvento::getTitoloReport($dataGiorno).'</p>';
             Utilita::stampaTabella($rs, $_GET["id_evento"],$visualizza);
