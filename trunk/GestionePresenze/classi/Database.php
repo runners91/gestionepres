@@ -13,7 +13,7 @@ class Database{
     private $conn = null;
     private $server = "localhost";
     private $username = "root";
-    private $password = "admin";
+    private $password = "";
     private $db = "gestione_presenze";
 
     function __construct(){

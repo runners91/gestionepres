@@ -84,4 +84,6 @@ function stampaForm($messaggio = "",$errori = array()){ ?>
 function stampaMessaggio(){ ?>
     Buongiorno <a class="linkUser" href="?pagina=utente"><?php echo $_SESSION['username']; ?></a>
     (<a class="linkAiuti" href="?azione=logout">Logout</a>)
-<?php } ?>
+<?php
+}
+?>
