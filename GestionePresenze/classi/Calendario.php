@@ -14,7 +14,7 @@ class Calendario {
     /**
      *  Restituisce la data che il calendario utilizza per essere visualizzato correttamente
      */
-    static function getCalData($m){
+    static function getCalData($m = 0){
         date_default_timezone_set("Europe/Zurich");
 
         if($m=="r"){
@@ -39,9 +39,11 @@ class Calendario {
     }
 
     /**
-     *  Stampa i parametri del calendario
+     *
+     * @param int $m indica lo spostamento di mese (+1/-1)
+     * @param boolean $parRicerca indica se stampare anche i parametri di ricerca (tipo,utente,...)
      */
-    static function stampaParametriCalendario($m = 0){
+    static function stampaParametriCalendario($m = 0, $parRicerca = true){
         $data = Calendario::getCalData($m);
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
@@ -79,6 +81,7 @@ class Calendario {
                             }
                         ?></select>
                     </td>
+                    <?php if($parRicerca){ ?>
                     <td class="cellaSpazio">
 
                     </td>
@@ -150,6 +153,7 @@ class Calendario {
                     <td>
                         <input class="bottCalendario" type="button" value="reset" onclick="location.href = '?pagina=home'" />
                     </td>
+                    <?php } ?>
                 </tr>
             </table>
         </form><?php
