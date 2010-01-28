@@ -11,7 +11,6 @@
         <td valign="top">
             <?php
                 stampaEvento::stampaFormEvento();
-
             ?>
         </td>
     </tr>
