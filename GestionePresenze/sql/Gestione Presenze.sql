@@ -136,7 +136,7 @@ CREATE TABLE `eventi` (
   KEY `FK_event_2` (`fk_causale`),
   CONSTRAINT `FK_event_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`),
   CONSTRAINT `FK_event_2` FOREIGN KEY (`fk_causale`) REFERENCES `causali` (`id_motivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `eventi`
@@ -147,7 +147,8 @@ INSERT INTO `eventi` (`id_evento`,`data_da`,`data_a`,`priorita`,`commento`,`fk_d
  (122,'1263337200','1263337200',1,'',11,2,'2',NULL,'G'),
  (124,'1263337200','1263337200',1,'',12,1,'2',NULL,'G'),
  (125,'1263337200','1263337200',2,'',14,2,'2',NULL,'G'),
- (126,'1263337200','1263337200',1,'',15,1,'2',NULL,'G');
+ (126,'1263337200','1263337200',1,'',15,1,'2',NULL,'G'),
+ (129,'1264546800','1264546800',3,'',11,1,'1',NULL,'G');
 /*!40000 ALTER TABLE `eventi` ENABLE KEYS */;
 
 
@@ -402,13 +403,24 @@ CREATE TABLE `timbrature` (
   PRIMARY KEY (`id_timbratura`),
   KEY `FK_timbrature_1` (`fk_dipendente`),
   CONSTRAINT `FK_timbrature_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='Contiene tutte le timbrature in entrata e in uscita che  i d';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='Contiene tutte le timbrature in entrata e in uscita che  i d';
 
 --
 -- Dumping data for table `timbrature`
 --
 
 /*!40000 ALTER TABLE `timbrature` DISABLE KEYS */;
+INSERT INTO `timbrature` (`id_timbratura`,`data`,`stato`,`fk_dipendente`) VALUES 
+ (1,'1264576828','E',10),
+ (2,'1264610127','U',10),
+ (3,'1264663228','E',10),
+ (4,'1264696527','U',10),
+ (5,'1264749628','E',10),
+ (6,'1264782927','U',10),
+ (7,'1264836028','E',10),
+ (8,'1264869327','U',10),
+ (9,'1264577828','E',10),
+ (10,'1264577128','U',10);
 /*!40000 ALTER TABLE `timbrature` ENABLE KEYS */;
 
 
