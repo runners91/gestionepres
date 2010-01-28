@@ -264,6 +264,15 @@ tr.reportRigaDati:hover {
 .linkGiorno:hover {
     text-decoration: underline;
 }
+.giorno {
+    font-size: 9pt;
+    height: 5px;
+    padding: 0;
+    margin: 0;
+}
+.fest {
+    background-color: orange;
+}
 /*******************************************************************************/
 
 
