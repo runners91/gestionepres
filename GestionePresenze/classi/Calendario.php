@@ -246,7 +246,7 @@ class Calendario {
                     AND (e.fk_dipendente in (".$utenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
             $rs = Database::getInstance()->eseguiQuery($sql,$param);
         
-             $sql = "SELECT COUNT(*) as c
+            $sql = "SELECT COUNT(*) as c
                     FROM eventi e,causali c,dipendenti d
                     WHERE DATA_DA <= ? and DATA_A >= ? AND c.id_motivo = e.fk_causale
                     AND e.fk_dipendente = d.id_dipendente AND (e.fk_causale = ? or ? = 0 )
