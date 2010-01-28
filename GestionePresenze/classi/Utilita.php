@@ -172,6 +172,20 @@ class Utilita {
         <?php
     }
 
+    static function getListaUtentiPerGruppo(){
+        $rs = Database::getInstance()->eseguiQuery("SELECT d.id_dipendente id FROM dipendenti d,dipendenti_gruppi dg WHERE d.id_dipendente = dg.fk_dipendente AND dg.fk_gruppo in (   SELECT dg2.fk_gruppo FROM dipendenti_gruppi dg2, dipendenti d2 WHERE d2.id_dipendente = dg2.fk_dipendente AND d2.username = ? );",array($_SESSION["username"]));
+        $ok = false;
+        while(!$rs->EOF){
+            $ut = $rs->fields["id"];
+            if($utente == $ut)
+                $ok = true;
+                $utenti[] = $ut;
+                $rs->MoveNext();
+            }
+            if($ok)
+                $utenti = array($utente);
+            return $utenti = implode(",", $utenti);
+    }
 
      /**
      *  Ritorna la data in GET (pagina home.php) oppure quella di oggi se non è settato il GET
