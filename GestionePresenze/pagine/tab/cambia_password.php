@@ -3,7 +3,7 @@
         $vecchiaPwd = trim($_POST["vecchiaPwd"]);
         $nuovaPwd = trim($_POST["nuovaPwd"]);
         if(strlen($vecchiaPwd)>0){
-            $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as valida FROM dipendenti WHERE password = md5('".$vecchiaPwd."') AND username = '".$_SESSION['username']."';");
+            $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as valida FROM dipendenti WHERE password = md5(?) AND username = ?;",array($vecchiaPwd,$_SESSION['username']));
             if(!$rs->fields["valida"]==1)
                 $errori["vecchiaPwd"] = " - la password non &egrave; corretta";
             else {
@@ -13,14 +13,17 @@
                     else if($nuovaPwd == "inizio")
                         $errori["nuovaPwd"] =  "- la password deve essere diversa da \"inizio\"";
                     else{
-                        Database::getInstance()->eseguiQuery("UPDATE dipendenti SET password = md5('".$nuovaPwd."') WHERE username = '".$_SESSION['username']."';");
+                        Database::getInstance()->eseguiQuery("UPDATE dipendenti SET password = md5(?) WHERE username = ?;",array($nuovaPwd,$_SESSION['username']));
                         echo "<b>la password &egrave stata modificata con successo</b>";
                     }
                 }
                 else
-                    $errori["nuovaPwd"] = " - la password non è valida";
+                    $errori["nuovaPwd"] = " - la password non pu&ograve essere nulla";
             }
         }
+        else
+            $errori["vecchiaPwd"] = " - la password non pu&ograve essere nulla";
+
     }
     else
         if($_GET["login"]==1)

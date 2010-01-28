@@ -231,16 +231,45 @@ class Calendario {
         $utente  = Utilita::getValoreFiltro($_GET['utn']);
         $filiale = Utilita::getValoreFiltro($_GET['filiale']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
+        if(!Autorizzazione::gruppoAmministrazione($_SESSION["username"])){
+            $utenti = $utente;
+            $param = array($da,$a,$tipo,$tipo,$prio,$prio);
+            if($utente==0){
+                $utenti = "SELECT d.id_dipendente r FROM dipendenti d,dipendenti_gruppi dg WHERE d.id_dipendente = dg.fk_dipendente AND dg.fk_gruppo in (   SELECT dg2.fk_gruppo FROM dipendenti_gruppi dg2, dipendenti d2 WHERE d2.id_dipendente = dg2.fk_dipendente AND d2.username = ? )";
+                $param[] = $_SESSION["username"];
+            }
+            $sql = "SELECT e.id_evento,c.nome,e.priorita,e.data_da
+                    FROM eventi e,causali c,dipendenti d
+                    WHERE DATA_DA <= ? and DATA_A >= ? AND c.id_motivo = e.fk_causale
+                    AND e.fk_dipendente = d.id_dipendente AND (e.fk_causale = ? or ? = 0 )
+                    AND (e.priorita = ? or ? = 0 )
+                    AND (e.fk_dipendente in (".$utenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
+            $rs = Database::getInstance()->eseguiQuery($sql,$param);
         
-        $sql = "SELECT e.id_evento,c.nome,e.priorita,e.data_da FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ? and DATA_A >= ? and c.id_motivo = e.fk_causale and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
-        $rs = Database::getInstance()->eseguiQuery($sql,array($da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
+             $sql = "SELECT COUNT(*) as c
+                    FROM eventi e,causali c,dipendenti d
+                    WHERE DATA_DA <= ? and DATA_A >= ? AND c.id_motivo = e.fk_causale
+                    AND e.fk_dipendente = d.id_dipendente AND (e.fk_causale = ? or ? = 0 )
+                    AND (e.priorita = ? or ? = 0 )
+                    AND (e.fk_dipendente in (".$utenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome";
+
+            $c = Database::getInstance()->eseguiQuery($sql,$param);
+            $count = $c->fields["c"];
+
+        }
+        else {
+            $sql = "SELECT e.id_evento,c.nome,e.priorita,e.data_da FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ? and DATA_A >= ? and c.id_motivo = e.fk_causale and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
+            $rs = Database::getInstance()->eseguiQuery($sql,array($da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
+            $c = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi e,dipendenti d WHERE e.DATA_DA <= ? and e.DATA_A >= ? and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 )",array($da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
+            $count = $c->fields["c"];
+
+        }
         while(!$rs->EOF) {
             echo '<br /><a alt="'.$rs->fields['nome'].'" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'&id_evento='.$rs->fields['id_evento'].'" class="prio'.$rs->fields['priorita'].'">'.$rs->fields['nome'].'</a>';
             $rs->MoveNext();
         }
-        $rs = Database::getInstance()->eseguiQuery("SELECT count(*) c FROM eventi e,dipendenti d WHERE e.DATA_DA <= ? and e.DATA_A >= ? and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 )",array($da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
-        if($rs->fields["c"]>3){
-            echo " altri ".($rs->fields["c"]-3)."...";
+        if($count>3){
+            echo " altri ".($count-3)."...";
         }
 
     }
