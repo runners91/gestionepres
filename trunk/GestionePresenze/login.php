@@ -26,7 +26,8 @@ function login($stampa = true){
 
             }
             else{
-                $msg = "Username o password errati !";
+                $errori["username"] = "Username o password errati !";
+                $errori["password"] = "";
             }
         }
     }
