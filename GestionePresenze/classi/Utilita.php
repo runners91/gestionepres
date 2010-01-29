@@ -184,7 +184,7 @@ class Utilita {
             }
             if($ok)
                 $utenti = array($utente);
-            return $utenti = implode(",", $utenti);
+            return $utenti;
     }
 
      /**

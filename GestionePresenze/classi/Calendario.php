@@ -105,7 +105,7 @@ class Calendario {
                                     if(Autorizzazione::gruppoAmministrazione($_SESSION['username']))
                                         $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
                                     else 
-                                        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente r,username d FROM dipendenti WHERE id_dipendente in (".$utenti.");");
+                                        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente r,username d FROM dipendenti WHERE id_dipendente in (".implode(",", $utenti).");");
                                     while(!$rs->EOF){
                                         if($rs->fields['r']==$selected)
                                             echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
@@ -234,12 +234,19 @@ class Calendario {
         $filiale = Utilita::getValoreFiltro($_GET['filiale']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
         if(!Autorizzazione::gruppoAmministrazione($_SESSION["username"])){
+            $listaUtenti = implode(",", $utenti);
+            foreach ($utenti as $key => $value) {
+                if($value == $utente) {
+                    $listaUtenti = $utente;
+                    break;
+                }
+            }
             $sql = "SELECT e.id_evento,c.nome,e.priorita,e.data_da
                     FROM eventi e,causali c,dipendenti d
                     WHERE DATA_DA <= ? and DATA_A >= ? AND c.id_motivo = e.fk_causale
                     AND e.fk_dipendente = d.id_dipendente AND (e.fk_causale = ? or ? = 0 )
                     AND (e.priorita = ? or ? = 0 )
-                    AND (e.fk_dipendente in (".$utenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
+                    AND (e.fk_dipendente in (".$listaUtenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
             $rs = Database::getInstance()->eseguiQuery($sql,array($da,$a,$tipo,$tipo,$prio,$prio));
         
             $sql = "SELECT COUNT(*) as c
@@ -247,11 +254,10 @@ class Calendario {
                     WHERE DATA_DA <= ? and DATA_A >= ? AND c.id_motivo = e.fk_causale
                     AND e.fk_dipendente = d.id_dipendente AND (e.fk_causale = ? or ? = 0 )
                     AND (e.priorita = ? or ? = 0 )
-                    AND (e.fk_dipendente in (".$utenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome";
+                    AND (e.fk_dipendente in (".$listaUtenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome";
 
             $c = Database::getInstance()->eseguiQuery($sql,array($da,$a,$tipo,$tipo,$prio,$prio));
             $count = $c->fields["c"];
-
         }
         else {
             $sql = "SELECT e.id_evento,c.nome,e.priorita,e.data_da FROM eventi e,causali c,dipendenti d WHERE DATA_DA <= ? and DATA_A >= ? and c.id_motivo = e.fk_causale and e.fk_dipendente = d.id_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
