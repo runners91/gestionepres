@@ -1,17 +1,16 @@
 <?php
     $stampaform = false;
     $e = new Evento();
-    if(isset($_GET['id_evento']) && !isset($_POST['azione'])){
+    if(isset($_GET['id_evento']) && !isset($_POST['azione'])) {
         $e->getValoriDB($_GET['id_evento']);
     }
-    else{
+    else {
         $e->getValoriPost();
     }
 
     if($_POST["azione"] == "Rifiuta"){
         if($e->eliminaEvento())
             $messaggioSucc = "l'evento &egrave; stato eliminato";
-            //mail con avviso all'utente?
     }
     else if($_POST["azione"] == "Accetta"){
         if($e->aggiornaStato(2))

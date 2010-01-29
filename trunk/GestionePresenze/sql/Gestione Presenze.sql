@@ -1,7 +1,7 @@
 -- MySQL Administrator dump 1.4
 --
 -- ------------------------------------------------------
--- Server version	5.1.30-community
+-- Server version	5.1.36-community
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -60,26 +60,27 @@ CREATE TABLE `dipendenti` (
   `username` varchar(45) NOT NULL,
   `password` varchar(4500) DEFAULT NULL COMMENT 'criptata md5',
   `fk_filiale` int(10) unsigned NOT NULL COMMENT 'id della filiale di appartenenza del dipendente',
+  `email` varchar(45) NOT NULL,
   PRIMARY KEY (`id_dipendente`),
   UNIQUE KEY `unique_username` (`username`),
   KEY `FK_dipendenti_1` (`fk_filiale`),
   CONSTRAINT `FK_dipendenti_1` FOREIGN KEY (`fk_filiale`) REFERENCES `filiali` (`id_filiale`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i dati che riguardano i dipendenti';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i dati che riguardano i dipendenti';
 
 --
 -- Dumping data for table `dipendenti`
 --
 
 /*!40000 ALTER TABLE `dipendenti` DISABLE KEYS */;
-INSERT INTO `dipendenti` (`id_dipendente`,`nome`,`cognome`,`username`,`password`,`fk_filiale`) VALUES 
- (10,'admin','admin','admin','e10adc3949ba59abbe56e057f20f883e',2),
- (11,'user1','g1','u1g1','e10adc3949ba59abbe56e057f20f883e',1),
- (12,'user2','g1','u2g1','7df656af4efecd9b1f69f708e6903b78',1),
- (14,'user3','g1','u3g1','7df656af4efecd9b1f69f708e6903b78',1),
- (15,'user1','g2','u1g2','7df656af4efecd9b1f69f708e6903b78',1),
- (16,'user2','g2','u2g2','7df656af4efecd9b1f69f708e6903b78',1),
- (17,'user3','g2','u3g2','7df656af4efecd9b1f69f708e6903b78',1),
- (18,'utente','libero','utente','7df656af4efecd9b1f69f708e6903b78',1);
+INSERT INTO `dipendenti` (`id_dipendente`,`nome`,`cognome`,`username`,`password`,`fk_filiale`,`email`) VALUES 
+ (10,'admin','admin','admin','73acd9a5972130b75066c82595a1fae3',2,'admin@gmail.com'),
+ (11,'user1','g1','u1g1','e10adc3949ba59abbe56e057f20f883e',1,'u1g1@gmail.com'),
+ (12,'user2','g1','u2g1','c4ca4238a0b923820dcc509a6f75849b',1,'u2g1@gmail.com'),
+ (14,'user3','g1','u3g1','7df656af4efecd9b1f69f708e6903b78',1,'u3g1@gmail.com'),
+ (15,'user1','g2','u1g2','7df656af4efecd9b1f69f708e6903b78',1,'u1g2@gmail.com'),
+ (16,'user2','g2','u2g2','7df656af4efecd9b1f69f708e6903b78',1,'u2g2@gmail.com'),
+ (17,'user3','g2','u3g2','7df656af4efecd9b1f69f708e6903b78',1,'u3g2@gmail.com'),
+ (18,'utente','libero','utente','7df656af4efecd9b1f69f708e6903b78',1,'utente@gmail.com');
 /*!40000 ALTER TABLE `dipendenti` ENABLE KEYS */;
 
 
@@ -136,7 +137,7 @@ CREATE TABLE `eventi` (
   KEY `FK_event_2` (`fk_causale`),
   CONSTRAINT `FK_event_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`),
   CONSTRAINT `FK_event_2` FOREIGN KEY (`fk_causale`) REFERENCES `causali` (`id_motivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `eventi`
@@ -148,7 +149,10 @@ INSERT INTO `eventi` (`id_evento`,`data_da`,`data_a`,`priorita`,`commento`,`fk_d
  (124,'1263337200','1263337200',1,'',12,1,'2',NULL,'G'),
  (125,'1263337200','1263337200',2,'',14,2,'2',NULL,'G'),
  (126,'1263337200','1263337200',1,'',15,1,'2',NULL,'G'),
- (129,'1264546800','1264546800',3,'',11,1,'1',NULL,'G');
+ (133,'1263510000','1263510000',1,'',12,5,'2','','G'),
+ (134,'1262818800','1262991600',1,'',11,3,'2','','G'),
+ (143,'1263337200','1263337200',1,'',10,4,'2',NULL,'G'),
+ (144,'1263942000','1263942000',1,'',10,4,'2',NULL,'G');
 /*!40000 ALTER TABLE `eventi` ENABLE KEYS */;
 
 

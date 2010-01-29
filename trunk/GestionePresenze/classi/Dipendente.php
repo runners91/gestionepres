@@ -10,6 +10,7 @@ class Dipendente {
     private $nome;
     private $cognome;
     private $username;
+    private $email;
     private $filiale;
     private $errori;
     
@@ -37,6 +38,16 @@ class Dipendente {
         $this->cognome = $cognome;
             
     }
+    public function setEmail($e){
+        $email = trim($e);
+        if(strlen($email)==0)
+            $this->aggiungiErrore(" - Email non pu&ograve avere un valore nullo", "email");
+        else if(!Utilita::validaEmail($email))
+            $this->aggiungiErrore(" - Email non &egrave valida", "email");
+
+
+        $this->email = $email;
+    }
     public function setUsername($u){
         $username = trim($u);
         $param = array($username);
@@ -63,7 +74,7 @@ class Dipendente {
      */
     public function aggiungiDipendente(){
         if(sizeof($this->errori)==0){
-            $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale) values (?,?,?,md5('inizio'),?)",array($this->nome,$this->cognome,$this->username,$this->filiale));
+            $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale,email) values (?,?,?,md5('inizio'),?,?)",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->email));
             $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = ?",array($this->username));
             //Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi (fk_dipendente,fk_gruppo) values (?,2);",array($rs->fields['id']));
             return $ris;
@@ -76,7 +87,7 @@ class Dipendente {
      */
     public function aggiornaDipendente(){
         if(sizeof($this->errori)==0){
-            return Database::getInstance()->eseguiQuery("UPDATE dipendenti set nome = ?,cognome = ?,username = ?,fk_filiale = ? where id_dipendente = ?",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->id));
+            return Database::getInstance()->eseguiQuery("UPDATE dipendenti set nome = ?,cognome = ?,username = ?,fk_filiale = ?,email = ? where id_dipendente = ?",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->email,$this->id));
         }
         return false;
     }
@@ -87,12 +98,13 @@ class Dipendente {
      * @return Dipendente l'oggetto con i dati del dipendente cercato
      */
     function trovaUtenteDaId($id){
-        $rs = Database::getInstance()->eseguiQuery("SELECT nome,cognome,username,fk_filiale from dipendenti where id_dipendente = ?",array($id));
+        $rs = Database::getInstance()->eseguiQuery("SELECT nome,cognome,username,fk_filiale,email from dipendenti where id_dipendente = ?",array($id));
         $this->id = $id;
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
         $this->username = $rs->fields["username"];
         $this->filiale = $rs->fields["fk_filiale"];
+        $this->email = $rs->fields["email"];
         return $this;
     }
 
@@ -102,12 +114,13 @@ class Dipendente {
      * @return Dipendente l'oggetto con i dati del dipendente cercato
      */
     function trovaUtenteDaUsername($username){
-        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale from dipendenti where username = ?",array($username));
+        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale,email from dipendenti where username = ?",array($username));
         $this->id = $rs->fields["id_dipendente"];
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
         $this->username = $username;
         $this->filiale = $rs->fields["fk_filiale"];
+        $this->email = $rs->fields["email"];
         return $this;
     }
 
