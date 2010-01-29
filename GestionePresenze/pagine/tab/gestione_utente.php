@@ -14,6 +14,7 @@
             $d->setNome($_POST["nome"]);
             $d->setCognome($_POST["cognome"]);
             $d->setUsername($_POST["username"]);
+            $d->setEmail($_POST["email"]);
             $d->setFiliale($_POST["filiale"]);
             if($d->aggiungiDipendente()){
                 creaFormUtente();
@@ -28,6 +29,7 @@
             $d->setNome($_POST["nome"]);
             $d->setCognome($_POST["cognome"]);
             $d->setUsername($_POST["username"]);
+            $d->setEmail($_POST["email"]);
             $d->setFiliale($_POST["filiale"]);
             if($d->aggiornaDipendente()){
                 creaFormUtente();
@@ -69,6 +71,11 @@
                     <td><input type="text" name="username" value="<?php echo $d->username;?>" <?php echo isset($errori["username"])?"class='errore'":""; ?> /></td>
                     <td class="messaggioErrore"><?php echo $errori["username"]; ?></td>
                 <?php }?>
+            </tr>
+            <tr>
+                <td class="label">Email:</td>
+                <td><input type="text" name="email" value="<?php echo $d->email; ?>" <?php echo isset($errori["email"])?"class='errore'":""; ?>/></td>
+                <td class="messaggioErrore"><?php echo $errori["email"]; ?></td>
             </tr>
             <tr>
                 <td class="label">Filiale:</td>
