@@ -221,7 +221,9 @@ class Calendario {
     }
 
      /**
-     * Stampa all'interno dell cella di un giorno i suoi eventi
+     * Stampa all'interno della cella di un giorno i suoi eventi
+     * @param int $dataGiorno timestamp del giorno di cui si cercano gli eventi
+     * @param String $utenti 
      */
     static function stampaEventiGiorno($dataGiorno,$utenti = null){
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
