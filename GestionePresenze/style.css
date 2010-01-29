@@ -1,4 +1,4 @@
-input[type="text"], input[type="password"],select {
+input,select {
     border:1px solid #5D92FA;
     background-color: #F3F4FF;
 }
