@@ -11,6 +11,7 @@
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_utente", "GESTIONE UTENTI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_autorizzazioni", "GESTIONE AUTORIZZAZIONI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_gruppi", "GESTIONE GRUPPI");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_festivi", "GESTIONE FESTIVI");
             $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as totale FROM eventi WHERE stato = 3");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "gestione_segnalazioni", "GESTIONE SEGNALAZIONI(".$rs->fields["totale"].")");
             $rs = Database::getInstance()->eseguiQuery("SELECT count(*) as totale FROM eventi WHERE stato = 1");
