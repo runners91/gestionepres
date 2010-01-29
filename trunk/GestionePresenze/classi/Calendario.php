@@ -43,7 +43,7 @@ class Calendario {
      * @param int $m indica lo spostamento di mese (+1/-1)
      * @param boolean $parRicerca indica se stampare anche i parametri di ricerca (tipo,utente,...)
      */
-    static function stampaParametriCalendario($m = 0, $parRicerca = true){
+    static function stampaParametriCalendario($m = 0, $parRicerca = true,$utenti = null){
         $data = Calendario::getCalData($m);
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
@@ -104,8 +104,8 @@ class Calendario {
                                     $selected = Utilita::getValoreFiltro($_GET['utn']);
                                     if(Autorizzazione::gruppoAmministrazione($_SESSION['username']))
                                         $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
-                                    else
-                                        $rs = Database::getInstance()->eseguiQuery("select d.id_dipendente r,d.username d from dipendenti d,dipendenti_gruppi dg where d.id_dipendente = dg.fk_dipendente and dg.fk_gruppo in ( select dg2.fk_gruppo from dipendenti_gruppi dg2, dipendenti d2 where d2.id_dipendente = dg2.fk_dipendente and d2.username = ? )",array($_SESSION['username']));
+                                    else 
+                                        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente r,username d FROM dipendenti WHERE id_dipendente in (".$utenti.");");
                                     while(!$rs->EOF){
                                         if($rs->fields['r']==$selected)
                                             echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
@@ -164,7 +164,7 @@ class Calendario {
      * Stampa il calendario
      * @param m indica lo spostamento di mese (+1/-1) di default è 0
      */
-    static function stampaCalendario($m = 0){
+    static function stampaCalendario($m = 0,$utenti = null){
         $data = Calendario::getCalData($m);
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
@@ -205,7 +205,7 @@ class Calendario {
 
 
                                         echo '<a class="linkGiorno" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
-                                        Calendario::stampaEventiGiorno($dataGiorno);
+                                        Calendario::stampaEventiGiorno($dataGiorno,$utenti);
                                         echo '</td>';
                                     }
                                 }
@@ -223,28 +223,24 @@ class Calendario {
      /**
      * Stampa all'interno dell cella di un giorno i suoi eventi
      */
-    static function stampaEventiGiorno($dataGiorno){
+    static function stampaEventiGiorno($dataGiorno,$utenti = null){
         $da = mktime(23, 59, 59, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
         $a  = mktime(0, 0, 0, date("n",$dataGiorno), date("j",$dataGiorno), date("Y",$dataGiorno));
-
+        /*for($i=0;$i<50;$i++){
+            Database::getInstance()->eseguiQuery("insert into eventi (data_da,data_a,priorita,commento,fk_dipendente,fk_causale,stato,durata) values (?,?,?,?,?,?,?,?)",array($da,$a,1,'ciao',15,1,2,'G'));
+        }*/
         $prio    = Utilita::getValoreFiltro($_GET['prio']);
         $utente  = Utilita::getValoreFiltro($_GET['utn']);
         $filiale = Utilita::getValoreFiltro($_GET['filiale']);
         $tipo    = Utilita::getValoreFiltro($_GET['tipo']);
         if(!Autorizzazione::gruppoAmministrazione($_SESSION["username"])){
-            $utenti = $utente;
-            $param = array($da,$a,$tipo,$tipo,$prio,$prio);
-            if($utente==0){
-                $utenti = "SELECT d.id_dipendente r FROM dipendenti d,dipendenti_gruppi dg WHERE d.id_dipendente = dg.fk_dipendente AND dg.fk_gruppo in (   SELECT dg2.fk_gruppo FROM dipendenti_gruppi dg2, dipendenti d2 WHERE d2.id_dipendente = dg2.fk_dipendente AND d2.username = ? )";
-                $param[] = $_SESSION["username"];
-            }
             $sql = "SELECT e.id_evento,c.nome,e.priorita,e.data_da
                     FROM eventi e,causali c,dipendenti d
                     WHERE DATA_DA <= ? and DATA_A >= ? AND c.id_motivo = e.fk_causale
                     AND e.fk_dipendente = d.id_dipendente AND (e.fk_causale = ? or ? = 0 )
                     AND (e.priorita = ? or ? = 0 )
                     AND (e.fk_dipendente in (".$utenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome LIMIT 3";
-            $rs = Database::getInstance()->eseguiQuery($sql,$param);
+            $rs = Database::getInstance()->eseguiQuery($sql,array($da,$a,$tipo,$tipo,$prio,$prio));
         
             $sql = "SELECT COUNT(*) as c
                     FROM eventi e,causali c,dipendenti d
@@ -253,7 +249,7 @@ class Calendario {
                     AND (e.priorita = ? or ? = 0 )
                     AND (e.fk_dipendente in (".$utenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome";
 
-            $c = Database::getInstance()->eseguiQuery($sql,$param);
+            $c = Database::getInstance()->eseguiQuery($sql,array($da,$a,$tipo,$tipo,$prio,$prio));
             $count = $c->fields["c"];
 
         }
