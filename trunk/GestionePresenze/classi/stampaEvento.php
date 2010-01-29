@@ -323,6 +323,13 @@ class stampaEvento {
         $cnfTxt   = '<a alt="conferma" href="?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&id_evento='; $cnfTxt2 = '">Conferma</a>';
         $prioTxt  = '<img src="./img/prio'; $prioTxt2 = '.png" />';
         if(!Autorizzazione::gruppoAmministrazione($_SESSION["username"])){
+            $listaUtenti = implode(",", $utenti);
+            foreach ($utenti as $key => $value) {
+                if($value == $utente) {
+                    $listaUtenti = $utente;
+                    break;
+                }
+            }
             $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CONCAT(?,e.id_evento,?,CASE WHEN e.fk_dipendente = ? THEN 'modifica' ELSE 'dett' END,'.png\" /></a>') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT(?,e.id_evento,?) END as Stato,e.commento as Commento
                     FROM eventi e,causali c,dipendenti d,filiali f
                     WHERE DATA_DA <= ? AND DATA_A >= ? AND c.id_motivo = e.fk_causale
@@ -330,7 +337,7 @@ class stampaEvento {
                     AND d.id_dipendente = e.fk_dipendente
                     AND (e.fk_causale = ? or ? = 0 )
                     AND (e.priorita = ? or ? = 0 )
-                    AND (e.fk_dipendente in (".$utenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
+                    AND (e.fk_dipendente in (".$listaUtenti.")) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
 
 
             $rs = Database::getInstance()->eseguiQuery($sql,array($prioTxt,$prioTxt2,$editTxt,$editTxt2,$_SESSION["id_utente"],$cnfTxt,$cnfTxt2,$da,$a,$tipo,$tipo,$prio,$prio));
