@@ -52,7 +52,7 @@ function stampaForm($messaggio = "",$errori = array()){ ?>
                     </tr>
                     <tr>
                         <td>
-                            <input type="textfield" name="username" id="username" class="standartTextfield<?php echo isset($errori["username"])?" errore":"";?>" value="<?php echo $_POST['username'] ?>" />
+                            <input type="text" name="username" id="username" class="standartTextfield<?php echo isset($errori["username"])?" errore":"";?>" value="<?php echo $_POST['username'] ?>" />
                         </td>
                         <td>
                             <input type="password" name="password" id="password" class="standartTextfield<?php echo isset($errori["password"])?" errore":"";?>" />
