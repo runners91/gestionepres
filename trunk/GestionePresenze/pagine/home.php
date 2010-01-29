@@ -11,7 +11,7 @@
             <?php Calendario::stampaCalendario($_POST['m'],$utenti); ?>
         </td>
         <td valign="top">
-            <?php stampaEvento::stampaFormEvento(); ?>
+            <?php stampaEvento::stampaFormEvento($utenti); ?>
         </td>
     </tr>
     <tr>

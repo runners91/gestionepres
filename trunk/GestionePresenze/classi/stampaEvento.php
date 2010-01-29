@@ -10,7 +10,7 @@ class stampaEvento {
      /**
      * Stampa il form per aggiungere assenze/vacanze/ecc...
      */
-    static function stampaFormEvento(){
+    static function stampaFormEvento($utenti = null){
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         $data = Utilita::getDataHome();
@@ -27,8 +27,17 @@ class stampaEvento {
             <?php
                 if(Autorizzazione::gruppoAmministrazione($_SESSION["username"]) || ($_SESSION["id_utente"] == $evt->getDipendente() && $evt->getStato() == 1) || !$evt->getID())
                     stampaEvento::stampaFormAggiungiEvento($mesi, $giorni, $data, $evt);
-                else
-                    stampaEvento::stampaVisualizzaEvento($mesi, $giorni, $data, $evt);
+                else {
+                    foreach ($utenti as $val) {
+                        if ($val == $evt->getDipendente()) {
+                            stampaEvento::stampaVisualizzaEvento($mesi, $giorni, $data, $evt);        
+                            break;
+                        }
+
+                    }
+                    
+                }
+                    
             ?>
         </div>
     <?php
@@ -47,7 +56,7 @@ class stampaEvento {
                             Da:
                         </td>
                         <td>
-                            <input id="sel1" <?php echo isset($evt->errori["data_da"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="textfield" name="dataDa" value="<?php
+                            <input id="sel1" <?php echo isset($evt->errori["data_da"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="text" name="dataDa" value="<?php
                             if(!isset($_POST['action']) && !$evt->getID())
                                 echo trim(date("d",$data).'.'.date("m",$data).'.'.date("Y",$data));
                             else if(isset($evt->errori["data_da"]))
@@ -71,7 +80,7 @@ class stampaEvento {
                             A:
                         </td>
                         <td>
-                            <input id="sel2" <?php echo isset($evt->errori["data_a"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="textfield" name="dataA" value="<?php
+                            <input id="sel2" <?php echo isset($evt->errori["data_a"]) && Utilita::eseguiControlliFormEvento()?"class='errore'":""; ?> type="text" name="dataA" value="<?php
                             if(!isset($_POST['action']) && !$evt->getID())
                                 echo trim(date("d",$data).'.'.date("m",$data).'.'.date("Y",$data));
                             else if(isset($evt->errori["data_a"]))
@@ -129,10 +138,7 @@ class stampaEvento {
                                 <select name="utente" class="selectField<?php echo isset($evt->errori["fk_dipendente"])&& Utilita::eseguiControlliFormEvento()?" errore":""; ?>">
                                     <option value="0">-</option>
                                  <?php
-                                    if(Autorizzazione::gruppoAmministrazione($_SESSION['username']))
-                                        $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
-                                    else
-                                        $rs = Database::getInstance()->eseguiQuery("select d.id_dipendente r,d.username d from dipendenti d,dipendenti_gruppi dg where d.id_dipendente = dg.fk_dipendente and dg.fk_gruppo in ( select dg2.fk_gruppo from dipendenti_gruppi dg2, dipendenti d2 where d2.id_dipendente = dg2.fk_dipendente and d2.username = ? )",array($_SESSION['username']));
+                                    $rs = Database::getInstance()->eseguiQuery("SELECT d.username as d, d.id_dipendente as r FROM dipendenti d");
                                     while(!$rs->EOF){
                                         if($rs->fields['r']==$evt->getDipendente())
                                             echo '<option selected="selected" value="'.$rs->fields['r'].'">'.$rs->fields['d'].'</option>';
@@ -151,7 +157,7 @@ class stampaEvento {
                             Commento:
                         </td>
                         <td>
-                            <input type="textflied" name="commento" value="<?php echo $evt->getCommento(); ?>" />
+                            <input type="text" name="commento" value="<?php echo $evt->getCommento(); ?>" />
                         </td>
                     </tr>
                     <tr>
@@ -288,7 +294,7 @@ class stampaEvento {
                         Priorit&agrave:
                     </td>
                     <td>
-                        <?php echo $evt->getPriorita(); ?>
+                        <span class="prio<?php echo $evt->getPriorita(); ?>"><?php echo $evt->getPriorita(); ?></span>
                     </td>
                 </tr>
             </table>

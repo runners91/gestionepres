@@ -134,7 +134,7 @@
                     Priorit&agrave:
                 </td>
                 <td>
-                    <?php echo $e->getPriorita(); ?>
+                    <span class="prio<?php echo $e->getPriorita(); ?>"><?php echo $e->getPriorita(); ?></span>
                 </td>
             </tr>
             <tr>
