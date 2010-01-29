@@ -25,7 +25,7 @@ class stampaEvento {
         ?>
         <div class="aggiungiEventoContainer" id="sel">
             <?php
-                if(Autorizzazione::gruppoAmministrazione($_SESSION["username"]) || $_SESSION["id_utente"] == $evt->getDipendente())
+                if(Autorizzazione::gruppoAmministrazione($_SESSION["username"]) || ($_SESSION["id_utente"] == $evt->getDipendente() && $evt->getStato() == 1))
                     stampaEvento::stampaFormAggiungiEvento($mesi, $giorni, $data, $evt);
                 else
                     stampaEvento::stampaVisualizzaEvento($mesi, $giorni, $data, $evt);
@@ -330,7 +330,7 @@ class stampaEvento {
                     break;
                 }
             }
-            $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CONCAT(?,e.id_evento,?,CASE WHEN e.fk_dipendente = ? THEN 'modifica' ELSE 'dett' END,'.png\" /></a>') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT(?,e.id_evento,?) END as Stato,e.commento as Commento
+            $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CONCAT(?,e.id_evento,?,CASE WHEN (e.fk_dipendente = ? AND e.stato = 1)THEN 'modifica' ELSE 'dett' END,'.png\" /></a>') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT(?,e.id_evento,?) END as Stato,e.commento as Commento
                     FROM eventi e,causali c,dipendenti d,filiali f
                     WHERE DATA_DA <= ? AND DATA_A >= ? AND c.id_motivo = e.fk_causale
                     AND d.fk_filiale = f.id_filiale
