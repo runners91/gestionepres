@@ -229,11 +229,6 @@ class stampaEvento {
                     </td>
                     <td>
                         <?php
-                        if(!isset($_POST['action']) && !$evt->getID())
-                            echo trim(date("d",$data).'.'.date("m",$data).'.'.date("Y",$data));
-                        else if(isset($evt->errori["data_da"]))
-                            echo "";
-                        else
                             echo date("d.m.Y",$evt->getDataDa());
                         ?>
                     </td>
