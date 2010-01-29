@@ -18,7 +18,7 @@
         if(isset($_GET["id_evento"])){
             $e = new Evento();
             $e->getValoriDB($_GET["id_evento"]);
-            if($e->getStato() == 3){
+            if($e->getStato() != 2 || $e->getDipendente() != $_SESSION["id_utente"]){
                 $messaggioErr = "Non puoi segnalare questo evento";
                 $stampaform = false;
             }
