@@ -14,6 +14,7 @@
     }
     else if($_POST["azione"] == "Salva"){
         if(sizeof($e->errori)==0){
+            $e->setStato(2);
             if($e->aggiornaEvento())
                 $messaggioSucc = "Aggiornamento eseguito con successo";
             else {

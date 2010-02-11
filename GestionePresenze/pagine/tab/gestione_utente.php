@@ -15,6 +15,7 @@
             $d->setCognome($_POST["cognome"]);
             $d->setUsername($_POST["username"]);
             $d->setEmail($_POST["email"]);
+            $d->setVacanze($_POST["vacanze"]);
             $d->setFiliale($_POST["filiale"]);
             if($d->aggiungiDipendente()){
                 creaFormUtente();
@@ -30,6 +31,7 @@
             $d->setCognome($_POST["cognome"]);
             $d->setUsername($_POST["username"]);
             $d->setEmail($_POST["email"]);
+            $d->setVacanze($_POST["vacanze"]);
             $d->setFiliale($_POST["filiale"]);
             if($d->aggiornaDipendente()){
                 creaFormUtente();
@@ -76,6 +78,11 @@
                 <td class="label">Email:</td>
                 <td><input type="text" name="email" value="<?php echo $d->email; ?>" <?php echo isset($errori["email"])?"class='errore'":""; ?>/></td>
                 <td class="messaggioErrore"><?php echo $errori["email"]; ?></td>
+            </tr>
+            <tr>
+                <td class="label">Vacanze:</td>
+                <td><input type="text" name="vacanze" size="1" maxlength="3" value="<?php echo $d->vacanze?$d->vacanze:25; ?>" <?php echo isset($errori["vacanze"])?"class='errore'":""; ?>/></td>
+                <td class="messaggioErrore"><?php echo $errori["vacanze"]; ?></td>
             </tr>
             <tr>
                 <td class="label">Filiale:</td>

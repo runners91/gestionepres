@@ -1,4 +1,16 @@
-<?php $utenti = Utilita::getListaUtentiPerGruppo(); ?>
+<?php
+    $utenti = Utilita::getListaUtentiPerGruppo();
+    $visualizza = true;
+    $filtriGiorno = null;
+    if($_GET["data"]){
+        $rs = Calendario::getFestiviGiorno($_SESSION["username"], $_GET["data"]);
+        if($rs->fields["durata"] == 'G' && $rs->RowCount()>0)//&& !Autorizzazione::gruppoAmministrazione($_SESSION["username"])
+            $visualizza = false;
+        $filtriGiorno = $rs->fields["durata"];
+    }
+    
+
+?>
 
 <table>
     <tr>
@@ -11,12 +23,15 @@
             <?php Calendario::stampaCalendario($_POST['m'],$utenti); ?>
         </td>
         <td valign="top">
-            <?php stampaEvento::stampaFormEvento($utenti); ?>
+            <?php
+                if($visualizza) stampaEvento::stampaFormEvento($utenti,$filtriGiorno);
+            ?>
+
         </td>
     </tr>
     <tr>
         <td align="center">
-            <?php stampaEvento::stampaReportEventi($utenti); ?>
+            <?php if($visualizza) stampaEvento::stampaReportEventi($utenti); ?>
         </td>
     </tr>
 </table>
