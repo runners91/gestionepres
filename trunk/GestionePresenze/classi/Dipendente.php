@@ -11,6 +11,9 @@ class Dipendente {
     private $cognome;
     private $username;
     private $email;
+    private $vacanze;
+    private $stato;
+    private $commento_stato;
     private $filiale;
     private $errori;
     
@@ -48,6 +51,14 @@ class Dipendente {
 
         $this->email = $email;
     }
+    public function setVacanze($v){
+        $vacanze = trim($v);
+        if(strlen($vacanze)==0)
+            $this->aggiungiErrore(" - Vacanze non pu&ograve avere un valore nullo", "vacanze");
+        else if(!is_numeric($vacanze))
+            $this->aggiungiErrore(" - Vacanze non ha un valore valido", "vacanze");
+        $this->vacanze = $vacanze;
+    }
     public function setUsername($u){
         $username = trim($u);
         $param = array($username);
@@ -69,14 +80,23 @@ class Dipendente {
         $this->filiale = $filiale;
     }
 
+    public function setStato($stato){
+        if($stato == 1 || $stato == 2  || $stato == 3)
+            $this->stato = $stato;
+    }
+
+    public function setCommentoStato($commento){
+        $this->commento_stato = trim($commento);
+    }
+
     /**
      * aggiunge il nuovo dipendente nel DB
      */
     public function aggiungiDipendente(){
         if(sizeof($this->errori)==0){
-            $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale,email) values (?,?,?,md5('inizio'),?,?)",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->email));
-            $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = ?",array($this->username));
-            //Database::getInstance()->eseguiQuery("INSERT INTO dipendenti_gruppi (fk_dipendente,fk_gruppo) values (?,2);",array($rs->fields['id']));
+            $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale,email) values (?,?,?,md5('inizio'),?,?);",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->email));
+            $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = ?;",array($this->username));
+            Database::getInstance()->eseguiQuery("INSERT INTO saldi (fk_dipendente,saldo, saldo_strd, vac_spt, vac_rst, vac_matr) values (?,0,0,?,?,0);",array($rs->fields["id"],$this->vacanze,$this->vacanze));
             return $ris;
         }
         return false;
@@ -93,18 +113,27 @@ class Dipendente {
     }
 
     /**
+     * aggiorna lo stato del dipendente
+     */
+    public function aggiornaStato(){
+        return Database::getInstance()->eseguiQuery("UPDATE dipendenti set stato_att = ?, commento_stato= ? where id_dipendente = ?",array($this->stato,$this->commento_stato,$this->id));
+    }
+
+    /**
      * Trova l'utente in base all'id passato e lo salva nell'oggetto
      * @param int $id Id dell'utente da cercare
      * @return Dipendente l'oggetto con i dati del dipendente cercato
      */
     function trovaUtenteDaId($id){
-        $rs = Database::getInstance()->eseguiQuery("SELECT nome,cognome,username,fk_filiale,email from dipendenti where id_dipendente = ?",array($id));
+        $rs = Database::getInstance()->eseguiQuery("SELECT nome,cognome,username,fk_filiale,email,stato_att as stato,commento_stato from dipendenti where id_dipendente = ?",array($id));
         $this->id = $id;
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
         $this->username = $rs->fields["username"];
         $this->filiale = $rs->fields["fk_filiale"];
         $this->email = $rs->fields["email"];
+        $this->stato = $rs->fields["stato"];
+        $this->commento_stato = $rs->fields["commento_stato"];
         return $this;
     }
 
@@ -114,14 +143,37 @@ class Dipendente {
      * @return Dipendente l'oggetto con i dati del dipendente cercato
      */
     function trovaUtenteDaUsername($username){
-        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale,email from dipendenti where username = ?",array($username));
+        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale,email,stato_att as stato,commento_stato from dipendenti where username = ?",array($username));
         $this->id = $rs->fields["id_dipendente"];
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
         $this->username = $username;
         $this->filiale = $rs->fields["fk_filiale"];
         $this->email = $rs->fields["email"];
+        $this->stato = $rs->fields["stato"];
+        $this->commento_stato = $rs->fields["commento_stato"];
         return $this;
+    }
+
+    function getStatoOggi($admin){
+        $stato = array();
+        $data = Calendario::getTimestamp(Date("d.m.Y"));
+        $rs = Database::getInstance()->eseguiQuery("SELECT date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%Y') as da, date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%Y') as a, c.nome as nome FROM eventi e, causali c WHERE e.fk_causale = c.id_motivo AND e.data_da <= ? AND e.data_a >= ? AND e.fk_dipendente = ?;",array($data,$data,$this->id));
+        if($rs->RowCount()>0){
+            $da = $rs->fields["da"];
+            $a = $rs->fields["a"];
+            $stato['stato'] = 3;
+            if($da == $a) $date_commento = " il ".$da;
+            else $date_commento = " dal :".$rs->fields["da"]." al :".$rs->fields["a"];
+
+            if($admin) $stato['commento'] = $rs->fields["nome"].$date_commento;
+            else $stato['commento'] = "Assente ".$date_commento;
+        }
+        else {
+            $stato['stato'] = $this->stato;
+            $stato['commento'] = $this->commento_stato;
+        }
+        return $stato;
     }
 
      /**

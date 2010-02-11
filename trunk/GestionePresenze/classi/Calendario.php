@@ -176,9 +176,9 @@ class Calendario {
 
                         </td><?php
                             foreach($giorni as $value){
-                               echo '<td class="cellaGiorno">';
-                                  echo $value;
-                               echo '</td>';
+                                echo '<td class="cellaGiorno">';
+                                    echo $value;
+                                echo '</td>';
                             }
                             ?>
                     </tr>
@@ -188,23 +188,33 @@ class Calendario {
                             echo '<tr>';
                                 for($j=$nrGiorno;$j<=($nrGiorno+7);$j++){
                                     $dataGiorno = mktime(0,0,0,date("n",$data),$j,date("Y",$data));
+                                    if($_GET["filiale"]) 
+                                        $festivo = Calendario::getFestiviGiornoPerFiliale($_GET["filiale"], $dataGiorno);
+                                    else
+                                        $festivo = Calendario::getFestiviGiorno($_SESSION["username"], $dataGiorno);
+                                        
+                                    $tot = $festivo->rowCount();
+                                    
                                     if($j==$nrGiorno){
                                         echo '<td class="cellaSettimana">';
                                             echo "Sett-".date("W",mktime(0,0,0,date("n",$data),$j+7,date("Y",$date)));
                                         echo '</td>';
                                     }
                                     else{
+                                        $class = '';
                                         if(date("j-n-o",time())==date("j-n-o",$dataGiorno))
-                                            echo '<td class="cellaData cellaDataOggi">';
+                                            $class = ' cellaDataOggi';
                                         else if(date("j-n-o",$_GET['data'])==date("j-n-o",$dataGiorno))
-                                            echo '<td class="cellaData cellaDataSelezionata">';
+                                            $class = ' cellaDataSelezionata';
                                         else if(date("n",$dataGiorno)!=date("n",$data))
-                                            echo '<td class="cellaData cellaDataGrigia">';
-                                        else
-                                            echo '<td class="cellaData">';
+                                            $class = ' cellaDataGrigia';
+                                        else if($tot>0)
+                                            $class = ' cellaDataFestiva';
+                                        
+                                        echo '<td class="cellaData'.$class.'" onclick="location.href=\''.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'\'">';
 
-
-                                        echo '<a class="linkGiorno" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'">'.date("d",$dataGiorno).'</a>';
+                                        echo '<font class="linkGiorno">'.date("d",$dataGiorno).'</font> <font style="font-size:8px;font-family:Verdana;">'.$festivo->fields["nome"].'</font>';
+                                        //echo '<a class="linkGiorno" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'">'.date("d",$dataGiorno).'</a> ';
                                         Calendario::stampaEventiGiorno($dataGiorno,$utenti);
                                         echo '</td>';
                                     }
@@ -320,6 +330,41 @@ class Calendario {
         $anno   = (int)$data[2];
         
         return mktime(0, 0, 0, $mese, $giorno, $anno);
+    }
+
+    /**
+     * Controlla se ci sono giorni festivi nel giorno passato per la filiale di un determinato utente
+     * @param String $utente utente da cui prendere la filiale
+     * @param String $data data in formato timestamp del giorno da controllare
+     * @return ResultSet festivi nel giorno passato
+     */
+    static function getFestiviGiorno($utente,$data){
+        $rs = Database::getInstance()->eseguiQuery("    SELECT f.id_festivo as id, f.nome, f.durata as durata,f.ricorsivo
+                                                        FROM festivi f, festivi_effettuati fe, dipendenti d
+                                                        WHERE f.id_festivo = fe.fk_festivo
+                                                        AND fe.fk_filiale = d.fk_filiale
+                                                        AND d.username = ?
+                                                        AND f.data = ?;",array($utente,$data));
+
+
+        return $rs;
+    }
+
+   /**
+     * Controlla se ci sono giorni festivi nel giorno passato per la filiale
+     * @param String $filiale filiale da cui prendere i giorni festivi
+     * @param String $data data in formato timestamp del giorno da controllare
+     * @return ResultSet festivi nel giorno passato
+     */
+    static function getFestiviGiornoPerFiliale($filiale,$data){
+        $rs = Database::getInstance()->eseguiQuery("    SELECT f.id_festivo as id, f.nome, f.durata as durata,f.ricorsivo
+                                                        FROM festivi f, festivi_effettuati fe
+                                                        WHERE f.id_festivo = fe.fk_festivo
+                                                        AND fe.fk_filiale = ?
+                                                        AND f.data = ?;",array($filiale,$data));
+
+
+        return $rs;
     }
 }
 ?>

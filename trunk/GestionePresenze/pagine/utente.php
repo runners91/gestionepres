@@ -12,6 +12,7 @@
             creaSubmenuItem($paginaAttuale, $tabAttuale, "visualizza_timbrature", "VISUALIZZA TIMBRATURE");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "segnalazione", "SEGNALA");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "cambia_password", "CAMBIA PASSWORD");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "trova_utente", "TROVA UTENTE");
 
         ?>
     </ul>

@@ -19,7 +19,7 @@ class Utilita {
      * @param int $visualizza numero di record da visualizzare
      * @param boolean $nascondiID true se si vuole nascondere la colonna ID, false se la si vuole vedere
      */
-    static function stampaTabella($rs,$idSelezionato=1,$visualizza=8,$nascondiID=true){
+    static function stampaTabella($rs,$idSelezionato=0,$visualizza=8,$nascondiID=true){
 
         // Preparo le variabili che mi servono per la paginazione del report
         $riga     = 0;
@@ -50,7 +50,7 @@ class Utilita {
                 echo '<tr class="reportRigaDati"'.$style.'>';
                     foreach($rs->fields as $key => $value){
                         $style="";
-                        if($key == "id")
+                        if($key == "id" && $nascondiID)
                             $style="style='display:none;'";
                         echo '<td class="reportCella" '.$style.'> '.$value.' </td>';
                     }

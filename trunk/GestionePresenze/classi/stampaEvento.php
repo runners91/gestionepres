@@ -10,7 +10,7 @@ class stampaEvento {
      /**
      * Stampa il form per aggiungere assenze/vacanze/ecc...
      */
-    static function stampaFormEvento($utenti = null){
+    static function stampaFormEvento($utenti = null,$festivo = null){
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         $data = Utilita::getDataHome();
@@ -26,7 +26,7 @@ class stampaEvento {
         <div class="aggiungiEventoContainer" id="sel">
             <?php
                 if(Autorizzazione::gruppoAmministrazione($_SESSION["username"]) || ($_SESSION["id_utente"] == $evt->getDipendente() && $evt->getStato() == 1) || !$evt->getID())
-                    stampaEvento::stampaFormAggiungiEvento($mesi, $giorni, $data, $evt);
+                    stampaEvento::stampaFormAggiungiEvento($mesi, $giorni, $data, $evt,$festivo);
                 else {
                     foreach ($utenti as $val) {
                         if ($val == $evt->getDipendente()) {
@@ -42,7 +42,7 @@ class stampaEvento {
         </div>
     <?php
     }
-    static function stampaFormAggiungiEvento($mesi, $giorni, $data,$evt){ ?>
+    static function stampaFormAggiungiEvento($mesi, $giorni, $data,$evt,$festivo){ ?>
         <form name="taskCalendario" action="#" method="POST">
                 <input type="hidden" name="stato" value="<?php echo Autorizzazione::gruppoAmministrazione($_SESSION["username"])?"2":"1";?>"/>
                 <table>
@@ -121,11 +121,18 @@ class stampaEvento {
                         </td>
                         <td valign="top">
                             <select name="durata">
+                            <?php if($festivo == null) { ?>
                                 <option value="G" selected="selected">Giornata</option>
                                 <?php $txt = ""; if($evt->getDurata()=="M") $txt = "selected='selected'"; ?>
                                 <option value="M" <?php echo $txt; ?>>Mattina</option>
                                 <?php $txt = ""; if($evt->getDurata()=="P") $txt = "selected='selected'"; ?>
                                 <option value="P" <?php echo $txt; ?>>Pomeriggio</option>
+                            <?php }
+                                  else if($festivo == 'P')
+                                      echo '<option value="M">Mattina</option>';
+                                  else
+                                      echo '<option value="P">Pomeriggio</option>';
+                            ?>
                             </select>
                         </td>
                     </tr>
@@ -208,7 +215,7 @@ class stampaEvento {
                                 <input class="bottCalendario" type="submit" value="Elimina" onclick="document.getElementById('action').value='elimina'" />
                             <?php } ?>
                             <?php if($evt->getID()){ ?>
-                                <input class="bottCalendario" type="submit" value="Salva" onclick="document.getElementById('action').value='aggiorna';" />
+                                <input class="bottCalendario" type="submit" value="<?php echo $evt->getStato()==1 && Autorizzazione::gruppoAmministrazione($_SESSION["username"])?'Accetta':'Salva'?>" onclick="document.getElementById('action').value='aggiorna';" />
                             <?php } ?>
                             <?php if(!$evt->getID()){ ?>
                                 <input class="bottCalendario" type="submit" value="Crea" onclick="document.getElementById('action').value='inserisci'" />
@@ -330,7 +337,7 @@ class stampaEvento {
                     break;
                 }
             }
-            $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CONCAT(?,e.id_evento,?,CASE WHEN (e.fk_dipendente = ? AND e.stato = 1)THEN 'modifica' ELSE 'dett' END,'.png\" /></a>') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE 'Segnalato' END as Stato,e.commento as Commento
+            $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CONCAT(?,e.id_evento,?,CASE WHEN (e.fk_dipendente = ? AND e.stato = 1)THEN 'modifica' ELSE 'dett' END,'.png\" /></a>') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE 'Segnalato' END as Stato,CASE WHEN e.durata = 'G' THEN 'Giorno' WHEN e.durata = 'M' THEN 'Mattino' ELSE 'Pomeriggio' END as Periodo
                     FROM eventi e,causali c,dipendenti d,filiali f
                     WHERE DATA_DA <= ? AND DATA_A >= ? AND c.id_motivo = e.fk_causale
                     AND d.fk_filiale = f.id_filiale
@@ -345,7 +352,7 @@ class stampaEvento {
         else {
             $cnfTxt   = '<a alt="conferma" href="?pagina=amministrazione&tab=gestione_segnalazioni&azione=visualizza&id_evento=';
             $cnfTxt2 = '">Conferma</a>';
-            $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CONCAT(?,e.id_evento,?,'modifica.png\"/></a>') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT(?,e.id_evento,?) END as Stato,e.commento as Commento FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ? and DATA_A >= ? and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
+            $sql = "SELECT e.id_evento as id, CONCAT(?,e.priorita,?) as ' ', CONCAT(?,e.id_evento,?,'modifica.png\"/></a>') as Edit, c.nome as Causale,d.username as Utente,date_format(FROM_UNIXTIME(e.data_da),'%d.%m.%y') as Dal,date_format(FROM_UNIXTIME(e.data_a),'%d.%m.%y') as Al,f.nome as Filiale,CASE WHEN e.stato = 1 THEN 'Richiesto' WHEN e.stato = 2 THEN 'Accettato' ELSE CONCAT(?,e.id_evento,?) END as Stato,CASE WHEN e.durata = 'G' THEN 'Giorno' WHEN e.durata = 'M' THEN 'Mattino' ELSE 'Pomeriggio' END as Periodo FROM eventi e,causali c,dipendenti d,filiali f WHERE DATA_DA <= ? and DATA_A >= ? and c.id_motivo = e.fk_causale and d.fk_filiale = f.id_filiale and d.id_dipendente = e.fk_dipendente and (e.fk_causale = ? or ? = 0 ) and (e.priorita = ? or ? = 0 ) and (e.fk_dipendente = ? or ? = 0 ) and (d.fk_filiale = ? or ? = 0 ) ORDER BY e.priorita DESC,e.data_da,c.nome,d.username";
             $rs = Database::getInstance()->eseguiQuery($sql,array($prioTxt,$prioTxt2,$editTxt,$editTxt2,$cnfTxt,$cnfTxt2,$da,$a,$tipo,$tipo,$prio,$prio,$utente,$utente,$filiale,$filiale));
         }
         if($rs->fields){

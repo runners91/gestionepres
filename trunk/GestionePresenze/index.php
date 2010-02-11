@@ -4,15 +4,27 @@
         session_destroy();
         header('Location:index.php');
     }
+
     include("classi/Database.php");
     include("classi/Dipendente.php");
     include("classi/Calendario.php");
     include("classi/Evento.php");
+    include("classi/Festivo.php");
     include("classi/Utilita.php");
     include("classi/Autorizzazione.php");
     include("classi/stampaEvento.php");
     include("login.php");
     include("pagine/navigazione/menu.php");
+    
+    if($_POST['azione'] == "cambiaStato"){
+        
+        $d = new Dipendente();
+        $d->trovaUtenteDaId($_SESSION["id_utente"]);
+        $d->setStato($_POST["stato"]);
+        $d->setCommentoStato($_POST["commento_stato"]);
+        $d->aggiornaStato();
+
+    }
 
     if(isset($_SESSION['username']) && isset($_GET['pagina']))
         if(!Autorizzazione::verificaAccesso($_GET['pagina']))
@@ -30,8 +42,10 @@
         <script type="text/javascript" src="script/mini_calendario/calendar.js"></script>
         <script type="text/javascript" src="script/mini_calendario/calendar-it.js"></script>
         <script type="text/javascript" src="script/mini_calendario/script.js"></script>
+        <script type="text/javascript" src="script/jquery-1.4.1.js"></script>
     </head>
     <body>
+        
         <div id="pagina">
             <div id="header">
                 <div class="mainTitle">Gestione Presenze</div>
