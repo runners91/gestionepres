@@ -339,12 +339,13 @@ class Calendario {
      * @return ResultSet festivi nel giorno passato
      */
     static function getFestiviGiorno($utente,$data){
-        $rs = Database::getInstance()->eseguiQuery("    SELECT f.id_festivo as id, f.nome, f.durata as durata,f.ricorsivo
-                                                        FROM festivi f, festivi_effettuati fe, dipendenti d
-                                                        WHERE f.id_festivo = fe.fk_festivo
-                                                        AND fe.fk_filiale = d.fk_filiale
-                                                        AND d.username = ?
-                                                        AND f.data = ?;",array($utente,$data));
+        $rs = Database::getInstance()->eseguiQuery("SELECT f.id_festivo as id, f.nome, f.durata as durata,f.ricorsivo
+                                                    FROM festivi f, festivi_effettuati fe, dipendenti d
+                                                    WHERE f.id_festivo = fe.fk_festivo AND
+                                                          fe.fk_filiale = d.fk_filiale AND
+                                                          d.username = ? AND
+                                                          (f.data = ? OR
+                                                           FROM_UNIXTIME(f.data,'%d.%c') = ? AND f.ricorsivo = 1)",array($utente,$data,date("j.n",$data)));
 
 
         return $rs;
