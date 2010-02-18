@@ -295,7 +295,8 @@ class Calendario {
      * ritorna i messaggi di errore se $conMessaggi = true altrimenti ritorna true/false (data ok/non ok)
      * @param String $d Contiene la data da controllare
      * @param String $name Contiene il nome della data che viene controllata
-     * @param boolean $conMessaggi Indica cosa la funzione deve ritornare
+     * @param boolean $conMessaggi Indica cosa la funzione deve ritornare messaggi di errore o boolean
+     * @return boolean/string a dipendenza di $conMessaggi
      */
     static function checkData($d,$name,$conMessaggi){
         $return = "";
@@ -318,6 +319,55 @@ class Calendario {
         if($conMessaggi) return $return; else return $returnB;
     }
 
+    /**
+     *
+     * Controlla se una data e' valida (dd.mm.yyyy hh:mm)
+     * ritorna i messaggi di errore se $conMessaggi = true altrimenti ritorna true/false (data ok/non ok)
+     * @param String $d Contiene la data da controllare
+     * @param String $name Contiene il nome della data che viene controllata
+     * @param boolean $conMessaggi Indica cosa la funzione deve ritornare messaggi di errore o boolean
+     * @return boolean/string a dipendenza di $conMessaggi
+     */
+    static function checkDataOra($d,$name,$conMessaggi){
+        $return = "";
+        $returnB = true;
+        if($d == null){
+            $returnB = false;
+            $return = "- Data ".$name." non inserita<br/>";
+            if($conMessaggi) return $return; else return $returnB;
+        }
+
+        $data   = explode(".",$d);
+        $giorno = $data[0];
+        $mese   = $data[1];
+        $anno   = substr($data[2],0,4);
+        if(!checkdate($mese, $giorno, $anno)){
+            $return .= "- La data ".$name." immessa non &egrave; valida<br/>";
+            $returnB = false;
+        }
+
+        if(strstr(":",$data[2])>0){
+            $orario = explode(":",$data[2]);
+            $ore    = substr($orario[0],-2);
+            $min    = $orario[1];
+
+            if($ore>23 || $ore<0){
+                $return .= "- L'ora ".$name." immessa non esiste<br/>";
+                $returnB = false;
+            }
+            if($min>59 || $min<0){
+                $return .= "- I minuti ".$name." immessi non esistono<br/>";
+                $returnB = false;
+            }
+        }
+        else{
+            $return .= "- L'orario in ".$name." immessa non &egrave; valida<br/>";
+            $returnB = false;
+        }
+
+        if($conMessaggi) return $return; else return $returnB;
+    }
+
      /**
      *  Prende una data in formato dd.mm.yyyy e la ritorna in timestamp
      * @param String $d Contiente la data da convertire
@@ -331,6 +381,27 @@ class Calendario {
         
         return mktime(0, 0, 0, $mese, $giorno, $anno);
     }
+
+     /**
+     *  Prende una data in formato dd.mm.yyyy hh:mm e la ritorna in timestamp
+     * @param String $d Contiente la data da convertire
+     * @return int
+     */
+    static function getTimestampOre($d){
+        $data   = explode(".",$d);
+        $giorno = (int)$data[0];
+        $mese   = (int)$data[1];
+        $anno   = (int)substr($data[2],0,4);
+        $orario = explode(":",$data[2]);
+        $ore    = substr($orario[0],-2);
+        $min    = $orario[1];
+
+        //echo $giorno.".".$mese.".".$anno." ".$ore.":".$min;
+        return mktime($ore, $min, 0, $mese, $giorno, $anno);
+    }
+
+
+
 
     /**
      * Controlla se ci sono giorni festivi nel giorno passato per la filiale di un determinato utente

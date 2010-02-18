@@ -42,7 +42,7 @@ class stampaEvento {
         </div>
     <?php
     }
-    static function stampaFormAggiungiEvento($mesi, $giorni, $data,$evt,$festivo){ ?>
+    static function stampaFormAggiungiEvento($mesi, $giorni, $data, $evt, $festivo){ ?>
         <form name="taskCalendario" action="#" method="POST">
                 <input type="hidden" name="stato" value="<?php echo Autorizzazione::gruppoAmministrazione($_SESSION["username"])?"2":"1";?>"/>
                 <table>
@@ -66,7 +66,7 @@ class stampaEvento {
                             ?>" />
                         </td>
                         <td>
-                            <input value="" type="reset" onclick="return showCalendar('sel1', '%d.%m.%Y');" class="imgCal" />
+                            <input value="" type="reset" onclick="return showCalendar('sel1','%d.%m.%Y');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>
@@ -90,7 +90,7 @@ class stampaEvento {
                             ?>" />
                         </td>
                         <td>
-                            <input value="" type="reset" onclick="return showCalendar('sel2', '%d.%m.%Y');" class="imgCal" />
+                            <input value="" type="reset" onclick="return showCalendar('sel2','%d.%m.%Y');" class="imgCal" />
                         </td>
                     </tr>
                     <tr>
