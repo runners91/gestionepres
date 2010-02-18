@@ -97,11 +97,11 @@
                         while(!$rs->EOF){
                             echo '<td class="griglia '.$class.'">';
                                 if($rs->fields['stato']=="E" && $i%2==0){
-                                    echo date("H:i",$rs->fields['data'])." E ".$rs->fields['id_timbratura'];
+                                    echo date("H:i",$rs->fields['data'])." E";
                                     $class = "uscita";
                                 }
                                 else if($rs->fields['stato']=="U" && $i%2==1){
-                                    echo date("H:i",$rs->fields['data'])." U ".$rs->fields['id_timbratura'];
+                                    echo date("H:i",$rs->fields['data'])." U";
                                     $class = "entrata";
                                 }
                             echo '</td>';
@@ -118,12 +118,4 @@
             }
         ?>
     </table>
-
-<div style="float:right">
-    <?php
-        $d = new Dipendente();
-        $d = $d->trovaUtenteDaUsername($_SESSION['username']);
-        echo $d->getSaldo();
-    ?>
-</div>
     

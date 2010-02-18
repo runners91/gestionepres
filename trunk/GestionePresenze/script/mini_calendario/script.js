@@ -38,7 +38,7 @@ function showCalendar(id, format, showsTime, showsOtherMonths) {
     // cal.weekNumbers = false;
     if (typeof showsTime == "string") {
       cal.showsTime = true;
-      cal.time24 = (showsTime == "24");
+      //cal.time24 = (showsTime == "24");
     }
     if (showsOtherMonths) {
       cal.showsOtherMonths = true;

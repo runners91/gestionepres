@@ -12,6 +12,7 @@
     include("classi/Festivo.php");
     include("classi/Utilita.php");
     include("classi/Autorizzazione.php");
+    include("classi/Timbratura.php");
     include("classi/stampaEvento.php");
     include("login.php");
     include("pagine/navigazione/menu.php");
