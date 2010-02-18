@@ -17,7 +17,7 @@ body {
 }
 #contenuto{
     border: 1px solid blue;
-    padding: 20px;
+    padding: 15px;
 }
 #footer {
     border-top: 1px solid black;
@@ -262,7 +262,8 @@ tr.reportRigaDati:hover {
 }
 
 .cellaSpazio {
-    width: 80px;
+    width: 60px;
+    background-color: #F2F0F0; /* grigio chiarissimo */
 }
 .bottCalendario {
     background-color: #5D92FA; /* celeste */
@@ -282,20 +283,42 @@ tr.reportRigaDati:hover {
 .linkGiorno:hover {
     text-decoration: underline;
 }
-.giorno {
-    border: 1px solid black;
-    text-align: right;
+
+
+.timbrature {
     font-size: 8pt;
+}
+.giorno {
+    --border: 1px solid black;
+    text-align: right;
     height: 5px;
     padding: 0 3px 0 3px;
 }
 
 td.cellaData:hover {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .fest {
     border: 1px solid red;
+}
+tr.rigaGriglia:hover {
+    background-color: #C6DEFF; /* Celeste chiaro */
+}
+.griglia{
+    border: 1px solid black;
+    text-align: center;
+    height: 5px;
+    padding: 0 15px 0 15px;
+}
+.negativo {
+    background-color: #F78181;
+}
+.entrata {
+    margin-left: 20px;
+}
+.uscita {
+    background-color: #D8D8D8; /* grigio */
 }
 /*******************************************************************************/
 
@@ -369,67 +392,67 @@ td.cellaData:hover {
 
 #stato {
     position:absolute;
-    right:13px;
-    top:30px;
+    right: 13px;
+    top: 30px;
     border: 1px solid black; 
-    width:220px;
-    background-color:#58ACFA;
-    opacity:0.9;
+    width: 220px;
+    background-color: #58ACFA;
+    opacity: 0.9;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    display:none;
-    padding:0;
-    z-index:1;
+    display: none;
+    padding: 0;
+    z-index: 1;
 }
 #modificaCommento {
-    display:none;
+    display: none;
 }
 
 #modificaCommento, #vedicommento {
-    position:absolute;
-    right:13px;
-    top:30px;
+    position: absolute;
+    right: 13px;
+    top: 30px;
     border: 1px solid black;
-    width:218px;
-    background-color:#58ACFA;
-    opacity:0.9;
+    width: 218px;
+    background-color: #58ACFA;
+    opacity: 0.9;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    padding:0;
-    padding-top:3px;
-    padding-left:1px;
-    padding-right:1px;
+    padding: 0;
+    padding-top: 3px;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 
 #stato table{
-    width:100%;
+    width: 100%;
 }
 
 #stato table tr td {
-   padding-left:50px;
+   padding-left: 50px;
 }
 
 #stato tr td:hover{
-    background-color:#81F7F3;
+    background-color: #81F7F3;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 #testoStato {
-    font-size:10px;
-    margin-right:2px;
-    float:right;
+    font-size: 10px;
+    margin-right: 2px;
+    float: right;
 }
 
 #testoStato:hover {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 #commento_stato {
-    width:217px;
+    width: 217px;
 }
 
 span.puntatore:hover,.puntatore:hover {
-     cursor:pointer;
+     cursor: pointer;
 }
