@@ -184,5 +184,53 @@ class Dipendente {
     function aggiungiErrore($errore, $d){
         $this->errori[$d]  = $errore;
     }
+
+
+    /**
+     * Va a calcolare il saldo orario dell'utente
+     * @return String saldo
+     */
+    function getSaldo(){
+        $data = mktime(0,0,0,1,1,date("Y",time()));
+        $saldo = 0;
+        for($j=1;;$j++){
+            $tot = 0;
+            $d = date("N",mktime(0,0,0,date("n",$data),$j,date("Y",$data)));
+
+            if($d!=7 && $d!=6){
+                $sql = "select e.fk_causale from eventi e where fk_dipendente = ? and e.data_da <= ? and e.data_a >= ? order by e.priorita desc limit 1";
+                $dataGiorno = mktime(0,0,0,date("n",$data),$j,date("Y",$data));
+                $rs  = Database::getInstance()->eseguiQuery($sql,array($_SESSION['id_utente'],$dataGiorno,$dataGiorno));
+                if(strlen($rs->fields['fk_causale'])>0) $tot = 28800; /* 8 ore */
+
+                // calcola totale ore giornaliere
+                $sql = "select data,stato from timbrature where fk_dipendente = ? and data > ? and data < ? order by data";
+                $rs = Database::getInstance()->eseguiQuery($sql,array($_SESSION['id_utente'],mktime(0,0,0,date("n",$data),$j,date("Y",$data)),mktime(23,59,59,date("n",$data),$j,date("Y",$data))));
+
+                $i = 0;
+                while(!$rs->EOF){
+                    if($i==0) $inizio = (int)$rs->fields['data'];
+                    if($rs->fields['stato']=="E" && $i%2==0)
+                        $e = (int)$rs->fields['data'];
+                    else if($rs->fields['stato']=="U" && $i%2==1){
+                        $tot = $tot + (int)$rs->fields['data'] - $e;
+                        $fine = (int)$rs->fields['data'];
+                    }
+                    $rs->MoveNext();
+                    $i++;
+                }
+
+                if(($fine-$inizio)-$tot<3600 && $tot>0 && ($fine-$inizio)>0) /* se non è stata fatta 1 ora di pausa viene tolta automaticamente*/
+                    $tot = ($fine-$inizio)-3600;
+
+                $saldo += $tot-28800;
+                //echo date("d.m.Y",mktime(0,0,0,date("n",$data),$j,date("Y",$data)))." - ".Utilita::oreMinDaSec($saldo)."<br>";
+            }
+
+            if(mktime(0,0,0,date("n",$data),$j+1,date("Y",$data))>time())
+                break;
+        }
+        return Utilita::oreMinDaSec($saldo);
+    }
 }
 ?>

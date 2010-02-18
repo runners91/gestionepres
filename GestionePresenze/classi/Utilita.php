@@ -203,7 +203,25 @@ class Utilita {
       */
      static function validaEmail($email) {
         return eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email);
-    }
+     }
+
+
+     /**
+      * Prende un tempo in secondi e ritorna il formato leggibile hh.mm
+      * @param String $sec secondi da trasformare in ore minuti
+      * @return String
+      */
+     static function oreMinDaSec($sec) {
+        if($sec<0){ $sec = $sec*(-1); $segno = "-"; }
+        $ore = floor($sec/3600);
+        $secondi_resto = $sec-$ore*3600;
+        $minuti = floor($secondi_resto/60);
+        $secondi_resto = $sec-$ore*3600-$minuti*60;
+        if($secondi_resto>=30) if($minuti<59) $minuti++; else{ $ore++; $minuti = 0; }
+        if($minuti<10) $minuti = "0".$minuti;
+        return $segno.$ore.".".$minuti;
+     }
+
 
 }
 

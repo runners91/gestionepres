@@ -90,11 +90,11 @@ class Calendario {
                         <select name="filtroPrio" onchange="redirect('<?php echo Utilita::getHomeUrlCompleto("prio"); ?>&prio='+this.value)">
                             <option value="0">- Priorit&agrave;</option>
                         <?php if($selected==1) $txt = 'selected="selected"'; ?>
-                            <option value="1" <?php echo $txt; ?>>Priotit&agrave 1</option>
+                            <option value="1" <?php echo $txt; ?>>Priorit&agrave 1</option>
                         <?php $txt = ""; if($selected==2) $txt = 'selected="selected"'; ?>
-                            <option value="2" <?php echo $txt; ?>>Priotit&agrave 2</option>
+                            <option value="2" <?php echo $txt; ?>>Priorit&agrave 2</option>
                         <?php $txt = ""; if($selected==3) $txt = 'selected="selected"'; ?>
-                            <option value="3" <?php echo $txt; ?>>Priotit&agrave 3</option>
+                            <option value="3" <?php echo $txt; ?>>Priorit&agrave 3</option>
                         </select>
                     </td>
                     <td>
