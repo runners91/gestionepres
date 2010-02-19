@@ -1,7 +1,7 @@
 -- MySQL Administrator dump 1.4
 --
 -- ------------------------------------------------------
--- Server version	5.1.36-community
+-- Server version	5.1.30-community
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -43,7 +43,7 @@ INSERT INTO `causali` (`id_motivo`,`nome`,`descrizione`) VALUES
  (2,'CONGEDO','In caso di matrimoni, funerali, traslochi, ecc...'),
  (3,'SCUOLA','In caso di presenza scolastica del dipendente'),
  (4,'VACANZA','In caso di vacanza del dipendente'),
- (5,'MEDICO','In caso di mezza giornata di vacanza del dipendente'),
+ (5,'MEDICO','In caso di mezza giornata di necessità mediche da parte di un paziente'),
  (6,'FUORI SEDE','In caso di presenza fuori sede');
 /*!40000 ALTER TABLE `causali` ENABLE KEYS */;
 
@@ -142,7 +142,7 @@ CREATE TABLE `eventi` (
   KEY `FK_event_2` (`fk_causale`),
   CONSTRAINT `FK_event_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`),
   CONSTRAINT `FK_event_2` FOREIGN KEY (`fk_causale`) REFERENCES `causali` (`id_motivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `eventi`
@@ -165,13 +165,19 @@ INSERT INTO `eventi` (`id_evento`,`data_da`,`data_a`,`priorita`,`commento`,`fk_d
  (158,'1266361200','1266361200',1,'',20,5,'2',NULL,'G'),
  (159,'1266361200','1266361200',1,'',19,6,'2',NULL,'G'),
  (161,'1266274800','1266274800',1,'',11,4,'2',NULL,'M'),
- (163,'1266015600','1266188400',1,'',11,1,'2',NULL,'G');
-INSERT INTO `eventi` (`id_evento`,`data_da`,`data_a`,`priorita`,`commento`,`fk_dipendente`,`fk_causale`,`stato`,`commento_segnalazione`,`durata`) VALUES 
+ (163,'1266015600','1266188400',1,'',11,1,'2',NULL,'G'),
  (170,'1267657200','1267830000',1,'',11,2,'2','','G'),
  (171,'1268694000','1268866800',1,'',11,4,'2','','G'),
  (172,'1266793200','1266793200',1,'',10,4,'2',NULL,'M'),
  (173,'1266966000','1266966000',1,'',10,3,'2',NULL,'P'),
- (174,'1266361200','1266361200',1,'',11,3,'1',NULL,'G');
+ (174,'1266361200','1266361200',1,'',11,3,'2','','G'),
+ (175,'1266188400','1266188400',3,'patenti',10,2,'2',NULL,'G'),
+ (176,'1265842800','1265842800',3,'',10,2,'2',NULL,'G'),
+ (177,'1265756400','1265756400',1,'',10,5,'2',NULL,'G'),
+ (178,'1265670000','1265670000',1,'',10,3,'2',NULL,'G'),
+ (179,'1266447600','1266447600',1,'',10,5,'2',NULL,'G'),
+ (180,'1265065200','1265065200',1,'',10,2,'2',NULL,'G'),
+ (181,'1265151600','1265151600',3,'',10,2,'2',NULL,'G');
 /*!40000 ALTER TABLE `eventi` ENABLE KEYS */;
 
 
@@ -185,9 +191,9 @@ CREATE TABLE `festivi` (
   `nome` varchar(45) NOT NULL,
   `data` varchar(45) DEFAULT NULL COMMENT 'data di cadenza del festivo',
   `durata` varchar(1) NOT NULL DEFAULT 'G',
-  `ricorsivo` int(1) unsigned NOT NULL,
+  `ricorsivo` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_festivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i giorni festivi che l''azienda riconosce';
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1 COMMENT='Contiene tutti i giorni festivi che l''azienda riconosce';
 
 --
 -- Dumping data for table `festivi`
@@ -198,7 +204,10 @@ INSERT INTO `festivi` (`id_festivo`,`nome`,`data`,`durata`,`ricorsivo`) VALUES
  (43,'MartedÃ¬ grasso','1266274800','P',0),
  (45,'prova','1266534000','G',0),
  (46,'prova M','1266966000','M',0),
- (47,'prova P','1266793200','P',0);
+ (47,'prova P','1266793200','P',0),
+ (48,'santo stefano','1266361200','G',0),
+ (49,'natale','1293231600','G',1),
+ (50,'456','1266447600','G',1);
 /*!40000 ALTER TABLE `festivi` ENABLE KEYS */;
 
 
@@ -225,7 +234,10 @@ INSERT INTO `festivi_effettuati` (`fk_filiale`,`fk_festivo`) VALUES
  (1,43),
  (1,45),
  (1,46),
- (1,47);
+ (1,47),
+ (1,48),
+ (1,49),
+ (1,50);
 /*!40000 ALTER TABLE `festivi_effettuati` ENABLE KEYS */;
 
 
@@ -414,7 +426,7 @@ CREATE TABLE `saldi` (
 /*!40000 ALTER TABLE `saldi` DISABLE KEYS */;
 INSERT INTO `saldi` (`fk_dipendente`,`saldo`,`saldo_strd`,`vac_spt`,`vac_rst`,`vac_matr`) VALUES 
  (3,3.05,4,25,15,0),
- (10,1.2,0,25,10,1),
+ (10,-201.49,0,25,10,1),
  (11,4,0,25,22,2),
  (21,0,0,25,25,0);
 /*!40000 ALTER TABLE `saldi` ENABLE KEYS */;
@@ -433,7 +445,7 @@ CREATE TABLE `timbrature` (
   PRIMARY KEY (`id_timbratura`),
   KEY `FK_timbrature_1` (`fk_dipendente`),
   CONSTRAINT `FK_timbrature_1` FOREIGN KEY (`fk_dipendente`) REFERENCES `dipendenti` (`id_dipendente`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='Contiene tutte le timbrature in entrata e in uscita che  i d';
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=latin1 COMMENT='Contiene tutte le timbrature in entrata e in uscita che  i d';
 
 --
 -- Dumping data for table `timbrature`
@@ -441,16 +453,20 @@ CREATE TABLE `timbrature` (
 
 /*!40000 ALTER TABLE `timbrature` DISABLE KEYS */;
 INSERT INTO `timbrature` (`id_timbratura`,`data`,`stato`,`fk_dipendente`) VALUES 
- (1,'1264576828','E',10),
- (2,'1264610127','U',10),
- (3,'1264663228','E',10),
- (4,'1264696527','U',10),
- (5,'1264749628','E',10),
- (6,'1264782927','U',10),
- (7,'1264836028','E',10),
- (8,'1264869327','U',10),
- (9,'1264577828','E',10),
- (10,'1264577128','U',10);
+ (72,'1266562800','E',10),
+ (73,'1266563160','U',10),
+ (74,'1266541800','E',10),
+ (76,'1266542400','U',10),
+ (78,'1265322600','E',10),
+ (79,'1265333400','U',10),
+ (80,'1266584940','E',10),
+ (81,'1266585300','U',10),
+ (82,'1266543000','E',10),
+ (83,'1266561000','U',10),
+ (84,'1266561660','E',10),
+ (85,'1266562020','U',10),
+ (86,'1266541440','U',10),
+ (87,'1266538860','E',10);
 /*!40000 ALTER TABLE `timbrature` ENABLE KEYS */;
 
 
