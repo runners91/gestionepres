@@ -309,7 +309,7 @@ tr.rigaGriglia:hover {
     border: 1px solid black;
     text-align: center;
     height: 5px;
-    padding: 0 15px 0 15px;
+    padding: 0 10px 0 10px;
 }
 .negativo {
     background-color: #F78181;
