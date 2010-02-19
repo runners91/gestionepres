@@ -13,7 +13,7 @@
 
     <table>
         <tr>
-            <td>
+            <td height="400">
                 <?php Utilita::stampaTabella($rs); ?>
             </td>
             <td>
