@@ -35,9 +35,9 @@ class Timbratura {
      */
     function inserisciTimbratura(){
         if(!isset($this->errori['data'])>0){
-            // cerco se ce l'ultima timbratura effettuata
-            $sql = "select id_timbratura,data,stato from timbrature where fk_dipendente = ? and data <= ? order by 2 desc limit 1";
-            $rs = Database::getInstance()->eseguiQuery($sql,array($this->fk_dipendente,$this->data));
+            // cerco se ce l'ultima timbratura effettuata (nel giorno attuale)
+            $sql = "select id_timbratura,data,stato from timbrature where fk_dipendente = ? and data >= ? and data <= ? order by 2 desc limit 1";
+            $rs = Database::getInstance()->eseguiQuery($sql,array($this->fk_dipendente,mktime(0,0,0,date("n",$this->data),date("j",$this->data),date("Y",$this->data)),$this->data));
             if($rs->fields['data']) $this->data_prec = $rs->fields['data']; else $this->data_prec = 1;
             if($rs->fields['stato']=='E') $this->stato = "U"; else $this->stato = "E";
 

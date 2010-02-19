@@ -96,18 +96,22 @@
                         // celle delle timbrature
                         $rs = Database::getInstance()->eseguiQuery($sql,array($_SESSION['id_utente'],mktime(0,0,0,date("n",$data),$j,date("Y",$data)),mktime(23,59,59,date("n",$data),$j,date("Y",$data))));
                         $i = 0;
-                        $class = "entrata";
                         while(!$rs->EOF){
-                            echo '<td class="griglia '.$class.'">';
-                                if($rs->fields['stato']=="E" && $i%2==0){
+                            if($rs->fields['stato']=="E" && $i%2==0){
+                                echo '<td class="griglia entrata">';
                                     echo date("H:i",$rs->fields['data'])." E";
-                                    $class = "uscita";
-                                }
-                                else if($rs->fields['stato']=="U" && $i%2==1){
+                                echo '</td>';
+                            }
+                            else if($rs->fields['stato']=="U" && $i%2==1){
+                                echo '<td class="griglia uscita">';
                                     echo date("H:i",$rs->fields['data'])." U";
-                                    $class = "entrata";
-                                }
-                            echo '</td>';
+                                echo '</td>';
+                            }
+                            else{
+                                echo '<td class="griglia errore">';
+                                    echo date("H:i",$rs->fields['data'])." ".$rs->fields['stato'];
+                                echo '</td>';
+                            }
                             $rs->MoveNext();
                             $i++;
                         }
