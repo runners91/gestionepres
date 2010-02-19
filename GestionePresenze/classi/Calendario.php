@@ -346,7 +346,7 @@ class Calendario {
             $returnB = false;
         }
 
-        if(strstr(":",$data[2])>0){
+        if(strpos($data[2],":")>0){
             $orario = explode(":",$data[2]);
             $ore    = substr($orario[0],-2);
             $min    = $orario[1];
@@ -361,7 +361,7 @@ class Calendario {
             }
         }
         else{
-            $return .= "- L'orario in ".$name." immessa non &egrave; valida<br/>";
+            $return .= "- L'orario ".$name." immessa non &egrave; valido<br/>";
             $returnB = false;
         }
 

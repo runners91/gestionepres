@@ -19,6 +19,12 @@
             <td>
                 <div class="aggiungiEventoContainer">
                     <form action="#" method="POST">
+                        <?php
+                            if(isset($_POST['data'])){
+                                $t = new Timbratura($_POST['data']);
+                                $t->inserisciTimbratura();
+                            }
+                        ?>
                         <table>
                             <tr>
                                 <td colspan="2" class="cellaTitoloTask">
@@ -30,15 +36,20 @@
                                     Orario:
                                 </td>
                                 <td>
-                                    <input id="sel1" type="text" name="data" value="<?php echo date("d.m.y H:i",time()) ?>" />
+                                    <input id="sel1" <?php echo isset($t->errori["data"])?"class='errore'":""; ?> type="text" name="data" value="<?php if(isset($_POST['data'])) echo $_POST['data']; else echo date("d.m.y H:i",time()); ?>" />
                                 </td>
                                 <td>
                                     <input value="" type="reset" onclick="return showCalendar('sel1','%d.%m.%Y %H:%M','true');" class="imgCal" />
                                 </td>
                             </tr>
                             <tr>
+                                <td colspan="3">
+                                    <span class="messaggioErrore"><?php echo $t->errori["data"]; ?></span>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="messaggioTaskOk" colspan="3">
-
+                                    <?php echo $t->errori['timbratura'] ?>
                                 </td>
                             </tr>
                             <tr>
@@ -47,12 +58,6 @@
                                 </td>
                             </tr>
                         </table>
-                        <?php
-                            if(isset($_POST['data'])){
-                                $t = new Timbratura($_POST['data']);
-                                $t->inserisciTimbratura();
-                            }
-                        ?>
                     </form>
                 </div>
             </td>

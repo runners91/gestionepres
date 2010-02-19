@@ -5,7 +5,7 @@
     $data = Calendario::getCalData($_POST['m']);
     $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
     $giorni = array(1=>'LU','MA','ME','GI','VE','SA','DO');
-
+    $causale = "";
 ?>
 
     <table class="timbrature">
@@ -48,7 +48,8 @@
                         $rs  = Database::getInstance()->eseguiQuery($sql,array($_SESSION['id_utente'],$dataGiorno,$dataGiorno));
                         echo '<td class="griglia">';
                             echo $rs->fields['nome'];
-                            if(strlen($rs->fields['nome'])>0) $tot = 28800; /* 8 ore */
+                            $causale = $rs->fields['nome'];
+                            if(strlen($causale)>0) $tot = 28800; /* se ce una causale 8 ore vengono messe auto */
                         echo '</td>';
 
                         // cella totale ore giornaliere
@@ -66,8 +67,10 @@
                             $rs->MoveNext();
                             $i++;
                         }
-                        if(($fine-$inizio)-$tot<3600 && $tot>0 && ($fine-$inizio)>0) /* se non è stata fatta 1 ora di pausa viene tolta automaticamente*/
+                        if(($fine-$inizio)-$tot<3600 && $tot>0 && ($fine-$inizio)>0){ /* se non è stata fatta 1 ora di pausa viene tolta automaticamente */
                             $tot = ($fine-$inizio)-3600;
+                            if(strlen($causale)>0) $tot += 28800; /* 8 ore causale */
+                        }
 
                         if($tot>=28800){ /* 8 ore */
                             echo '<td class="griglia">';
