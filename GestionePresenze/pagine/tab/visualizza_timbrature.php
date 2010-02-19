@@ -7,7 +7,6 @@
     $giorni = array(1=>'LU','MA','ME','GI','VE','SA','DO');
     $causale = "";
 ?>
-
     <table class="timbrature">
         <tr>
             <th align="center">
@@ -27,6 +26,10 @@
             <th colspan="4" align="center">
                 Timbrature
             </th>
+            <td>
+                <input id="bottElimina" type="button" value="ELIMINA" class="bottPaginazione" style="display:none" onclick="redirect('?pagina=utente&tab=visualizza_timbrature&elimina='+document.getElementById('elimina').value)" />
+                <input id="elimina" type="hidden" name="elimina"  /> <!-- campo contenente l'id della timbratura da eliminare -->
+            </td>
         </tr>
         <?php
             for($j=1;;$j++){
@@ -98,17 +101,17 @@
                         $i = 0;
                         while(!$rs->EOF){
                             if($rs->fields['stato']=="E" && $i%2==0){
-                                echo '<td class="griglia entrata">';
+                                echo '<td class="griglia entrata" onclick="eliminaTimbratura(this,'.$rs->fields['id_timbratura'].')">';
                                     echo date("H:i",$rs->fields['data'])." E";
                                 echo '</td>';
                             }
                             else if($rs->fields['stato']=="U" && $i%2==1){
-                                echo '<td class="griglia uscita">';
+                                echo '<td class="griglia uscita" onclick="eliminaTimbratura(this,'.$rs->fields['id_timbratura'].')">';
                                     echo date("H:i",$rs->fields['data'])." U";
                                 echo '</td>';
                             }
                             else{
-                                echo '<td class="griglia errore">';
+                                echo '<td class="griglia errore" onclick="eliminaTimbratura(this,'.$rs->fields['id_timbratura'].')">';
                                     echo date("H:i",$rs->fields['data'])." ".$rs->fields['stato'];
                                 echo '</td>';
                             }
