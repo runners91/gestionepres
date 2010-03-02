@@ -186,7 +186,7 @@ class stampaEvento {
                                     if($_POST['action']=="inserisci"){
                                         if($evt->inserisciEvento()){
                                             echo "Evento inserito con successo";
-                                           // Utilita::reload();
+                                            Utilita::reload();
                                         }
                                     }
                                     else if($_POST['action']=="aggiorna"){
