@@ -456,3 +456,7 @@ tr.rigaGriglia:hover {
 span.puntatore:hover,.puntatore:hover {
      cursor: pointer;
 }
+
+#listaUtenti {
+    position:absolute;
+}

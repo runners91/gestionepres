@@ -431,9 +431,9 @@ class Calendario {
     static function getFestiviGiornoPerFiliale($filiale,$data){
         $rs = Database::getInstance()->eseguiQuery("    SELECT f.id_festivo as id, f.nome, f.durata as durata,f.ricorsivo
                                                         FROM festivi f, festivi_effettuati fe
-                                                        WHERE f.id_festivo = fe.fk_festivo
-                                                        AND fe.fk_filiale = ?
-                                                        AND f.data = ?;",array($filiale,$data));
+                                                        WHERE f.id_festivo = fe.fk_festivo AND
+                                                        fe.fk_filiale = ? AND
+                                                        (f.data = ? OR FROM_UNIXTIME(f.data,'%d.%c') = ? AND f.ricorsivo = 1);",array($filiale,$data,date("j.n",$data)));
 
 
         return $rs;
