@@ -86,7 +86,7 @@ class Evento {
     * Esegue l'inserimento nel Database e ne ritorna la riuscita (true/false)
     * @return boolean
     */
-    function inserisciEvento(){
+       function inserisciEvento(){
         if(sizeof($this->errori)>0) return false;
         $festivo = true;
         if($this->durata != "G") $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
@@ -111,8 +111,12 @@ class Evento {
                  OR data_da >= ? AND data_a <= ?)";
         $rs = Database::getInstance()->eseguiQuery($sql,array($this->fk_dipendente,$this->data_da,$this->data_da,$this->data_a,$this->data_a,$this->data_da,$this->data_a));
         if($rs->fields['totEventi']==0 && $festivo){
-            $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale,durata) ";
-            $sql .= "values (?,?,?,?,?,?,?,?,?);";
+            if($this->fk_causale == 4){
+                $giorni = $this->contaGiorni();
+                Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst - ? WHERE fk_dipendente = ?",array($giorni,$this->fk_dipendente));
+            }
+            $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale,durata)
+                     values (?,?,?,?,?,?,?,?,?);";
             return Database::getInstance()->eseguiQuery($sql,array($this->data_da,$this->data_a,$this->priorita,$this->commento,$this->stato,$this->commento_segn,$this->fk_dipendente,$this->fk_causale,$this->durata));
         }
         else{
@@ -151,7 +155,33 @@ class Evento {
         }
    }
 
-
+    function contaGiorni() {
+        $giorni = 0;
+        $incremento = 1;
+        if($this->durata != "G")
+            $incremento = 0.5;
+        $i=date("j",$this->data_da);
+        while(true) {
+            $data = mktime(0, 0, 0, date("n",$this->data_da),$i,date("Y",$this->data_da));
+            if(date("N",$data)<=5) {
+                $sql = "SELECT durata
+                        FROM filiali f, dipendenti d,festivi_effettuati fe,festivi fs
+                        WHERE f.id_filiale = d.fk_filiale
+                        AND fe.fk_filiale = f.id_filiale
+                        AND fs.id_festivo = fe.fk_festivo
+                        AND (fs.data = ? OR FROM_UNIXTIME(fs.data,'%d.%c') = ? AND fs.ricorsivo = 1)
+                        AND d.id_dipendente = ?;";
+                $rs = Database::getInstance()->eseguiQuery($sql,array($data,date("j.n",$data) ,$this->fk_dipendente));
+                if($rs->rowCount()==0)
+                    $giorni += $incremento;
+                else if($rs->fields["durata"]!="G")
+                    $giorni += 0.5;
+            }
+            $i++;
+            if($data == $this->data_a)
+                break;
+        }
+   }
     /**
      * Ritorna il titolo del form in base ai dati contenuti nell'oggetto Evento
      * @return String

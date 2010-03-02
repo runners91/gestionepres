@@ -168,6 +168,7 @@ class Calendario {
         $data = Calendario::getCalData($m);
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
+
         ?>
         <div id="calendario">
                 <table>
@@ -195,12 +196,12 @@ class Calendario {
                                         
                                     $tot = $festivo->rowCount();
                                     
-                                    if($j==$nrGiorno){
+                                    if($j==$nrGiorno) {
                                         echo '<td class="cellaSettimana">';
                                             echo "Sett-".date("W",mktime(0,0,0,date("n",$data),$j+7,date("Y",$date)));
                                         echo '</td>';
                                     }
-                                    else{
+                                    else {
                                         $class = '';
                                         if(date("j-n-o",time())==date("j-n-o",$dataGiorno))
                                             $class = ' cellaDataOggi';
