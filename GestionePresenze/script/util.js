@@ -25,12 +25,13 @@ function vediStati(commento){
     $("#stato").slideDown('fast');
     $("#vediCommento").slideUp('fast');
     $("#modificaCommento").slideUp('fast');
-    window.setInterval('nascondiStati('+commento+')', 2500)
+    window.setTimeout('nascondiStati('+commento+')', 2500)
 }
 function nascondiStati(commento){
     $('#stato').slideUp('fast');
     if(commento==1)
         $("#vediCommento").slideDown('fast');
+
 }
 
 function utenti(){
