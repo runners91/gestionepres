@@ -2,7 +2,9 @@
 include("classi/Database.php");
 $utente = $_POST["utente"];
 $rs = Database::getInstance()->eseguiQuery("SELECT * FROM dipendenti WHERE username like ?",array("%".$utente."%"));
+echo $rs->rowCount()."||".$rs->fields["username"]."||";
 ?>
+
 <style>
     table.listaUtenti{
         background-color:#D9DADE;
@@ -18,7 +20,7 @@ $rs = Database::getInstance()->eseguiQuery("SELECT * FROM dipendenti WHERE usern
     <?php
     $i=0;
     while(!$rs->EOF){
-        echo '<tr class="'.($i%2?"odd":"even").'"" onclick="cercaUtente(\''.$rs->fields["username"].'\');">';
+        echo '<tr class="'.($i%2?"odd":"even").'" onclick="cercaUtente(\''.$rs->fields["username"].'\');">';
             echo '<td>'.str_ireplace($utente, "<b>".$utente."</b>", $rs->fields["username"]).'</td>';
         echo '</tr>';
         $i++;

@@ -38,9 +38,14 @@ function utenti(){
     $.ajax({
         type: "POST",
         url: "listaUtenti.php",
-        data: "utente="+$("#username").val(),
+        data: "tipo=ricerca&utente="+$("#username").val(),
         success: function(html){
-            $("#listaUtenti").html(html);
+            var tmp = html.split("||");
+            if(tmp[0]==1) {
+               cercaUtente(tmp[1])
+            }
+            else
+                $("#listaUtenti").html(tmp[2]);
         }
     });
 }
