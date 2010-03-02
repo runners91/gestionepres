@@ -9,6 +9,9 @@ function redirect(href){
 /**** Inserisce nel textfield elimina l'id della timbratura da eliminare e mostra il bottone elimina ***/
 /**** Tiene in slTd un riferimento a qual'è l'ultima cella modificata, per farla tornare non selezionata in visualizzazione ***/
 function eliminaTimbratura(td,id){
+    if(document.getElementById("successoTimbratura")) document.getElementById("successoTimbratura").style.display = 'none';
+    if(document.getElementById("erroreTimbratura")) document.getElementById("erroreTimbratura").style.display = 'none';
+
     if(slTd) slTd.className = className;
     if(slTd!=td){
         slTd = td;

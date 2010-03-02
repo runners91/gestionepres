@@ -13,7 +13,7 @@
 
     <table>
         <tr>
-            <td height="400">
+            <td>
                 <?php Utilita::stampaTabella($rs); ?>
             </td>
             <td>
@@ -21,7 +21,9 @@
                     <form action="#" method="POST">
                         <?php
                             if(isset($_POST['data'])){
-                                $t = new Timbratura($_POST['data']);
+                                $t = new Timbratura();
+                                $t->setDipendente($_SESSION['id_utente']);
+                                $t->setData($_POST['data']);
                                 $t->inserisciTimbratura();
                             }
                         ?>
