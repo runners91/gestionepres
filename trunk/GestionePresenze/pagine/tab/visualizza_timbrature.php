@@ -1,5 +1,10 @@
 <?php
 
+    if(isset($_GET['elimina'])){
+        Timbratura::eliminaTimbratura($_GET['elimina']);
+    }
+
+
     Calendario::stampaParametriCalendario($_POST['m'],false);
 
     $data = Calendario::getCalData($_POST['m']);
@@ -27,7 +32,7 @@
                 Timbrature
             </th>
             <td>
-                <input id="bottElimina" type="button" value="ELIMINA" class="bottPaginazione" style="display:none" onclick="redirect('?pagina=utente&tab=visualizza_timbrature&elimina='+document.getElementById('elimina').value)" />
+                <input id="bottElimina" type="button" value="elimina" class="bottPaginazione" style="display:none" onclick="redirect('?pagina=utente&tab=visualizza_timbrature&data=<?php echo $data; ?>&elimina='+document.getElementById('elimina').value)" />
                 <input id="elimina" type="hidden" name="elimina"  /> <!-- campo contenente l'id della timbratura da eliminare -->
             </td>
         </tr>
@@ -123,7 +128,7 @@
                 echo '</tr>';
                 if(date("n",mktime(0,0,0,date("n",$data),$j+1,date("Y",$data)))!=date("n",$data)) // tutto il mese
                     break;
-                if(mktime(0,0,0,date("n",$data),$j+1,date("Y",$data))>time()) // oppure fino ad oggi
+                else if(mktime(0,0,0,date("n",$data),$j+1,date("Y",$data))>time()) // oppure fino ad oggi
                     break;                    
             }
         ?>

@@ -311,6 +311,9 @@ tr.rigaGriglia:hover {
     height: 5px;
     padding: 0 10px 0 10px;
 }
+.selezionato {
+    border: 1px dashed blue;
+}
 .negativo {
     background-color: #F78181;
 }
