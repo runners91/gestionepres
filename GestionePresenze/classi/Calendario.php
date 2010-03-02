@@ -43,12 +43,12 @@ class Calendario {
      * @param int $m indica lo spostamento di mese (+1/-1)
      * @param boolean $parRicerca indica se stampare anche i parametri di ricerca (tipo,utente,...)
      */
-    static function stampaParametriCalendario($m = 0, $parRicerca = true,$utenti = null){
+    static function stampaParametriCalendario($m = 0, $parRicerca = true,$utenti = null, $action = "#"){
         $data = Calendario::getCalData($m);
         $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
         $giorni = array(1=>'Luned&igrave','Marted&igrave','Mercoled&igrave','Gioved&igrave','Venerd&igrave','Sabato','Domenica');
         ?>
-        <form name="calendarioNav" action="#" method="POST">
+        <form name="calendarioNav" action="<?php echo $action; ?>" method="POST">
             <table>
                 <tr>
                     <td>

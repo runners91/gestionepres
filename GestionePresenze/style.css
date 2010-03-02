@@ -18,6 +18,7 @@ body {
 #contenuto{
     border: 1px solid blue;
     padding: 15px;
+    height: 80%;
 }
 #footer {
     border-top: 1px solid black;
@@ -310,6 +311,12 @@ tr.rigaGriglia:hover {
     text-align: center;
     height: 5px;
     padding: 0 10px 0 10px;
+}
+.successoTimbratura {
+    color: green;
+}
+.erroreTimbratura {
+    color: red;
 }
 .selezionato {
     border: 1px dashed blue;

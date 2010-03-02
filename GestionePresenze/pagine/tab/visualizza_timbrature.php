@@ -1,11 +1,13 @@
 <?php
 
     if(isset($_GET['elimina'])){
-        Timbratura::eliminaTimbratura($_GET['elimina']);
+        $t = new Timbratura();
+        $t->getValoriDB($_GET['elimina']);
+        $t->eliminaTimbratura($_GET['elimina']);
     }
 
 
-    Calendario::stampaParametriCalendario($_POST['m'],false);
+    Calendario::stampaParametriCalendario($_POST['m'],false,null,"http://localhost/GestionePresenze/index.php?pagina=utente&tab=visualizza_timbrature");
 
     $data = Calendario::getCalData($_POST['m']);
     $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
@@ -31,7 +33,12 @@
             <th colspan="4" align="center">
                 Timbrature
             </th>
-            <td>
+            <td class="cellaSpazio"></td>
+            <td colspan="5">
+                <?php
+                    if($t->errori['eliminaNok']) echo '<div id="erroreTimbratura" class="erroreTimbratura">'.$t->errori['eliminaNok'].'</div>';
+                    if($t->errori['eliminaOk']) echo '<div id="successoTimbratura" class="successoTimbratura">'.$t->errori['eliminaOk'].'</div>';
+                ?>
                 <input id="bottElimina" type="button" value="elimina" class="bottPaginazione" style="display:none" onclick="redirect('?pagina=utente&tab=visualizza_timbrature&data=<?php echo $data; ?>&elimina='+document.getElementById('elimina').value)" />
                 <input id="elimina" type="hidden" name="elimina"  /> <!-- campo contenente l'id della timbratura da eliminare -->
             </td>

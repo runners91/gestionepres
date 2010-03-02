@@ -19,15 +19,26 @@ class Timbratura {
      *
      * @param String $data data in formato dd.mm.yyyy hh:mm
      */
-    function  __construct($data){
-        $this->fk_dipendente = $_SESSION['id_utente'];
-        $this->setData($data);
+    function  __construct(){
+
+    }
+
+    function getValoriDB($id_timbratura){
+        $rs = Database::getInstance()->eseguiQuery("select * from timbrature where id_timbratura = ?",array($this->id));
+
+        $this->id             = $id_timbratura;
+        $this->data           = $rs->fields['data'];
+        $this->fk_dipendente  = $rs->fields['fk_dipendente'];
     }
 
     function setData($d){
         if(!Calendario::checkDataOra($d, "della timbratura", false))
             $this->aggiungiErrore(Calendario::checkDataOra($d, "della timbratura", true), "data");
         $this->data = Calendario::getTimestampOre($d);
+    }
+
+    function setDipendente($d){
+        $this->fk_dipendente = $d;
     }
 
     /**
@@ -63,9 +74,15 @@ class Timbratura {
      * Elimina una timbratura
      * @param int $id id della timbratura da eliminare
      */
-    static function eliminaTimbratura($id){
-        $sql = "delete from timbrature where id_timbratura = ?";
-        Database::getInstance()->eseguiQuery($sql,array($id));
+    function eliminaTimbratura($id){
+        try{
+            $sql = "delete from timbrature where id_timbratura = ?";
+            Database::getInstance()->eseguiQuery($sql,array($this->id));
+            $this->aggiungiErrore("Timbratura eliminata con successo", "eliminaOk");
+        }
+        catch(Exception $e){
+            $this->aggiungiErrore("Impossibile eliminare la timbratura", "eliminaNok");
+        }
     }
 
     /**
