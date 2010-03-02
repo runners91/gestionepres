@@ -147,7 +147,7 @@ class Dipendente {
         $this->id = $rs->fields["id_dipendente"];
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
-        $this->username = $username;
+        $this->username = $rs->fields["username"];;
         $this->filiale = $rs->fields["fk_filiale"];
         $this->email = $rs->fields["email"];
         $this->stato = $rs->fields["stato"];

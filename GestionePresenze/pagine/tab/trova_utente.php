@@ -4,7 +4,10 @@
     if($utente) {
         $d = new Dipendente();
         $d->trovaUtenteDaUsername($utente);
-        stampaInfoUtente($d);
+        if($d->username)
+            stampaInfoUtente($d);
+        else
+            echo "Nessun utente trovato";
     }
 ?>
 
