@@ -1,31 +1,3 @@
-<script>
-    function cambiaStato(stato){
-        $("#stato").slideUp('fast');
-        $("#nuovoStato").val(stato);
-        $("#modificaCommento").slideDown('fast');
-        $("#commento_stato").focus();
-        $("#vediCommento").slideUp('fast');
-    }
-
-    function cambiaCommento(stato,commento){
-        $("#vediCommento").slideUp('fast');
-        $("#nuovoStato").val(stato);
-        $("#commento_stato").val(commento);
-        $("#modificaCommento").slideDown('fast');
-        $("#commento_stato").focus();
-    }
-    function vediStati(){
-        $("#stato").slideDown('fast');
-        $("#vediCommento").slideUp('fast');
-        $("#modificaCommento").slideUp('fast');
-    }
-    function nascondiStati(commento){
-        $('#stato').slideUp('fast');
-        if(commento==1)
-            $("#vediCommento").slideDown('fast');
-    }
-</script>
-
 <?php
 
 function creaMenuItem($paginaAttuale,$pagina){
@@ -52,20 +24,20 @@ function creaMenu($pagina){
         stampaMessaggio($d);
     ?>
 </div>
-<div id="stato">
+<div id="stato"">
     <table>
         <tr>
-            <td onclick="cambiaStato(1);">
+            <td onclick="cambiaStato(1,'');">
                 <img src="./img/stato1.png" alt="disp."/> Disponibile
             </td>
         </tr>
         <tr>
-            <td onclick="cambiaStato(2);">
+            <td onclick="cambiaStato(2,'Occupato');">
                 <img src="./img/stato2.png" alt="occ."/> Occupato
             </td>
         </tr>
         <tr>
-            <td onclick="cambiaStato(3);">
+            <td onclick="cambiaStato(3,'Non al computer');">
                 <img src="./img/stato3.png" alt="non al pc."/> Non al computer
             </td>
         </tr>

@@ -1,10 +1,9 @@
+<table>
+    <tr>
+        <td style="float:left" valign="top">
 <?php
     if($_POST){
         $data = $_POST["data"];
-        /*if($_POST["ricorsivo"]) {
-            $tmpData = explode(".", $data);
-            $data = $tmpData[0].".".$tmpData[1].".2000";
-        }*/
         $f = new Festivo();
         $f->setNome($_POST["nome"]);
         $f->setRicorsivo(isset($_POST["ricorsivo"]));
@@ -14,21 +13,21 @@
         
         if(!$f->insersciFestivo() && sizeof($f->getErrori())>0)
             stampaFormAggiungiFestivo($f, $f->getErrori());
-        else
+        else  {
             stampaFormAggiungiFestivo(new Festivo());
+            $successo = 'Il festivo &egrave; stato aggiunto con successo';
+        }
         
-        /*$filiale = 1;
-        $rs = Database::getInstance()->eseguiQuery("SELECT id_festivo as id,nome,ricorsivo,date_format(FROM_UNIXTIME(f.data),'%d.%m.%y') as data,quantita FROM festivi as f,festivi_effettuati as fe WHERE fe.fk_festivo = f.id_festivo AND fe.fk_filiale = ?",array($filiale));
-        if($rs)
-            Utilita::stampaTabella($rs);
-
-*/
     }
     else {
         stampaFormAggiungiFestivo(new Festivo());
     }
 ?>
-
+        </td>
+        <td style="width:30px;"></td>
+        <td valign="top" ><div class="messaggioTaskOk"><?php echo $successo; ?> </div></td>
+    </tr>
+</table>
 <?php
     function stampaFormAggiungiFestivo($f,$e=null){
 ?>

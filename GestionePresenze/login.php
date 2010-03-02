@@ -84,7 +84,7 @@ function stampaForm($messaggio = "",$errori = array()){ ?>
 
 function stampaMessaggio($d){ ?>
     Buongiorno <a class="linkUser" href="?pagina=utente"><?php echo $_SESSION['username']; ?></a>
-    (<a class="linkAiuti" href="?azione=logout">Logout</a>) <img src="./img/stato<?php echo $d->stato;?>.png" onmouseover="vediStati();"/>
+    (<a class="linkAiuti" href="?azione=logout">Logout</a>) <img src="./img/stato<?php echo $d->stato;?>.png" onmouseover="vediStati(<?php echo strlen(trim($d->commento_stato))>0;?>);"/>
 <?php
 }
 ?>

@@ -1,19 +1,19 @@
 <?php
-    $utente = $_POST["utente"];
+    $utente = $_POST["username"];
     stampaFormRicerca($utente);
     if($utente) {
         $d = new Dipendente();
-        $d->trovaUtenteDaId($utente);
+        $d->trovaUtenteDaUsername($utente);
         stampaInfoUtente($d);
     }
 ?>
 
 <?php function stampaFormRicerca($utente){ ?>
-    <form method="POST">
+    <!--form method="POST">
         <select name="utente" onchange="this.form.submit();">
             <option value="0">-</option>
             <?php
-                $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,username FROM dipendenti");
+               /* $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,username FROM dipendenti");
                 while(!$rs->EOF){
                     $selected="";
                     $id = $rs->fields["id_dipendente"];
@@ -21,9 +21,13 @@
                         $selected="selected";
                     echo '<option value="'.$id.'" '.$selected.'>'.$rs->fields["username"].'</option>';
                     $rs->MoveNext();
-                }
+                }*/
             ?>
-        </select>
+        </select-->
+        <form method="POST" name="formCercaUtente">
+            <input type="text" name="username" onkeyup="utenti()" id="username" />
+            <div id="listaUtenti"></div>
+        </form>
     </form>
 <?php } 
 
