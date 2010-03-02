@@ -1,13 +1,24 @@
 <?php
-    $utente = $_POST["username"];
+    $utente = trim($_POST["username"]);
     stampaFormRicerca($utente);
     if($utente) {
         $d = new Dipendente();
         $d->trovaUtenteDaUsername($utente);
         if($d->username)
             stampaInfoUtente($d);
-        else
-            echo "Nessun utente trovato";
+        else {
+            $rs = Database::getInstance()->eseguiQuery("SELECT username FROM dipendenti WHERE username like ?",array("%".$utente."%"));
+            if($rs->rowCount()>0){
+                echo "Utenti trovati:";
+                while(!$rs->EOF) {
+                    $username = $rs->fields["username"];
+                    echo '<br /><a href="javascript: cercaUtente(\''.$username.'\')">'.$username.'</a>';
+                    $rs->MoveNext();
+                }
+            }
+            else
+                echo "Nessun utente trovato";
+        }
     }
 ?>
 

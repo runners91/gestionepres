@@ -1,7 +1,7 @@
 <?php
 include("classi/Database.php");
 $utente = $_POST["utente"];
-$rs = Database::getInstance()->eseguiQuery("SELECT * FROM dipendenti WHERE username like ?",array("%".$utente."%"));
+$rs = Database::getInstance()->eseguiQuery("SELECT username FROM dipendenti WHERE username like ?",array("%".$utente."%"));
 $count = $rs->rowCount();
 echo $rs->rowCount()."||".$rs->fields["username"]."||";
 ?>
