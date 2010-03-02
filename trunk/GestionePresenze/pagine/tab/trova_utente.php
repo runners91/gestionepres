@@ -13,7 +13,8 @@
 
 <?php function stampaFormRicerca($utente){ ?>
         <form method="POST" name="formCercaUtente">
-            <input type="text" name="username" onkeyup="utenti()" id="username" />
+            <input type="text" name="username" onkeyup="utenti()" id="username" autocomplete="off"/>
+            <input type="submit" value="cerca">
             <div id="listaUtenti"></div>
         </form>
     </form>

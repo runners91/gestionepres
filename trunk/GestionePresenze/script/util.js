@@ -57,11 +57,9 @@ function utenti(){
         data: "tipo=ricerca&utente="+$("#username").val(),
         success: function(html){
             var tmp = html.split("||");
-            if(tmp[0]==1) {
-               cercaUtente(tmp[1])
-            }
-            else
-                $("#listaUtenti").html(tmp[2]);
+            if(tmp[0]==1) 
+               $("#username").val(tmp[1]);
+            $("#listaUtenti").html(tmp[2]);
         }
     });
 }
