@@ -90,23 +90,20 @@ class Evento {
         if(sizeof($this->errori)>0) return false;
         $festivo = true;
         if($this->durata != "G") $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
-
-        if($this->data_da == $this->data_a) {
-            $sql = "SELECT count(*) as festivo
-                    FROM filiali f, dipendenti d,festivi_effettuati fe,festivi fs
-                    WHERE f.id_filiale = d.fk_filiale
-                    AND fe.fk_filiale = f.id_filiale
-                    AND fs.id_festivo = fe.fk_festivo
-                    AND fs.durata = 'G'
-                    AND (fs.data = ? OR FROM_UNIXTIME(fs.data,'%d.%c') = ? AND fs.ricorsivo = 1)
-                    AND d.id_dipendente = ?;";
-            $rs = Database::getInstance()->eseguiQuery($sql,array($this->data_a,date("j.n",$this->data_a) ,$this->fk_dipendente));
-            if($rs->fields["festivo"]==0)
-                $festivo = true;
-            else {
-                $festivo = false;
-                $errore = "non &egrave; possibile aggiungere eventi in un giorno festivo";
-            }
+        $sql = "SELECT count(*) as festivo
+                FROM filiali f, dipendenti d,festivi_effettuati fe,festivi fs
+                WHERE f.id_filiale = d.fk_filiale
+                AND fe.fk_filiale = f.id_filiale
+                AND fs.id_festivo = fe.fk_festivo
+                AND fs.durata = 'G'
+                AND (fs.data = ? OR FROM_UNIXTIME(fs.data,'%d.%c') = ? AND fs.ricorsivo = 1)
+                AND d.id_dipendente = ?;";
+        $rs = Database::getInstance()->eseguiQuery($sql,array($this->data_da,date("j.n",$this->data_da) ,$this->fk_dipendente));
+        if($rs->fields["festivo"]==0)
+            $festivo = true;
+        else {
+            $festivo = false;
+            $errore = "non &egrave; possibile aggiungere eventi in un giorno festivo";
         }
         $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." fk_dipendente= ?
                  AND (data_da <= ? AND data_a >= ?
