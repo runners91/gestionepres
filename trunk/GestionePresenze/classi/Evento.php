@@ -88,14 +88,32 @@ class Evento {
     */
     function inserisciEvento(){
         if(sizeof($this->errori)>0) return false;
-        if($this->durata != "G")
-            $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
+        $festivo = true;
+        if($this->durata != "G") $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
+
+        if($this->data_da == $this->data_a) {
+            $sql = "SELECT count(*) as festivo
+                    FROM filiali f, dipendenti d,festivi_effettuati fe,festivi fs
+                    WHERE f.id_filiale = d.fk_filiale
+                    AND fe.fk_filiale = f.id_filiale
+                    AND fs.id_festivo = fe.fk_festivo
+                    AND fs.durata = 'G'
+                    AND (fs.data = ? OR FROM_UNIXTIME(fs.data,'%d.%c') = ? AND fs.ricorsivo = 1)
+                    AND d.id_dipendente = ?;";
+            $rs = Database::getInstance()->eseguiQuery($sql,array($this->data_a,date("j.n",$this->data_a) ,$this->fk_dipendente));
+            if($rs->fields["festivo"]==0)
+                $festivo = true;
+            else {
+                $festivo = false;
+                $errore = "non &egrave; possibile aggiungere eventi in un giorno festivo";
+            }
+        }
         $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." fk_dipendente= ?
                  AND (data_da <= ? AND data_a >= ?
                  OR data_da <= ? AND data_a >= ?
                  OR data_da >= ? AND data_a <= ?)";
         $rs = Database::getInstance()->eseguiQuery($sql,array($this->fk_dipendente,$this->data_da,$this->data_da,$this->data_a,$this->data_a,$this->data_da,$this->data_a));
-        if($rs->fields['totEventi']==0){
+        if($rs->fields['totEventi']==0 && $festivo){
             $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale,durata) ";
             $sql .= "values (?,?,?,?,?,?,?,?,?);";
             return Database::getInstance()->eseguiQuery($sql,array($this->data_da,$this->data_a,$this->priorita,$this->commento,$this->stato,$this->commento_segn,$this->fk_dipendente,$this->fk_causale,$this->durata));
@@ -103,7 +121,9 @@ class Evento {
         else{
             $d = new Dipendente();
             $d->trovaUtenteDaId($this->fk_dipendente);
-            $this->aggiungiErrore("l'utente \"".$d->username."\" ha gi&agrave; un evento in questa data","processi");
+            if(!isset($errore))
+                $errore = 'l\'utente "'.$d->username.'" ha gi&agrave; un evento in questa data';
+            $this->aggiungiErrore($errore,"processi");
             return false;
         }
     }
