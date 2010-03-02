@@ -9,21 +9,6 @@
 ?>
 
 <?php function stampaFormRicerca($utente){ ?>
-    <!--form method="POST">
-        <select name="utente" onchange="this.form.submit();">
-            <option value="0">-</option>
-            <?php
-               /* $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,username FROM dipendenti");
-                while(!$rs->EOF){
-                    $selected="";
-                    $id = $rs->fields["id_dipendente"];
-                    if($utente==$id)
-                        $selected="selected";
-                    echo '<option value="'.$id.'" '.$selected.'>'.$rs->fields["username"].'</option>';
-                    $rs->MoveNext();
-                }*/
-            ?>
-        </select-->
         <form method="POST" name="formCercaUtente">
             <input type="text" name="username" onkeyup="utenti()" id="username" />
             <div id="listaUtenti"></div>

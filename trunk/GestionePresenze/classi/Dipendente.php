@@ -164,7 +164,7 @@ class Dipendente {
             $a = $rs->fields["a"];
             $stato['stato'] = 3;
             if($da == $a) $date_commento = " il ".$da;
-            else $date_commento = " dal :".$rs->fields["da"]." al :".$rs->fields["a"];
+            else $date_commento = " dal ".$rs->fields["da"]." al ".$rs->fields["a"];
 
             if($admin) $stato['commento'] = $rs->fields["nome"].$date_commento;
             else $stato['commento'] = "Assente ".$date_commento;
