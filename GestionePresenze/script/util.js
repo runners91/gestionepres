@@ -1,11 +1,27 @@
+var slTd = null;
+var className = null;
+
 function redirect(href){
     window.location.href = href;
 }
 
+/**** Prende l'elemento <td> della timbratura e l id della timbratura ***/
+/**** Inserisce nel textfield elimina l'id della timbratura da eliminare e mostra il bottone elimina ***/
+/**** Tiene in slTd un riferimento a qual'è l'ultima cella modificata, per farla tornare non selezionata in visualizzazione ***/
 function eliminaTimbratura(td,id){
-    td.style.border = "2px dotted black";
-    document.getElementById("elimina").value = id;
-    document.getElementById("bottElimina").style.display = 'block';
+    if(slTd) slTd.className = className;
+    if(slTd!=td){
+        slTd = td;
+        className = slTd.className;
+        td.className = "griglia selezionato";
+        document.getElementById("elimina").value = id;
+        document.getElementById("bottElimina").style.display = 'block';
+    }
+    else{
+        document.getElementById("elimina").value = "";
+        document.getElementById("bottElimina").style.display = 'none';
+        slTd = null;
+    }
 }
 
 function cambiaStato(stato,commento){

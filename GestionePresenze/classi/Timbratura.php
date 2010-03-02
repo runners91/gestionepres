@@ -60,6 +60,15 @@ class Timbratura {
     }
 
     /**
+     * Elimina una timbratura
+     * @param int $id id della timbratura da eliminare
+     */
+    static function eliminaTimbratura($id){
+        $sql = "delete from timbrature where id_timbratura = ?";
+        Database::getInstance()->eseguiQuery($sql,array($id));
+    }
+
+    /**
      * Aggiunge un errore all'array nella posizione d, ovvero dove e' avvenuto l'errore
      * @param String $errore Descrizione dell'errore
      * @param String $d Indica dove e' successo l'errore
