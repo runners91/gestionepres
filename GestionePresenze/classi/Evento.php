@@ -181,6 +181,7 @@ class Evento {
             if($data == $this->data_a)
                 break;
         }
+        return $giorni;
    }
     /**
      * Ritorna il titolo del form in base ai dati contenuti nell'oggetto Evento
