@@ -78,8 +78,12 @@ class Evento {
      * Elimina l'evento dal Database
      */
     function eliminaEvento(){
-        if($this->id_evento)
+        if($this->id_evento) {
+            if($this->fk_causale == 4)
+                Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst + ? WHERE fk_dipendente = ?",array($this->contaGiorni(),$this->fk_dipendente));
+
             return Database::getInstance()->eseguiQuery("DELETE FROM eventi where id_evento = ?",array($this->id_evento));
+        }
     }
 
     /**
@@ -88,45 +92,19 @@ class Evento {
     */
        function inserisciEvento(){
         if(sizeof($this->errori)>0) return false;
-        $festivo = true;
-        if($this->durata != "G") $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
-        $sql = "SELECT count(*) as festivo
-                FROM filiali f, dipendenti d,festivi_effettuati fe,festivi fs
-                WHERE f.id_filiale = d.fk_filiale
-                AND fe.fk_filiale = f.id_filiale
-                AND fs.id_festivo = fe.fk_festivo
-                AND fs.durata = 'G'
-                AND (fs.data = ? OR FROM_UNIXTIME(fs.data,'%d.%c') = ? AND fs.ricorsivo = 1)
-                AND d.id_dipendente = ?;";
-        $rs = Database::getInstance()->eseguiQuery($sql,array($this->data_da,date("j.n",$this->data_da) ,$this->fk_dipendente));
-        if($rs->fields["festivo"]==0)
-            $festivo = true;
-        else {
-            $festivo = false;
-            $errore = "non &egrave; possibile aggiungere eventi in un giorno festivo";
-        }
-        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." fk_dipendente= ?
-                 AND (data_da <= ? AND data_a >= ?
-                 OR data_da <= ? AND data_a >= ?
-                 OR data_da >= ? AND data_a <= ?)";
-        $rs = Database::getInstance()->eseguiQuery($sql,array($this->fk_dipendente,$this->data_da,$this->data_da,$this->data_a,$this->data_a,$this->data_da,$this->data_a));
-        if($rs->fields['totEventi']==0 && $festivo){
-            if($this->fk_causale == 4){
-                $giorni = $this->contaGiorni();
+        if($this->fk_causale == 4) $giorni = $this->contaGiorni();
+        
+        if($this->controllaErrori($giorni)){
+            if($this->fk_causale == 4)
                 Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst - ? WHERE fk_dipendente = ?",array($giorni,$this->fk_dipendente));
-            }
+
             $sql =  "insert into eventi(data_da,data_a,priorita,commento,stato,commento_segnalazione,fk_dipendente,fk_causale,durata)
                      values (?,?,?,?,?,?,?,?,?);";
             return Database::getInstance()->eseguiQuery($sql,array($this->data_da,$this->data_a,$this->priorita,$this->commento,$this->stato,$this->commento_segn,$this->fk_dipendente,$this->fk_causale,$this->durata));
         }
-        else{
-            $d = new Dipendente();
-            $d->trovaUtenteDaId($this->fk_dipendente);
-            if(!isset($errore))
-                $errore = 'l\'utente "'.$d->username.'" ha gi&agrave; un evento in questa data';
-            $this->aggiungiErrore($errore,"processi");
+        else 
             return false;
-        }
+        
     }
 
     /**
@@ -155,7 +133,57 @@ class Evento {
         }
    }
 
-    function contaGiorni() {
+    /**
+     * Controlla che l'evento possa essere inserito
+     * @param int $giorni giorni di vacanza presi dall'utente
+     * @return se si può aggiungere l'evento
+     */
+    private function controllaErrori($giorni = 0) {
+        if($this->durata != "G") $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
+        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." fk_dipendente= ?
+                 AND (data_da <= ? AND data_a >= ?
+                 OR data_da <= ? AND data_a >= ?
+                 OR data_da >= ? AND data_a <= ?)";
+        $rs = Database::getInstance()->eseguiQuery($sql,array($this->fk_dipendente,$this->data_da,$this->data_da,$this->data_a,$this->data_a,$this->data_da,$this->data_a));
+        if($rs->fields["totEventi"]>0) {
+            $d = new Dipendente();
+            $d->trovaUtenteDaId($this->fk_dipendente);
+            $this->aggiungiErrore('l\'utente "'.$d->username.'" ha gi&agrave; un evento in questa data',"processi");
+            return false;
+        }
+
+        $sql = "SELECT count(*) as festivo
+                FROM filiali f, dipendenti d,festivi_effettuati fe,festivi fs
+                WHERE f.id_filiale = d.fk_filiale
+                AND fe.fk_filiale = f.id_filiale
+                AND fs.id_festivo = fe.fk_festivo
+                AND fs.durata = 'G'
+                AND (fs.data = ? OR FROM_UNIXTIME(fs.data,'%d.%c') = ? AND fs.ricorsivo = 1)
+                AND d.id_dipendente = ?;";
+        $rs = Database::getInstance()->eseguiQuery($sql,array($this->data_da,date("j.n",$this->data_da) ,$this->fk_dipendente));
+        if($rs->fields["festivo"]>0) {
+            $this->aggiungiErrore("non &egrave; possibile aggiungere eventi in un giorno festivo","processi");
+            return false;
+        }
+
+       if($this->fk_causale == 4){
+            $vac = Database::getInstance()->eseguiQuery("SELECT vac_rst FROM saldi WHERE fk_dipendente = ?",array($this->fk_dipendente));
+            $vac_rst = $vac->fields["vac_rst"];
+            if($vac_rst < $giorni) {
+                $d = new Dipendente();
+                $d->trovaUtenteDaId($this->fk_dipendente);
+                $this->aggiungiErrore('l\'utente "'.$d->username.'" non ha abbastanza giorni',"processi");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Conta la durata in giorni dell'evento (senza contare i festivi e il weekend)
+     * @return la durata in giorni dell'evento
+     */
+    private function contaGiorni() {
         $giorni = 0;
         $incremento = 1;
         if($this->durata != "G")
