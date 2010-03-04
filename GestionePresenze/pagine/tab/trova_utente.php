@@ -55,6 +55,14 @@ function stampaInfoUtente($d){
             <td class="label"> Email: </td>
             <td> <?php echo $d->email;?> </td>
         </tr>
+        <tr>
+            <td class="label"> Telefono: </td>
+            <td> <?php echo $d->telefono;?> </td>
+        </tr>
+        <tr>
+            <td class="label"> Natel: </td>
+            <td> <?php echo $d->natel;?> </td>
+        </tr>
     </table>
 
 <?php } ?>
