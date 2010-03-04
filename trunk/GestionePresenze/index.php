@@ -6,6 +6,8 @@
     }
 
     include("classi/Database.php");
+    include("classi/Paese.php");
+    include("classi/Filiale.php");
     include("classi/Dipendente.php");
     include("classi/Calendario.php");
     include("classi/Evento.php");

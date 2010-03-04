@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of Evento
+ * Gestione Evento
  *
  * @author Bryan Daepp
  * @author Ethan Winiger

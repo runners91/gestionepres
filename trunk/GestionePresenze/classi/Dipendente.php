@@ -12,6 +12,10 @@ class Dipendente {
     private $username;
     private $email;
     private $vacanze;
+    private $telefono;
+    private $natel;
+    private $percLavorativa;
+    private $minPausa;
     private $stato;
     private $commento_stato;
     private $filiale;
@@ -55,7 +59,7 @@ class Dipendente {
         $vacanze = trim($v);
         if(strlen($vacanze)==0)
             $this->aggiungiErrore(" - Vacanze non pu&ograve avere un valore nullo", "vacanze");
-        else if(!is_numeric($vacanze))
+        else if(!is_numeric($vacanze) || $vacanze <= 0)
             $this->aggiungiErrore(" - Vacanze non ha un valore valido", "vacanze");
         $this->vacanze = $vacanze;
     }
@@ -89,27 +93,53 @@ class Dipendente {
         $this->commento_stato = trim($commento);
     }
 
+    public function setTelefono($telefono){
+        $tel = trim($telefono);
+        if(!is_numeric($tel))
+            $this->aggiungiErrore(" - Numero di telefono non valido", "telefono");
+        $this->telefono = trim($telefono);
+    }
+
+    public function setNatel($natel){
+        $nat = trim($natel);
+        if(!is_numeric($nat))
+            $this->aggiungiErrore(" - Numero di natel non valido", "natel");
+        $this->natel = trim($nat);
+    }
+
+    public function setPercLavorativa($percLavorativa){
+        $percL = trim($percLavorativa);
+        if(!is_numeric($percL) || ($percL <20 || $percL>100))
+            $this->aggiungiErrore(" - Percentuale lavorativa deve essere compresa tra 20% e 100%", "percLavorativa");
+        $this->percLavorativa = $percL;
+    }
+
+    public function setMinPausa($mP){
+        $minPausa = trim($mP);
+        if(!is_numeric($minPausa) || $minPausa <= 0)
+            $this->aggiungiErrore(" - Minimo Pausa Obbligatoria deve avere un valore maggiore di 0", "minPausa");
+        $this->minPausa = $minPausa;
+    }
+
     /**
      * aggiunge il nuovo dipendente nel DB
      */
     public function aggiungiDipendente(){
-        if(sizeof($this->errori)==0){
-            $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale,email) values (?,?,?,md5('inizio'),?,?);",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->email));
-            $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = ?;",array($this->username));
-            Database::getInstance()->eseguiQuery("INSERT INTO saldi (fk_dipendente,saldo, saldo_strd, vac_spt, vac_rst, vac_matr) values (?,0,0,?,?,0);",array($rs->fields["id"],$this->vacanze,$this->vacanze));
-            return $ris;
-        }
-        return false;
+        if(sizeof($this->errori)>0) return false;
+        $ris = Database::getInstance()->eseguiQuery("INSERT INTO dipendenti (nome,cognome,username,password,fk_filiale,email,telefono,natel,minPausa) values (?,?,?,md5('inizio'),?,?,?,?,?);",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->email,$this->telefono,$this->natel,$this->minPausa));
+        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente as id FROM dipendenti WHERE username = ?;",array($this->username));
+        $ris2 = Database::getInstance()->eseguiQuery("INSERT INTO saldi (fk_dipendente,saldo, saldo_strd, vac_spt, vac_rst, vac_matr,percLavorativa) values (?,0,0,?,?,0,?);",array($rs->fields["id"],$this->vacanze,$this->vacanze,$this->percLavorativa));
+        return $ris && $ris2;
     }
 
      /**
      * modifica un dipendente
      */
     public function aggiornaDipendente(){
-        if(sizeof($this->errori)==0){
-            return Database::getInstance()->eseguiQuery("UPDATE dipendenti set nome = ?,cognome = ?,username = ?,fk_filiale = ?,email = ? where id_dipendente = ?",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->email,$this->id));
-        }
-        return false;
+        if(sizeof($this->errori)>0) return false;
+        $ris = Database::getInstance()->eseguiQuery("UPDATE dipendenti set nome = ?,cognome = ?,username = ?,fk_filiale = ?,email = ?,telefono = ?,natel = ? where id_dipendente = ?",array($this->nome,$this->cognome,$this->username,$this->filiale,$this->email,$this->telefono,$this->natel,$this->id));
+        $ris2 = Database::getInstance()->eseguiQuery("UPDATE saldi set vac_spt = ?,percLavorativa = ? where fk_dipendente = ?",array($this->vacanze,$this->percLavorativa,$this->id));
+        return $ris && $ris2;
     }
 
     /**
@@ -125,7 +155,7 @@ class Dipendente {
      * @return Dipendente l'oggetto con i dati del dipendente cercato
      */
     function trovaUtenteDaId($id){
-        $rs = Database::getInstance()->eseguiQuery("SELECT nome,cognome,username,fk_filiale,email,stato_att as stato,commento_stato from dipendenti where id_dipendente = ?",array($id));
+        $rs = Database::getInstance()->eseguiQuery("SELECT nome,cognome,username,fk_filiale,email,stato_att as stato,commento_stato,telefono,natel FROM dipendenti where id_dipendente = ?",array($id));
         $this->id = $id;
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
@@ -134,6 +164,8 @@ class Dipendente {
         $this->email = $rs->fields["email"];
         $this->stato = $rs->fields["stato"];
         $this->commento_stato = $rs->fields["commento_stato"];
+        $this->telefono = $rs->fields["telefono"];
+        $this->natel = $rs->fields["natel"];
         return $this;
     }
 
@@ -143,7 +175,7 @@ class Dipendente {
      * @return Dipendente l'oggetto con i dati del dipendente cercato
      */
     function trovaUtenteDaUsername($username){
-        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale,email,stato_att as stato,commento_stato from dipendenti where username = ?",array($username));
+        $rs = Database::getInstance()->eseguiQuery("SELECT id_dipendente,nome,cognome,username,fk_filiale,email,stato_att as stato,commento_stato,telefono,natel FROM dipendenti where username = ?",array($username));
         $this->id = $rs->fields["id_dipendente"];
         $this->nome = $rs->fields["nome"];
         $this->cognome = $rs->fields["cognome"];
@@ -152,6 +184,8 @@ class Dipendente {
         $this->email = $rs->fields["email"];
         $this->stato = $rs->fields["stato"];
         $this->commento_stato = $rs->fields["commento_stato"];
+        $this->telefono = $rs->fields["telefono"];
+        $this->natel = $rs->fields["natel"];
         return $this;
     }
 
