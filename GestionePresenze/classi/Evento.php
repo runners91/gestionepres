@@ -94,7 +94,7 @@ class Evento {
         if(sizeof($this->errori)>0) return false;
         if($this->fk_causale == 4) $giorni = $this->contaGiorni();
         
-        if($this->controllaErrori($giorni)){
+        if($this->controllaErrori(false,$giorni)){
             if($this->fk_causale == 4)
                 Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst - ? WHERE fk_dipendente = ?",array($giorni,$this->fk_dipendente));
 
@@ -104,7 +104,6 @@ class Evento {
         }
         else 
             return false;
-        
     }
 
     /**
@@ -113,24 +112,37 @@ class Evento {
     */
     function aggiornaEvento(){
         if(sizeof($this->errori)>0) return false;
-        if($this->durata != "G")
-            $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
-        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." id_evento <> ? AND fk_dipendente = ?
-                 AND (data_da <= ? AND data_a >= ?
-                 OR data_da <= ? AND data_a >= ?
-                 OR data_da >= ? AND data_a <= ?)";
-        $rs = Database::getInstance()->eseguiQuery($sql,array($this->id_evento,$this->fk_dipendente,$this->data_da,$this->data_da,$this->data_a,$this->data_a,$this->data_da,$this->data_a));
-        if($rs->fields['totEventi']==0){
-            $sql =  "update eventi set data_da = ?,data_a = ?,fk_dipendente = ?,fk_causale = ?,commento = ?,priorita = ?,stato = ?, commento_segnalazione = ?,durata = ? ";
-            $sql .= "where id_evento = ?";
+        if($this->fk_causale == 4) $giorniEvento = $this->contaGiorni();
+
+        if($this->controllaErrori(true,$giorniEvento)){
+            $e = new Evento();
+            $e->getValoriDB($this->id_evento);
+
+            if($e->getCausale() == 4) {
+                $giorniVecchioEvento = $e->contaGiorni();
+                if($e->fk_dipendente != $this->fk_dipendente) {
+                    Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst - ? WHERE fk_dipendente = ?",array($giorniVecchioEvento,$this->fk_dipendente));
+                    Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst + ? WHERE fk_dipendente = ?",array($giorniVecchioEvento,$e->fk_dipendente));
+                }
+                if($this->fk_causale == 4) { // da vacanza a vacanza
+                        if($giorniVecchioEvento > $giorniEvento)
+                            Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst + ? WHERE fk_dipendente = ?",array(($giorniVecchioEvento-$giorniEvento),$this->fk_dipendente));
+                        else if($giorniVecchioEvento < $giorniEvento)
+                            Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst - ? WHERE fk_dipendente = ?",array(($giorniEvento-$giorniVecchioEvento),$this->fk_dipendente));
+                }
+                else // da vacanza a qualunque assenza
+                    Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst + ? WHERE fk_dipendente = ?",array($giorniVecchioEvento,$this->fk_dipendente));
+            }
+            else if($this->fk_causale == 4) // da qualunque assenza a vacanza
+                Database::getInstance()->eseguiQuery("UPDATE saldi SET vac_rst = vac_rst - ? WHERE fk_dipendente = ?",array($giorniEvento,$this->fk_dipendente));
+
+
+            $sql =  "update eventi set data_da = ?,data_a = ?,fk_dipendente = ?,fk_causale = ?,commento = ?,priorita = ?,stato = ?, commento_segnalazione = ?,durata = ?
+                     where id_evento = ?";
             return Database::getInstance()->getConnection()->execute($sql,array($this->data_da,$this->data_a,$this->fk_dipendente,$this->fk_causale,$this->commento,$this->priorita,$this->stato,$this->commento_segn,$this->durata,$this->id_evento));
         }
-        else{
-            $d = new Dipendente();
-            $d->trovaUtenteDaId($this->fk_dipendente);
-            $this->aggiungiErrore("l'utente \"".$d->username."\" ha gi&agrave; un evento in questa data","processi");
+        else
             return false;
-        }
    }
 
     /**
@@ -138,9 +150,10 @@ class Evento {
      * @param int $giorni giorni di vacanza presi dall'utente
      * @return se si può aggiungere l'evento
      */
-    private function controllaErrori($giorni = 0) {
+    private function controllaErrori($aggiorna,$giorni = 0) {
         if($this->durata != "G") $stringa = "(durata = 'G' OR durata = '".$this->durata."') AND";
-        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." fk_dipendente= ?
+        if($aggiorna) $stringaId = "id_evento <> ".$this->id_evento." AND ";
+        $sql =  "SELECT count(*) as totEventi FROM eventi WHERE ".$stringa." ".$stringaId." fk_dipendente= ?
                  AND (data_da <= ? AND data_a >= ?
                  OR data_da <= ? AND data_a >= ?
                  OR data_da >= ? AND data_a <= ?)";
@@ -172,7 +185,7 @@ class Evento {
             if($vac_rst < $giorni) {
                 $d = new Dipendente();
                 $d->trovaUtenteDaId($this->fk_dipendente);
-                $this->aggiungiErrore('l\'utente "'.$d->username.'" non ha abbastanza giorni',"processi");
+                $this->aggiungiErrore('l\'utente "'.$d->username.'" non ha abbastanza giorni di vacanza',"processi");
                 return false;
             }
         }
@@ -183,7 +196,7 @@ class Evento {
      * Conta la durata in giorni dell'evento (senza contare i festivi e il weekend)
      * @return la durata in giorni dell'evento
      */
-    private function contaGiorni() {
+    function contaGiorni() {
         $giorni = 0;
         $incremento = 1;
         if($this->durata != "G")
