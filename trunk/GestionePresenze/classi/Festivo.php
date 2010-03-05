@@ -14,6 +14,9 @@ class Festivo {
     private $durata;
     private $errori;
 
+    function setId($id) {
+        $this->id = $id;
+    }
     function getNome() {
         return $this->nome;
     }
@@ -50,6 +53,17 @@ class Festivo {
         $this->durata = $durata;
     }
 
+    function trovaFestivoDaId($id) {
+        $rs = Database::getInstance()->eseguiQuery("SELECT * FROM festivi WHERE id_festivo = ?",array($id));
+        $this->id = $rs->fields["id_festivo"];
+        $this->nome = $rs->fields["nome"];
+        $this->durata = $rs->fields["durata"];
+        $this->ricorsivo = $rs->fields["ricorsivo"];
+        $this->data = $rs->fields["data"];
+        $rs2 = Database::getInstance()->eseguiQuery("SELECT fk_filiale FROM festivi_effettuati WHERE fk_festivo = ?",array($id));
+        $this->filiale = $rs2->fields["fk_filiale"];
+    }
+
      /**
      * Aggiunge un errore all'array nella posizione d, ovvero dove e' avvenuto l'errore
      * @param String $errore Descrizione dell'errore
@@ -64,12 +78,22 @@ class Festivo {
     }
 
     function insersciFestivo() {
-        if(sizeof($this->errori)==0) {
-            Database::getInstance()->eseguiQuery("INSERT INTO festivi (nome,data,durata,ricorsivo) values (?,?,?,?)",array($this->nome, $this->data,$this->durata, $this->ricorsivo));
+        if(sizeof($this->errori)>0) return false;
+            $rs = Database::getInstance()->eseguiQuery("INSERT INTO festivi (nome,data,durata,ricorsivo) values (?,?,?,?)",array($this->nome, $this->data,$this->durata, $this->ricorsivo));
             $this->id = Database::getInstance()->getConnection()->Insert_ID();
-            return Database::getInstance()->eseguiQuery("INSERT INTO festivi_effettuati (fk_filiale,fk_festivo) values (?,?)",array($this->filiale, $this->id));
-        }
-        return false;
+            return $rs && Database::getInstance()->eseguiQuery("INSERT INTO festivi_effettuati (fk_filiale,fk_festivo) values (?,?)",array($this->filiale, $this->id));
+    }
+
+    function aggiornaFestivo() {
+        if(sizeof($this->errori)>0) return false;
+            $rs = Database::getInstance()->eseguiQuery("UPDATE festivi SET nome = ?, data = ?, durata = ?, ricorsivo = ? WHERE id_festivo = ?",array($this->nome, $this->data,$this->durata, $this->ricorsivo,$this->id));
+            return $rs && Database::getInstance()->eseguiQuery("UPDATE festivi_effettuati SET fk_filiale = ? WHERE fk_festivo =?",array($this->filiale, $this->id));
+    }
+
+    function eliminaFestivo() {
+        if(sizeof($this->errori)>0) return false;
+        $rs = Database::getInstance()->eseguiQuery("DELETE FROM festivi_effettuati WHERE fk_festivo = ?",array($this->id));
+        return $rs && Database::getInstance()->eseguiQuery("DELETE FROM festivi WHERE id_festivo = ?",array($this->id));
     }
 }
 ?>
