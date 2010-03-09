@@ -44,7 +44,8 @@
                 echo "Paese eliminato con successo";
             }
         }
-        
+        else
+            creaFormPaese();
     }
     else
         creaFormPaese();
