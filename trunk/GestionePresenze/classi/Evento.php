@@ -224,6 +224,47 @@ class Evento {
         }
         return $giorni;
    }
+
+    /**
+     * Conta la durata in giorni di eventi in un mese (senza contare i festivi e il weekend)
+     * @return la durata in giorni dell'evento
+     */
+    static function contaGiorniMese($data,$causale,$utente = null) {
+        $mese = date("n.Y",$data);
+        $rs = Database::getInstance()->eseguiQuery("SELECT data_da,data_a,durata
+                                                    FROM eventi
+                                                    WHERE fk_causale = ?
+                                                    AND ( FROM_UNIXTIME(data_da,'%c.%Y') = ? OR
+                                                    FROM_UNIXTIME(data_a,'%c.%Y') = ? )",array($causale,$mese,$mese));
+        $giorni = 0;
+        while(!$rs->EOF) {
+            $incremento = $rs->fields["durata"]=="G"?1:0.5;
+            $d = date("j",$rs->fields["data_da"]);
+            while(true){
+                $data = mktime(0, 0, 0, date("n",$rs->fields["data_da"]),$d,date("Y",$rs->fields["data_da"]));
+                if(date("N",$data)<=5 && date("n.Y",$data) == $mese) {
+                    $sql = "SELECT durata
+                            FROM filiali f, dipendenti d,festivi_effettuati fe,festivi fs
+                            WHERE f.id_filiale = d.fk_filiale
+                            AND fe.fk_filiale = f.id_filiale
+                            AND fs.id_festivo = fe.fk_festivo
+                            AND (fs.data = ? OR FROM_UNIXTIME(fs.data,'%d.%c') = ? AND fs.ricorsivo = 1)
+                            AND d.id_dipendente = ?;";
+                    $rs2 = Database::getInstance()->eseguiQuery($sql,array($data,date("j.n",$data) ,$utente));
+                    if($rs2->rowCount()==0)
+                        $giorni += $incremento;
+                    else if($rs2->fields["durata"]!="G")
+                        $giorni += 0.5;
+                }
+                $d++;
+                if($data == $rs->fields["data_a"])
+                    break;
+            }
+            $rs->MoveNext();
+        }
+        return $giorni;
+   }
+
     /**
      * Ritorna il titolo del form in base ai dati contenuti nell'oggetto Evento
      * @return String

@@ -46,6 +46,7 @@
         <script type="text/javascript" src="script/mini_calendario/calendar-it.js"></script>
         <script type="text/javascript" src="script/mini_calendario/script.js"></script>
         <script type="text/javascript" src="script/jquery-1.4.1.js"></script>
+        <script language="javascript" type="text/javascript" src="script/jquery.flot.min.js"></script>
     </head>
     <body>
         

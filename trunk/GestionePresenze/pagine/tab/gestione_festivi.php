@@ -49,10 +49,12 @@
                 $successo = "Festivo eliminato con successo";
             }
         }
+        else
+            creaFormFestivo(new Festivo());
     }
-    else {
+    else 
         creaFormFestivo(new Festivo());
-    }
+    
 ?>
         </td>
         <td style="width:30px;"></td>

@@ -146,6 +146,17 @@ class Dipendente {
      * aggiorna lo stato del dipendente
      */
     public function aggiornaStato(){
+        if(!$this->commento_stato){
+            switch ($this->stato) {
+                case 2:
+                    $this->commento_stato = "Occupato";
+                    break;
+
+                case 3:
+                    $this->commento_stato = "Non al computer";
+                    break;
+            }
+        }
         return Database::getInstance()->eseguiQuery("UPDATE dipendenti set stato_att = ?, commento_stato= ? where id_dipendente = ?",array($this->stato,$this->commento_stato,$this->id));
     }
 

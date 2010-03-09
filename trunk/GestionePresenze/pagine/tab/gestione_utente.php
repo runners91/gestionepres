@@ -50,6 +50,8 @@
                 creaFormUtente($d,$d->errori,"modificaUtente","Salva");
             }
         }
+        else
+            creaFormUtente();
     }
     else 
         creaFormUtente();

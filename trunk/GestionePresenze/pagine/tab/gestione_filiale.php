@@ -46,7 +46,8 @@
                 echo "Filiale eliminata con successo";
             }
         }
-
+        else
+            creaFormFiliale();
     }
     else
         creaFormFiliale();
