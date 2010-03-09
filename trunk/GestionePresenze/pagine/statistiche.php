@@ -1,4 +1,5 @@
 <?php include("navigazione/submenu.php"); ?>
+<script language="javascript" type="text/javascript" src="script/jquery.flot.min.js"></script>
 <div>
     <ul id="tabList">
         <?php
@@ -8,8 +9,8 @@
             if($tabAttuale=="")
                 $tabAttuale = "statistiche_globali";
 
-            creaSubmenuItem($paginaAttuale, $tabAttuale, "statistiche_globali", "STATISTICHE GLOBALI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "statistiche_personali", "STATISTICHE PERSONALI");
+            creaSubmenuItem($paginaAttuale, $tabAttuale, "statistiche_globali", "STATISTICHE GLOBALI");
             
         ?>
     </ul>
