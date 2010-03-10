@@ -222,6 +222,37 @@ class Utilita {
         return $segno.$ore.".".$minuti;
      }
 
+     /**
+      * Genera il dataset per creare i grafici delle statistiche in js
+      * @param int $anno anno in cui calcolare le statistiche
+      * @param int $ut_fi id dell'utente o della filiale da cui prendere le statistiche
+      * @param boolean $utente true se è per le statistiche personali false se è per le globali
+      * @return il datasets in js
+      */
+     static function creaDatasets($anno,$ut_fi,$utente = true) {
+        $str ='var datasets = {';
+        for($i=1;$i<=6;$i++) {
+            $rs = Database::getInstance()->eseguiQuery("SELECT nome FROM causali WHERE id_motivo = ?",array($i));
+            $nome = $rs->fields["nome"];
+            $str .= '"'.$i.'": { label: "'.$nome.'", data: [';
+            for($m=1;$m<=12;$m++) {
+                $data = mktime(0, 0, 0,$m,1,$anno);
+                if($utente)
+                    $giorni = Evento::contaGiorniMesePerUtente($data, $i, $ut_fi);
+                else
+                    $giorni = Evento::contaGiorniMesePerFiliali($data, $i, $ut_fi);
+                $str .= '['.$m.', '.$giorni.']';
+                if($m!=12)
+                    $str .= ',';
+            }
+            $str .= ']}';
+            if($i!=6){
+                $str .= ',';
+            }
+        }
+        $str .= '};';
+        return $str;
+    }
 
 }
 

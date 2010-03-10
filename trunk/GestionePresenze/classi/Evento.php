@@ -196,15 +196,18 @@ class Evento {
      * Conta la durata in giorni dell'evento (senza contare i festivi e il weekend)
      * @return la durata in giorni dell'evento
      */
-    function contaGiorni() {
+    function contaGiorni($anno = null) {
         $giorni = 0;
         $incremento = 1;
+        $controlloAnno = true;
         if($this->durata != "G")
             $incremento = 0.5;
         $i=date("j",$this->data_da);
         while(true) {
             $data = mktime(0, 0, 0, date("n",$this->data_da),$i,date("Y",$this->data_da));
-            if(date("N",$data)<=5) {
+            if($anno)
+                $controlloAnno = date("Y",$data) == $anno;
+            if(date("N",$data)<=5 && $controlloAnno) {
                 $sql = "SELECT durata
                         FROM filiali f, dipendenti d,festivi_effettuati fe,festivi fs
                         WHERE f.id_filiale = d.fk_filiale
@@ -218,6 +221,7 @@ class Evento {
                 else if($rs->fields["durata"]!="G")
                     $giorni += 0.5;
             }
+            
             $i++;
             if($data == $this->data_a)
                 break;
@@ -229,7 +233,7 @@ class Evento {
      * Conta la durata in giorni di eventi in un mese (senza contare i festivi e il weekend)
      * @return la durata in giorni dell'evento
      */
-    static function contaGiorniMese($data,$causale,$utente) {
+    static function contaGiorniMesePerUtente($data,$causale,$utente) {
         $mese = date("n.Y",$data);
         $rs = Database::getInstance()->eseguiQuery("SELECT id_evento,data_da,data_a,durata
                                                     FROM eventi

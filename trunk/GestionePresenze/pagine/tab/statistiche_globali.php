@@ -3,7 +3,7 @@
     $filiale = $_POST["filiale"]?$_POST["filiale"]:1;
 ?>
 <form action="#" method="POST" name="formCambiaAnno" style="position:absolute;left:45px;">
-    Filiale: <select name="filiale" onchange="cambiaAnno($('#selectAnno').val());"> 
+    Filiale: <select name="filiale" id="selectFiliale" onchange="cambiaAnno($('#selectAnno').val());">
         <?php
             foreach (Filiale::getListaFiliali() as $id => $nome) {
                     $selected = "";
@@ -31,36 +31,23 @@
     if($anno < date("Y")-1)
         echo ' <input type="button" class="bottCalendario" value=">>" onclick="cambiaAnno('.date("Y").')">';
     ?>
+    <input style="position:absolute;left:480px;" type="button" value="Export xls" class="bottCalendario" onclick="exportXls();">
 </form><br>
-<?php
-    $str ='var datasets = {';
-    $anno = $_POST["anno"]?$_POST["anno"]:date("Y");
-    for($i=1;$i<=6;$i++) {
-        $rs = Database::getInstance()->eseguiQuery("SELECT nome FROM causali WHERE id_motivo = ?",array($i));
-        $nome = $rs->fields["nome"];
-        $str .= '"'.strtolower($nome).'": { label: "'.$nome.'", data: [';
-        for($m=1;$m<=12;$m++) {
-            $data = mktime(0, 0, 0,$m,1,$anno);
-            $giorni = Evento::contaGiorniMesePerFiliali($data, $i, $filiale);
-            $str .= '['.$m.', '.$giorni.']';
-            if($m!=12)
-                $str .= ',';
-        }
-        $str .= ']}';
-        if($i!=6){
-            $str .= ',';
-        }
-    }
-    $str .= '};';
 
-?>
 <script>
+    function exportXls(){
+        var assenze = "";
+        $("#choices").find(".causali:checked").each(function () {
+            assenze += $(this).attr("name")+"_";
+        });
+        location.href="excel.php?filiale="+$("#selectFiliale").val()+"&anno="+$("#selectAnno").val()+"&assenze="+assenze;
+    }
     function cambiaAnno(anno){
         $("#anno").val(anno);
         formCambiaAnno.submit();
     }
     $(function () {
-        <?php echo $str;?>
+        <?php echo Utilita::creaDatasets($anno,$filiale,false);?>
         var i = 0;
         $.each(datasets, function(key, val) {
             val.color = i;
@@ -71,7 +58,7 @@
         var choiceContainer = $("#choices");
         $.each(datasets, function(key, val) {
             checked = "";
-            if(key=='malattia')
+            if(key==1)
                 checked="checked='checked'"
             choiceContainer.append('<input class="causali" type="checkbox" name="' + key +
                                    '" '+checked+' id="id' + key + '">' +
@@ -132,3 +119,4 @@
         <legend>Assenze</legend>
         <div id="choices"></div>
     </fieldset>
+

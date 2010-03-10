@@ -7,7 +7,7 @@
             $tabAttuale = $_GET['tab'];
 
             if($tabAttuale=="")
-                $tabAttuale = "statistiche_globali";
+                $tabAttuale = "statistiche_personali";
 
             creaSubmenuItem($paginaAttuale, $tabAttuale, "statistiche_personali", "STATISTICHE PERSONALI");
             creaSubmenuItem($paginaAttuale, $tabAttuale, "statistiche_globali", "STATISTICHE GLOBALI");
@@ -18,7 +18,7 @@
     <div id="contenuto">
         <?php
             if(!isset($_GET['tab'])){
-                include("tab/statistiche_globali.php");
+                include("tab/statistiche_personali.php");
             }
             else{
                 include("tab/".$_GET['tab'].".php");
