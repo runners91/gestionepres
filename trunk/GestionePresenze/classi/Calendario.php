@@ -212,7 +212,7 @@ class Calendario {
                                         else if($tot>0)
                                             $class = ' cellaDataFestiva';
                                         
-                                        echo '<td class="cellaData'.$class.'" onclick="location.href=\''.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'\'">';
+                                        echo '<td class="cellaData data_'.date("j_n_Y",$dataGiorno).$class.'" onclick="location.href=\''.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'\'">';
 
                                         echo '<font class="linkGiorno">'.date("d",$dataGiorno).'</font> <font style="font-size:8px;font-family:Verdana;">'.$festivo->fields["nome"].'</font>';
                                         //echo '<a class="linkGiorno" href="'.Utilita::getHomeUrlFiltri().'&data='.$dataGiorno.'">'.date("d",$dataGiorno).'</a> ';
