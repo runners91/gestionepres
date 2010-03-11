@@ -5,8 +5,8 @@
     $mesi = array(1=>'Gennaio', 'Febbraio', 'Marzo', 'Aprile','Maggio', 'Giugno', 'Luglio', 'Agosto','Settembre', 'Ottobre', 'Novembre','Dicembre');
     $anno = $_GET["anno"];
     $filename = "eventi_".$anno.".xls";
-    //header ("Content-Type: application/vnd.ms-excel");
-    //header ("Content-Disposition: inline; filename=$filename");
+    header ("Content-Type: application/vnd.ms-excel");
+    header ("Content-Disposition: inline; filename=$filename");
 
 ?>
 
