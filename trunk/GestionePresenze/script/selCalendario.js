@@ -1,6 +1,6 @@
 var ok = false;
 var dataSel = getUrlVars()['data'];
-if(dataSel.indexOf("#") != -1)
+if(dataSel && dataSel.indexOf("#") != -1)
     dataSel = dataSel.substring(0,10);
 
 if(dataSel>0){
@@ -67,8 +67,10 @@ if(dataSel>0){
 }
 
 function formattaData(data) {
+    mese = data.getMonth();
+    mese ++;
     var g = data.getDate()<10?'0'+data.getDate():data.getDate();
-    var m = data.getMonth()<10?'0'+data.getMonth():data.getMonth();
+    var m = mese<10?'0'+mese:mese;
     return g+"."+m+"."+data.getFullYear();
 }
 
