@@ -1,3 +1,4 @@
+<script type="text/javascript" src="script/selCalendario.js"></script>
 <?php
     $utenti = Utilita::getListaUtentiPerGruppo();
     $visualizza = true;
@@ -8,8 +9,6 @@
             $visualizza = false;
         $filtriGiorno = $rs->fields["durata"];
     }
-    
-
 ?>
 
 <table>
