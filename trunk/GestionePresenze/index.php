@@ -64,7 +64,7 @@
                         login();
                     }
                     else if(!$_GET){
-                        require_once("pagine/home.php");
+                        require_once('pagine/home.php');
                     }
                     else{
                         require_once("pagine/".$_GET['pagina'].".php");
