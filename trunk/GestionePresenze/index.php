@@ -5,19 +5,19 @@
         header('Location:index.php');
     }
 
-    include("classi/Database.php");
-    include("classi/Paese.php");
-    include("classi/Filiale.php");
-    include("classi/Dipendente.php");
-    include("classi/Calendario.php");
-    include("classi/Evento.php");
-    include("classi/Festivo.php");
-    include("classi/Utilita.php");
-    include("classi/Autorizzazione.php");
-    include("classi/Timbratura.php");
-    include("classi/stampaEvento.php");
-    include("login.php");
-    include("pagine/navigazione/menu.php");
+    require_once('classi/Database.php');
+    require_once('classi/Paese.php');
+    require_once('classi/Filiale.php');
+    require_once('classi/Dipendente.php');
+    require_once('classi/Calendario.php');
+    require_once('classi/Evento.php');
+    require_once('classi/Festivo.php');
+    require_once('classi/Utilita.php');
+    require_once('classi/Autorizzazione.php');
+    require_once('classi/Timbratura.php');
+    require_once('classi/stampaEvento.php');
+    require_once('login.php');
+    require_once('pagine/navigazione/menu.php');
     
     if($_POST['azione'] == "cambiaStato"){
         
@@ -64,10 +64,10 @@
                         login();
                     }
                     else if(!$_GET){
-                        include("pagine/home.php");
+                        require_once("pagine/home.php");
                     }
                     else{
-                        include("pagine/".$_GET['pagina'].".php");
+                        require_once("pagine/".$_GET['pagina'].".php");
                     }
                ?>
             </div>
