@@ -24,7 +24,7 @@ function creaMenu($pagina){
         stampaMessaggio($d);
     ?>
 </div>
-<div id="stato"">
+<div id="stato">
     <table>
         <tr>
             <td onclick="cambiaStato(1,'');">

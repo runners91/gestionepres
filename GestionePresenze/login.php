@@ -7,7 +7,6 @@ if($_POST){
 function login($stampa = true){
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
-    $msg = "";
     $errori = array();
     if($_POST){
         if($username=="")
@@ -31,16 +30,16 @@ function login($stampa = true){
             }
         }
     }
-    if($stampa) stampaForm($msg,$errori);
+    if($stampa) stampaForm($errori);
 }
 
-function stampaForm($messaggio = "",$errori = array()){ ?>
+function stampaForm($errori = array()){ ?>
 <body onLoad="document.loginForm.username.focus();">
 <table width="100%">
     <tr>
         <td align="center">
             <div>
-                <form name="loginForm" method="POST" action="<?php echo $_SERVER[PHP_SELF] ?>">
+                <form name="loginForm" method="POST" action="#">
                 <table class="loginForm">
                     <tr>
                         <td class="cellaTesto">
